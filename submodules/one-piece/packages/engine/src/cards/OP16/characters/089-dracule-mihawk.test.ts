@@ -1,0 +1,70 @@
+import { describe, expect, test } from "vite-plus/test";
+
+import { OnePieceTestEngine } from "../../../index.ts";
+
+describe("OP16-089 Dracule Mihawk", () => {
+  test("[On Play] draws 2, trashes 2, and gives an opposing Character -4 cost; [Rush] lets it attack", () => {
+    const engine = OnePieceTestEngine.create(
+      {
+        leaderCardId: "ST06-001",
+        hand: ["OP16-089", "ST06-006"],
+        deck: ["OP16-095", "OP15-090", "ST06-006"],
+        activeDon: 6,
+      },
+      { character: [{ cardId: "OP16-012", rested: true }] },
+    );
+    const bennId = engine.findCardInZone("north", "character", "OP16-012");
+
+    engine.playCard("OP16-089");
+    expect(engine.getView("south").players.south.hand.map((card) => card.cardId)).toEqual([
+      "ST06-006",
+      "OP16-095",
+      "OP15-090",
+    ]);
+    expect(engine.getView("south").players.south.deckCount).toBe(1);
+    const trash = engine.pendingDecision("effectTrashFromHandSelection", "south").steps[0];
+    if (trash?.kind !== "selectEntity") throw new Error("Expected the trash choice.");
+    engine.resolveDecision(
+      "effectTrashFromHandSelection",
+      { selectedIds: trash.candidates.slice(0, 2).map((candidate) => candidate.ref.id) },
+      "south",
+    );
+    expect(engine.getView("south").players.south.hand.map((card) => card.cardId)).toEqual([
+      "OP15-090",
+    ]);
+    expect(engine.getView("south").players.south.trash.map((card) => card.cardId)).toEqual([
+      "ST06-006",
+      "OP16-095",
+    ]);
+    const target = engine.pendingDecision("effectTargetSelection", "south").steps[0];
+    if (target?.kind !== "selectEntity") throw new Error("Expected the cost target.");
+    engine.resolveDecision("effectTargetSelection", { selectedIds: [bennId] }, "south");
+
+    const north = engine.getView("south").players.north;
+    expect(north.characters.find((card) => card?.instanceId === bennId)?.cost).toBe(1);
+
+    // [Rush (Character)]: the freshly played Character may attack a Character this turn.
+    engine.asSouth().attack("OP16-089", "OP16-012");
+    expect(engine.getView("south").players.north.trash.map((card) => card.instanceId)).toContain(
+      bennId,
+    );
+  });
+
+  test("[Continuous] survives the turn handoff", () => {
+    const engine = OnePieceTestEngine.create(
+      { character: [{ cardId: "OP16-089", attachedDon: 1 }], activeDon: 5 },
+      { activeDon: 5 },
+    );
+    const northBefore = engine.getView("south").players.north;
+
+    engine.endTurn("south");
+    const after = engine.getView("south").players.north;
+
+    expect(after.activeDon).toBe(northBefore.activeDon + 2);
+    expect(after.lifeCount).toBe(northBefore.lifeCount);
+    expect(engine.getView("south").players.south.characters.map((c) => c?.cardId)).toContain(
+      "OP16-089",
+    );
+    expect(engine.getView("south").prompts).toHaveLength(0);
+  });
+});

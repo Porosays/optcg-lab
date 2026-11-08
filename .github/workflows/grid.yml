@@ -1,0 +1,82 @@
+name: Matchup grid
+
+# Manual runs only: only people with write access to this repo can start it.
+on:
+  workflow_dispatch:
+    inputs:
+      bot:
+        description: "deep = look-ahead bot (slow, strong), fast = heuristic bot"
+        type: choice
+        options: [deep, fast]
+        default: deep
+      games:
+        description: "Games per deck pairing"
+        default: "50"
+      budget:
+        description: "Deep bot: imagined futures per decision"
+        default: "24"
+      decks:
+        description: "Deck file (inside the search folder)"
+        default: "decks/test-decks.json"
+
+permissions:
+  contents: read
+
+env:
+  SEARCH_DIR: submodules/one-piece/packages/engine/src/automation/search
+
+jobs:
+  sim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - name: Play games (4 cores per job, 80 shards total)
+        working-directory: ${{ env.SEARCH_DIR }}
+        run: |
+          bun run-grid.ts --decks="${{ inputs.decks }}" --games="${{ inputs.games }}" \
+            --bot="${{ inputs.bot }}" --budget="${{ inputs.budget }}" \
+            --workers=4 --shards=80 --shardBase=$(( ${{ matrix.job }} * 4 )) --dir=out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shard-${{ matrix.job }}
+          path: ${{ env.SEARCH_DIR }}/out/*.jsonl
+
+  report:
+    needs: sim
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: shard-*
+          path: ${{ env.SEARCH_DIR }}/out
+          merge-multiple: true
+      - name: Build grid
+        working-directory: ${{ env.SEARCH_DIR }}
+        run: |
+          bun aggregate.ts --decks="${{ inputs.decks }}" --dir=out
+          cat out/grid.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: matchup-grid
+          path: |
+            ${{ env.SEARCH_DIR }}/out/grid.md
+            ${{ env.SEARCH_DIR }}/out/grid.json
+            ${{ env.SEARCH_DIR }}/out/*.jsonl

@@ -1,0 +1,111 @@
+import { describe, expect, test } from "vite-plus/test";
+import { eb01Doma005, eb01Fourtricks025, eb03Nami006, eb03NefeltariVivi001 } from "@tcg/op-cards";
+
+import { OnePieceTestEngine } from "../../../src/index.ts";
+
+describe("EB03-006 Nami", () => {
+  test("pays the active-Leader power cost to draw, then applies her once-per-turn reduction", () => {
+    const engine = OnePieceTestEngine.create(
+      {
+        leaderCardId: eb03NefeltariVivi001,
+        hand: [eb03Nami006],
+        deck: [eb01Doma005, eb01Fourtricks025],
+        activeDon: 5,
+      },
+      {
+        character: [eb01Doma005],
+      },
+      { firstPlayer: "north", activeSeat: "south" },
+    );
+    const drawnId = engine.findCardInZone("south", "deck", eb01Doma005);
+    const targetId = engine.findCardInZone("north", "character", eb01Doma005);
+
+    engine.playCard(eb03Nami006, "south");
+    engine.resolveDecision("effectOptional", { optionId: "yes" }, "south");
+
+    let view = engine.getView("south");
+    expect(view.players.south.leader.power).toBe(0);
+    expect(view.players.south.hand.map((card) => card.instanceId)).toContain(drawnId);
+    expect(view.players.south.deckCount).toBe(1);
+
+    const namiId = engine.findCardInZone("south", "character", eb03Nami006);
+    engine.activateEffect(namiId, "activateMain", "south");
+    const target = engine.pendingDecision("effectTargetSelection", "south").steps[0];
+    expect(target?.kind).toBe("selectEntity");
+    if (target?.kind !== "selectEntity") throw new Error("Expected Nami's opposing target.");
+    expect(target.candidates.map((candidate) => candidate.ref.id)).toEqual([targetId]);
+    engine.resolveDecision("effectTargetSelection", { selectedIds: [targetId] }, "south");
+
+    view = engine.getView("south");
+    expect(view.players.north.characters.find((card) => card?.instanceId === targetId)?.power).toBe(
+      2000,
+    );
+    expect(
+      engine.expectFailure({
+        type: "activateEffect",
+        seat: "south",
+        sourceInstanceId: namiId,
+        trigger: "activateMain",
+      }).accepted,
+    ).toBe(false);
+    expect(view.prompts).toHaveLength(0);
+    expect(engine.getState().capabilityHistory).toHaveLength(0);
+  });
+
+  test("may decline optional so paid effect does not apply", () => {
+    const engine = OnePieceTestEngine.create(
+      {
+        leaderCardId: eb03NefeltariVivi001,
+        hand: [eb03Nami006],
+        deck: [eb01Doma005, eb01Fourtricks025],
+        activeDon: 5,
+      },
+      {
+        character: [eb01Doma005],
+      },
+      { firstPlayer: "north", activeSeat: "south" },
+    );
+    engine.playCard(eb03Nami006, "south");
+    const before = engine.getView("south").players.south;
+    const donPoolBefore = before.activeDon + before.restedDon;
+    const donDeckBefore = before.donDeckCount;
+    const handBefore = before.hand.length;
+    const lifeBefore = before.lifeCount;
+    const deckBefore = before.deckCount;
+    const trashBefore = before.trash.length;
+    engine.resolveDecision("effectOptional", { optionId: "no" }, "south");
+    const after = engine.getView("south").players.south;
+    expect(after.activeDon + after.restedDon).toBe(donPoolBefore);
+    expect(after.donDeckCount).toBe(donDeckBefore);
+    expect(after.hand.length).toBe(handBefore);
+    expect(after.lifeCount).toBe(lifeBefore);
+    expect(after.deckCount).toBe(deckBefore);
+    expect(after.trash.length).toBe(trashBefore);
+    expect(engine.getView("south").prompts).toHaveLength(0);
+  });
+  test("FAQ: an active Leader already at zero can pay another minus5000 to draw", () => {
+    const e = OnePieceTestEngine.create({
+      hand: ["EB03-006", "EB03-006"],
+      activeDon: 10,
+      deck: ["EB01-005", "EB01-025", "EB01-018"],
+    });
+    e.asSouth().play("EB03-006");
+    e.asSouth().acceptOptional();
+    expect(e.getView("south").players.south.leader.power).toBe(0);
+    e.asSouth().play("EB03-006");
+    e.asSouth().acceptOptional();
+    expect(e.getView("south").players.south).toMatchObject({ handCount: 2, deckCount: 1 });
+    expect(e.getView("south").players.south.leader.power).toBe(-5000);
+    e.asSouth().endTurn();
+    expect(e.getView("south").players.south.leader.power).toBe(5000);
+  });
+  test("a rested Leader cannot pay the On Play power cost", () => {
+    const e = OnePieceTestEngine.create({ hand: ["EB03-006"], activeDon: 5 });
+    e.asSouth().attack(e.leader("south"), e.leader("north"));
+    const deck = e.getView("south").players.south.deckCount;
+    e.asSouth().play("EB03-006");
+    expect(e.getView("south").players.south.deckCount).toBe(deck);
+    expect(e.getView("south").players.south.leader.power).toBe(5000);
+    expect(e.getView("south").prompts).toHaveLength(0);
+  });
+});
