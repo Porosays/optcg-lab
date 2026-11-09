@@ -4,9 +4,12 @@
  *   bun grid-worker.ts --decks=decks/x.json --games=50 --bot=fast|deep --shard=0 --shards=4 --out=r.jsonl
  */
 import "@tcg/op-cards";
+import { existsSync as _ex, readFileSync as _rd } from "node:fs";
+import { setPlaybook } from "./playbook.ts";
+if (process.env.OPTCG_PLAYBOOK && _ex(process.env.OPTCG_PLAYBOOK)) setPlaybook(JSON.parse(_rd(process.env.OPTCG_PLAYBOOK, "utf8")));
 import { appendFileSync, readFileSync } from "node:fs";
 import { createMatch } from "../../core.ts";
-import { heuristicAgent } from "../heuristic-strategy.ts";
+import { agentFor } from "./playbook.ts";
 import type { MatchConfig, MatchSeat } from "../../types.ts";
 import { cloneApply, trimmed } from "./fast-apply.ts";
 import { stepSafe } from "./fast-play.ts";
@@ -28,7 +31,7 @@ for (let i = 0; i < decks.length; i++) for (let j = i; j < decks.length; j++) {
 }
 const mine = jobs.filter((_, n) => n % shards === shard);
 
-const mkAgent = (): OnePieceBotAgent => (bot === "deep" ? createSearchAgent("deep", { ...DEFAULT_SEARCH, budget }) : heuristicAgent);
+const mkAgent = (d: { leader: string }): OnePieceBotAgent => { const h = agentFor(d.leader); return bot === "deep" ? createSearchAgent("deep", { ...DEFAULT_SEARCH, budget, rollout: h }) : h; };
 const pc = (d: (typeof decks)[number], seat: string) => ({ playerName: seat, leaderCardId: d.leader, mainDeck: [...d.main], donDeckCount: 10 });
 
 for (const [i, j, k] of mine) {
@@ -40,7 +43,7 @@ for (const [i, j, k] of mine) {
   s = trimmed(s);
   let r = (k * 2654435761 + i * 97 + j) >>> 0 || 1;
   const ctx = { random: () => ((r = (r * 1103515245 + 12345) >>> 0) / 4294967296) };
-  const agents = { south: mkAgent(), north: mkAgent() };
+  const agents = { south: mkAgent(decks[i]!), north: mkAgent(decks[j]!) };
   let cmds = 0, broken = false;
   for (; cmds < 2000 && s.status !== "finished"; cmds++) {
     let res;

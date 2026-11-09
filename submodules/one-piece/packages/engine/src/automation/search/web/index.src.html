@@ -233,6 +233,7 @@ input.w{width:64px;padding:3px 6px;text-align:right}
   <div class="card"><h3 style="margin-top:0">What the bots found last night</h3><p class="mute" style="margin:0" id="fInfo"></p></div>
   <div class="card" id="fRankCard"><h3 style="margin-top:0">OP-18 field ranking</h3><div class="scroll"><table id="fRank"></table></div></div>
   <div class="card" id="fDeckCard"><h3 style="margin-top:0">Decks the bots built</h3><p class="mute" style="margin-top:0;font-size:13px">Built and evolved from the full card pool, tested on few games each. Load one into Test my deck and run more games before trusting it.</p><div class="scroll"><table id="fDecks"></table></div></div>
+  <div class="card" id="fPlayCard"><h3 style="margin-top:0">How the bots learned to play each deck</h3><p class="mute" style="margin-top:0;font-size:13px">Each deck's playbook is trained every night: the bots try changes in real games and keep only what wins more. "vs default" is the win-rate gain over the untrained bot on fresh games.</p><div id="fPlay"></div></div>
   <div class="card" id="fCardCard"><h3 style="margin-top:0">Cards that lifted decks the most</h3><div class="cgrid" id="fCards"></div></div>
 </section>
 
@@ -266,6 +267,7 @@ input.w{width:64px;padding:3px 6px;text-align:right}
 
 <script>
 const FIELDS = __FIELDS__;
+const NIGHTLY = __NIGHTLY__;
 const IMGS = __IMGS__;
 /* ---------- card pictures ---------- */
 const setOf = (id) => id.split("-")[0];
@@ -277,7 +279,7 @@ function imgFail(el) {
   const d = document.createElement("div"); d.className = "ctext"; d.dataset.card = id; d.textContent = (CARDS[id]?.name ?? NAMES[id]?.name ?? "") + " " + id; el.replaceWith(d);
 }
 const cimg = (id, cls = "cimg") => `<img class="${cls}" data-card="${id}" src="${imgUrl(id)}" loading="lazy" alt="" onerror="imgFail(this)">`;
-const LEADER_OF = {}; for (const f of Object.values(FIELDS)) for (const d of f.decks) LEADER_OF[d.name] = d.leader;
+const LEADER_OF = {}, LEADER_OF_NAME = {}; for (const f of Object.values(FIELDS)) for (const d of f.decks) { LEADER_OF[d.name] = d.leader; LEADER_OF_NAME[d.leader] ??= d.name; }
 const lthumb = (leader, big) => leader ? `<img class="lthumb${big ? " lg" : ""}" data-card="${leader}" src="${imgUrl(leader)}" loading="lazy" alt="" onerror="imgFail(this)">` : "";
 const who = (name, leader, sub) => `<div class=who>${lthumb(leader ?? LEADER_OF[name])}<div class=nm>${esc(name)}${sub ? `<small>${sub}</small>` : ""}</div></div>`;
 const $ = (id) => document.getElementById(id);
@@ -300,7 +302,7 @@ const nm = (id) => NAMES[id]?.name ? `${NAMES[id].name}` : id;
 /* ---------- worker pool ---------- */
 let helper; const pending = new Map(); let reqId = 0;
 function helperCall(msg) {
-  if (!helper) { helper = new Worker("worker.js"); helper.onmessage = (e) => { const p = pending.get(e.data.id); if (p) { pending.delete(e.data.id); p(e.data); } }; }
+  if (!helper) { helper = new Worker("worker.js"); if (NIGHTLY?.playbook) helper.postMessage({ type: "playbook", id: -1, playbook: NIGHTLY.playbook }); helper.onmessage = (e) => { const p = pending.get(e.data.id); if (p) { pending.delete(e.data.id); p(e.data); } }; }
   const id = ++reqId; return new Promise((res) => { pending.set(id, res); helper.postMessage({ ...msg, id }); });
 }
 async function loadNames(ids) { const need = [...new Set(ids)].filter((i) => !NAMES[i]); if (!need.length) return; const r = await helperCall({ type: "names", ids: need }); Object.assign(NAMES, r.names); }
@@ -313,7 +315,8 @@ function runJobs(jobs, bot, nWorkers, onResult) {
     const feed = (w) => { if (stopped || !queue.length) { w.terminate(); if (--live === 0) resolve(); return; } w.postMessage({ type: "run", id: 0, jobs: queue.splice(0, chunk), bot, budget: 16 }); };
     for (let i = 0; i < Math.min(nWorkers, jobs.length); i++) {
       const w = new Worker("worker.js"); ws.push(w); live++;
-      w.onmessage = (e) => { const m = e.data; if (m.type === "result") onResult(m.result); else if (m.type === "done" || m.type === "error") feed(w); };
+      if (NIGHTLY?.playbook) w.postMessage({ type: "playbook", id: -1, playbook: NIGHTLY.playbook });
+      w.onmessage = (e) => { const m = e.data; if (m.type === "result") onResult(m.result); else if ((m.type === "done" || m.type === "error") && m.id !== -1) feed(w); };
       feed(w);
     }
     if (!live) resolve();
@@ -644,10 +647,14 @@ function noteFor(r) {
 function isKey(f) { return /K\.O\.'d|wins/.test(f.text) || /\((?:[0-2]) life left\)/.test(f.text) || /\(cost (?:[7-9]|1\d)\)/.test(f.text); }
 
 /* ---------- bot finds (nightly) ---------- */
-const NIGHTLY = __NIGHTLY__;
 function renderFinds() {
   const F = NIGHTLY?.found, G = NIGHTLY?.grid;
-  if (!F && !G) { $("fInfo").textContent = "No nightly results yet. The first nightly run happens around 2 AM New York time; check back tomorrow."; ["fRankCard", "fDeckCard", "fCardCard"].forEach((x) => $(x).classList.add("hidden")); return; }
+  const P = NIGHTLY?.playbook;
+  $("fPlayCard").classList.toggle("hidden", !P || !Object.keys(P).length);
+  if (P && Object.keys(P).length) helperCall({ type: "playbook", playbook: P }).then((r) => {
+    $("fPlay").innerHTML = Object.entries(P).sort((a, b) => b[1].gain - a[1].gain).map(([l, e]) => `<div class=who style="padding:8px 0;border-bottom:1px solid var(--line)">${lthumb(l)}<div class=nm><b>${esc(LEADER_OF_NAME[l] ?? cn(l))}</b> <span class="pill" style="background:var(--good);color:#fff">+${Math.round(100 * e.gain)} pts vs default</span><small>${esc((r.described[l] || []).join(" · ") || "small tweaks")}</small></div></div>`).join("");
+  });
+  if (!F && !G) { $("fInfo").textContent = "No nightly results yet. The first nightly run happens around 2 AM New York time; check back tomorrow."; ["fRankCard", "fDeckCard", "fCardCard", "fPlayCard"].forEach((x) => $(x).classList.add("hidden")); return; }
   $("fInfo").textContent = `Run on ${F?.date ?? "?"}. ${G ? G.games + " games across the OP-18 field. " : ""}${F ? F.decks.length + " bot-built decks shown." : ""}`;
   if (G) { const o = [...G.overall].sort((a, b) => b.wr - a.wr);
     $("fRank").innerHTML = "<tr><th>#</th><th>Tier</th><th>Deck</th><th class=n>Win rate</th><th class=n>1st</th><th class=n>2nd</th><th class=n>Games</th></tr>" + o.map((r, i) => { const t = tierOf(Math.round(r.wr * r.games), r.games); return `<tr><td>${i + 1}</td><td><span class="tier t${t}">${t}</span></td><td>${who(r.deck)}</td><td class="n wr ${cls(r.wr)}">${pct(r.wr)}</td><td class=n>${pct(r.first)}</td><td class=n>${pct(r.second)}</td><td class=n>${r.games}</td></tr>`; }).join(""); }

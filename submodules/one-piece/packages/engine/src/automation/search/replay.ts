@@ -5,7 +5,7 @@
 import "@tcg/op-cards";
 import { getCard, hasCard } from "@tcg/op-cards";
 import { createMatch } from "../../core.ts";
-import { heuristicAgent } from "../heuristic-strategy.ts";
+import { agentFor } from "./playbook.ts";
 import type { MatchConfig, MatchSeat, MatchState } from "../../types.ts";
 import type { OnePieceBotAgent } from "../bot-strategies.ts";
 import { cloneApply, trimmed } from "./fast-apply.ts";
@@ -107,14 +107,14 @@ function consequences(prev: MatchState, next: MatchState): string[] {
 }
 
 export function playReplay(job: Job, bot: string, budget: number): Replay {
-  const mk = (): OnePieceBotAgent => (bot === "deep" ? createSearchAgent("deep", { ...DEFAULT_SEARCH, budget }) : heuristicAgent);
+  const mk = (d: any): OnePieceBotAgent => { const h = agentFor(d.leader); return bot === "deep" ? createSearchAgent("deep", { ...DEFAULT_SEARCH, budget, rollout: h }) : h; };
   const aFirst = job.k % 2 === 0;
   const pc = (d: any, seat: string) => ({ playerName: seat, leaderCardId: d.leader, mainDeck: [...d.main], donDeckCount: donCount(d.leader) });
   let s = trimmed(createMatch({ firstPlayer: aFirst ? "south" : "north", seed: `${job.id}-${job.k}`, shuffleDecks: true, skipFirstTurnDraw: true,
     players: { south: pc(job.a, "south"), north: pc(job.b, "north") } } as unknown as MatchConfig));
   let r = (job.k * 2654435761 + job.id.length * 97) >>> 0 || 1;
   const ctx = { random: () => ((r = (r * 1103515245 + 12345) >>> 0) / 4294967296) };
-  const agents = { south: mk(), north: mk() };
+  const agents = { south: mk(job.a), north: mk(job.b) };
   const frames: Frame[] = [];
   let lastTurn = -1;
   const countered = new Set<string>();

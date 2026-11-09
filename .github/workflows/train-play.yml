@@ -1,0 +1,70 @@
+name: Train playbooks
+
+# Teach the bots how to pilot each deck (also runs inside the nightly run). Saves nightly/playbook.json.
+on:
+  workflow_dispatch:
+    inputs:
+      decks:
+        description: "Decks to train (inside the search folder)"
+        default: "decks/op18-preview.json"
+      iters:
+        description: "Changes to try per deck"
+        default: "10"
+      games:
+        description: "Games per opponent per try"
+        default: "6"
+
+permissions:
+  contents: read
+
+env:
+  SEARCH_DIR: submodules/one-piece/packages/engine/src/automation/search
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10.33.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - name: Train
+        working-directory: ${{ env.SEARCH_DIR }}
+        env: { SHARD: "${{ matrix.job }}", DECKS: "${{ inputs.decks }}", ITERS: "${{ inputs.iters }}", GAMES: "${{ inputs.games }}" }
+        run: bun train-play.ts --decks="$DECKS" --field="$DECKS" --iters="$ITERS" --games="$GAMES" --confirm=12 --base="$GITHUB_WORKSPACE/nightly/playbook.json" --shard="$SHARD" --shards=20 --workers=4 --out=out | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with: { name: "train-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/playbook-*.json" }
+
+  save:
+    needs: train
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/download-artifact@v4
+        with: { pattern: "train-*", path: train, merge-multiple: true }
+      - name: Merge and save
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          mkdir -p nightly
+          bun "$SEARCH_DIR/merge-playbook.ts" --dir=train --base=nightly/playbook.json --out=nightly/playbook.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add nightly/playbook.json
+          git diff --cached --quiet || git commit -m "Trained playbooks $(date -u +%F)"
+          git pull --rebase origin main && git push
+          gh workflow run pages.yml --ref main

@@ -25,6 +25,6 @@ root = os.path.dirname(out)
 def maybe(path):
     try: return json.load(open(os.path.join(root, path)))
     except Exception: return None
-nightly = {"found": maybe("nightly/latest/found-summary.json"), "grid": maybe("nightly/latest/grid.json")}
+nightly = {"found": maybe("nightly/latest/found-summary.json"), "grid": maybe("nightly/latest/grid.json"), "playbook": maybe("nightly/playbook.json")}
 html = open(os.path.join(here, "index.src.html")).read().replace("__NIGHTLY__", json.dumps(nightly, separators=(",", ":"))).replace("__FIELDS__", json.dumps(data, separators=(",", ":"))).replace("__IMGS__", json.dumps(imgs, separators=(",", ":")))
 open(os.path.join(out, "index.html"), "w").write(html); print("built", out)

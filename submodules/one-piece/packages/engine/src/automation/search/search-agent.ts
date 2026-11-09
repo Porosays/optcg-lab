@@ -137,9 +137,9 @@ export interface SearchStats { decisions: number; rollouts: number; ms: number; 
 export function createSearchAgent(id: string, opts: SearchOptions = DEFAULT_SEARCH, stats?: SearchStats): OnePieceBotAgent {
   return {
     id,
-    resolvePrompt: heuristicAgent.resolvePrompt,
+    resolvePrompt: opts.rollout.resolvePrompt ?? heuristicAgent.resolvePrompt,
     choose(state, seat, legal, ctx) {
-      const base = heuristicAgent.choose(state, seat, legal, ctx);
+      const base = opts.rollout.choose(state, seat, legal, ctx);
       if (state.status !== "active") return base;
       const cands = expand(state, seat, legal, ctx);
       if (cands.length <= 1) return base ?? cands[0] ?? null;

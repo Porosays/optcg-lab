@@ -1,6 +1,7 @@
 name: Nightly lab run
 
-# Every night: play the OP-18 field against itself, let the bots build and evolve new decks,
+# Every night: play the OP-18 field against itself, teach the bots to pilot each deck (playbooks),
+# let the bots build and evolve new decks,
 # save the results to nightly/latest/, rebuild the Deck Lab site, and open an issue if a found deck
 # beats the field by a wide margin. Also runnable by hand from the Actions tab.
 on:
@@ -35,7 +36,7 @@ jobs:
         run: CI=1 pnpm install --frozen-lockfile
       - name: Play the field
         working-directory: ${{ env.SEARCH_DIR }}
-        env: { JOB: "${{ matrix.job }}" }
+        env: { JOB: "${{ matrix.job }}", OPTCG_PLAYBOOK: "${{ github.workspace }}/nightly/playbook.json" }
         run: bun run-grid.ts --decks="$FIELD" --games=40 --bot=fast --workers=4 --shards=40 --shardBase=$(( JOB * 4 )) --dir=out
       - uses: actions/upload-artifact@v4
         with: { name: "grid-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/*.jsonl" }
@@ -59,13 +60,37 @@ jobs:
         run: CI=1 pnpm install --frozen-lockfile
       - name: Build and evolve decks
         working-directory: ${{ env.SEARCH_DIR }}
-        env: { SHARD: "${{ matrix.job }}" }
+        env: { SHARD: "${{ matrix.job }}", OPTCG_PLAYBOOK: "${{ github.workspace }}/nightly/playbook.json" }
         run: bun find-decks.ts --leaders=all --pop=8 --gens=4 --games=6 --field=decks/meta.json --mode=smart --confirm=10 --knowledge="$GITHUB_WORKSPACE/nightly/knowledge.json" --shard="$SHARD" --shards=10 --workers=4 --out=out
       - uses: actions/upload-artifact@v4
         with: { name: "found-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/*.json" }
 
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10.33.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - name: Learn how to play each deck
+        working-directory: ${{ env.SEARCH_DIR }}
+        env: { SHARD: "${{ matrix.job }}" }
+        run: bun train-play.ts --decks="$FIELD" --field="$FIELD" --iters=10 --games=6 --confirm=12 --base="$GITHUB_WORKSPACE/nightly/playbook.json" --shard="$SHARD" --shards=10 --workers=4 --out=out
+      - uses: actions/upload-artifact@v4
+        with: { name: "train-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/playbook-*.json" }
+
   report:
-    needs: [grid, find]
+    needs: [grid, find, train]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -86,6 +111,8 @@ jobs:
         with: { pattern: "grid-*", path: "${{ env.SEARCH_DIR }}/out", merge-multiple: true }
       - uses: actions/download-artifact@v4
         with: { pattern: "found-*", path: "${{ env.SEARCH_DIR }}/found", merge-multiple: true }
+      - uses: actions/download-artifact@v4
+        with: { pattern: "train-*", path: "${{ env.SEARCH_DIR }}/train", merge-multiple: true }
       - name: Build reports
         working-directory: ${{ env.SEARCH_DIR }}
         run: |
@@ -94,6 +121,7 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/nightly/latest" "$GITHUB_WORKSPACE/nightly/history"
           cp out/grid.md out/grid.json found/found.md found/found-summary.json "$GITHUB_WORKSPACE/nightly/latest/" 2>/dev/null || true
           cp found/knowledge.json "$GITHUB_WORKSPACE/nightly/knowledge.json" 2>/dev/null || true
+          bun merge-playbook.ts --dir=train --base="$GITHUB_WORKSPACE/nightly/playbook.json" --out="$GITHUB_WORKSPACE/nightly/playbook.json" || true
           cp found/found-summary.json "$GITHUB_WORKSPACE/nightly/history/$(date -u +%F)-found.json" 2>/dev/null || true
           { echo "# Nightly lab run $(date -u +%F)"; echo; cat out/grid.md 2>/dev/null; echo; cat found/found.md 2>/dev/null; } >> "$GITHUB_STEP_SUMMARY"
       - name: Save results

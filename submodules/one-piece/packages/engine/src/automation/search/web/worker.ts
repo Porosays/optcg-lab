@@ -14,12 +14,17 @@ import { playReplay } from "../replay.ts";
 import { leaders, poolFor, deckToText } from "../decklist.ts";
 import { features, pairSynergy, isOld } from "../synergy.ts";
 import { poolScores, buildDeck } from "../builder.ts";
+import { setPlaybook, describePolicy } from "../playbook.ts";
 
 self.onmessage = (e: MessageEvent<any>) => {
   const m = e.data;
   const post = (x: any) => (self as any).postMessage(x);
   try {
-    if (m.type === "parse") {
+    if (m.type === "playbook") {
+      setPlaybook(m.playbook);
+      const d: Record<string, string[]> = {}; for (const [l, e] of Object.entries<any>(m.playbook ?? {})) d[l] = describePolicy(e.policy);
+      post({ type: "playbook", id: m.id, described: d });
+    } else if (m.type === "parse") {
       const p = parseDecklist(m.text, "Your deck");
       post({ type: "parsed", id: m.id, deck: p.deck, errors: p.errors, warnings: p.warnings });
     } else if (m.type === "names") {
