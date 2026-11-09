@@ -24,7 +24,12 @@ const shard = Number(arg("shard", "0")), shards = Number(arg("shards", "1"));
 const workers = arg("workers") ? Number(arg("workers")) : undefined;
 const outDir = arg("out", "out")!; mkdirSync(outDir, { recursive: true });
 const leaderArg = arg("leaders", "all")!;
-const allLeaders = leaderArg === "all" ? leaders().map((l) => l.id) : leaderArg.split(",").map((s) => s.trim()).filter(Boolean);
+// "current" = leaders that show up in the meta / OP18 lists (what people actually play now)
+const currentLeaders = () => [...new Set(["decks/meta.json", "decks/op18-preview.json", "decks/op18-community.json"].flatMap((f) => {
+  try { return (JSON.parse(readFileSync(f, "utf8")) as Deck[]).map((d) => d.leader); } catch { return []; }
+}))].sort();
+const allLeaders = leaderArg === "all" ? leaders().map((l) => l.id) : leaderArg === "current" ? currentLeaders()
+  : leaderArg.split(",").map((s) => s.trim()).filter(Boolean);
 const myLeaders = allLeaders.filter((_, i) => i % shards === shard);
 // smart = read cards, build like a player, learn from games (default). random = the old blind generator.
 const MODE = arg("mode", "smart")!;
@@ -151,12 +156,17 @@ for (const leader of myLeaders) {
   elitesAll.push(...best);
   const cf = (best[0] as any)?.confirmed;
   console.log(`${leader} ${cardName(leader)}: best ${Math.round(100 * (best[0]?.wr ?? 0))}% (${best[0]?.style})${cf ? `, confirmed ${Math.round(100 * cf.w / Math.max(1, cf.g))}% over ${cf.g} fresh games` : ""}, ${best.length} styles, ${Math.round((Date.now() - t0) / 1000)}s`);
+  save(); // after every leader, so a timeout keeps what finished
 }
 
-writeFileSync(`${outDir}/found-${shard}.json`, JSON.stringify({ field: field.map((f) => f.name), games: GAMES,
-  elites: elitesAll.map((e) => ({ ...e, ci: wilson(e.w, e.g), text: deckToText(e.deck) })),
-  cards: cardStats(), combos: combosFor(myLeaders) }, null, 0));
-saveKnowledge(`${outDir}/knowledge-${shard}.json`, learned);
+save();
+function save() {
+  const done = [...new Set(elitesAll.map((e) => e.deck.leader))];
+  writeFileSync(`${outDir}/found-${shard}.json`, JSON.stringify({ field: field.map((f) => f.name), games: GAMES,
+    elites: elitesAll.map((e) => ({ ...e, ci: wilson(e.w, e.g), text: deckToText(e.deck) })),
+    cards: cardStats(), combos: combosFor(done) }, null, 0));
+  saveKnowledge(`${outDir}/knowledge-${shard}.json`, learned);
+}
 
 /** Pairs that won more together than apart, with the card-text reason when there is one. */
 function combosFor(ls: string[]) {

@@ -5,8 +5,8 @@ on:
   workflow_dispatch:
     inputs:
       leaders:
-        description: "all, or comma-separated leader ids (e.g. OP01-001,OP05-060)"
-        default: "all"
+        description: "current (meta + OP18 leaders), all, or comma-separated leader ids"
+        default: "current"
       pop:
         description: "Decks per generation, per leader"
         default: "8"
