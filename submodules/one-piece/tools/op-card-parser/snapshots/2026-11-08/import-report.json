@@ -1,0 +1,23 @@
+{
+  "imported": 61,
+  "perCategory": {
+    "characters": 48,
+    "events": 12,
+    "leaders": 1
+  },
+  "perProduct": {
+    "EB05": 61
+  },
+  "printingsAdded": 24,
+  "unparsedEffects": [
+    "EB05-006",
+    "EB05-013",
+    "EB05-017",
+    "EB05-028",
+    "EB05-034",
+    "EB05-044",
+    "EB05-049",
+    "EB05-057"
+  ],
+  "errors": []
+}

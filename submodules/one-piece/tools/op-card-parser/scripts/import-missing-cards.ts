@@ -17,7 +17,7 @@ import type { RawOPCard } from "../src/types/scraper.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CARDS_DIR = join(__dirname, "../../../packages/cards/src/cards");
-const SNAPSHOT_DIR = join(__dirname, "../snapshots/2026-09-18");
+const SNAPSHOT_DIR = process.env.OP_SNAPSHOT_DIR ?? join(__dirname, "../snapshots/2026-09-18");
 const WRITE = process.argv.includes("--write");
 
 const TYPE_DIRS: Record<Exclude<OPCardType, "don">, string> = {

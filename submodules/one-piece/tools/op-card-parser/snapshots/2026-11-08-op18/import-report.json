@@ -1,0 +1,31 @@
+{
+  "imported": 119,
+  "perCategory": {
+    "leaders": 6,
+    "characters": 92,
+    "events": 16,
+    "stages": 5
+  },
+  "perProduct": {
+    "OP18": 119
+  },
+  "printingsAdded": 0,
+  "unparsedEffects": [
+    "OP18-001",
+    "OP18-004",
+    "OP18-005",
+    "OP18-012",
+    "OP18-020",
+    "OP18-041",
+    "OP18-045",
+    "OP18-047",
+    "OP18-061",
+    "OP18-063",
+    "OP18-066",
+    "OP18-071",
+    "OP18-087",
+    "OP18-092",
+    "OP18-105"
+  ],
+  "errors": []
+}

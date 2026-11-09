@@ -47,3 +47,8 @@ export { st06NavyHq017 } from "./st06-017-navy-hq.ts";
 export { st07QueenMamaChanter017 } from "./st07-017-queen-mama-chanter.ts";
 export { st31ThousandSunny005 } from "./st31-005-thousand-sunny.ts";
 export { pMerryGo142 } from "./p-142-merry-go.ts";
+export { op18AbyssPentagram097 } from "./op18-097-abyss-pentagram.ts";
+export { op18MiniMerry078 } from "./op18-078-mini-merry.ts";
+export { op18SharkSubmerge3076 } from "./op18-076-shark-submerge-3.ts";
+export { op18ThousandSunny075 } from "./op18-075-thousand-sunny.ts";
+export { op18WhiteHobbyHorse1077 } from "./op18-077-white-hobby-horse-1.ts";
