@@ -3,7 +3,17 @@
 Automated One Piece Card Game research: bots play each other thousands of
 times to measure how every deck does against every other deck.
 
-**Status:** early. Test decks only; real meta decks next.
+**Status:** early research tool. EB-05 and OP-18 cards are in, with real meta and community lists.
+
+## Try it in your browser (Deck Lab)
+
+Deck Lab is a web app: paste a deck, pick a field (current meta, OP-18 lists,
+classic decks) and bots play the games on your own computer, one worker per CPU core.
+It also runs a full deck-vs-deck grid, and keeps a running "lab memory" of every game
+played in that browser that friends can share with each other by copy and paste.
+GitHub Pages rebuilds and publishes it on every push (`.github/workflows/pages.yml`).
+To build it locally into `site/`, run
+`python3 submodules/one-piece/packages/engine/src/automation/search/web/build.py`.
 
 ## How it works
 

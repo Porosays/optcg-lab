@@ -6,3 +6,4 @@ results/
 .env.*
 *.pem
 *.key
+site/

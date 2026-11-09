@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OPTCG Deck Lab</title>
+<style>
+:root{--bg:#f6f5f2;--panel:#fff;--ink:#1d1d1f;--mute:#6b6b70;--line:#e3e1dc;--accent:#c8102e;--accent-ink:#fff;--good:#1f7a4d;--bad:#b3261e;--mid:#8a6d00;--chip:#f0eee9;--r:10px;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#141416;--panel:#1d1d20;--ink:#ececee;--mute:#9a9aa2;--line:#2e2e33;--accent:#ff4d5e;--accent-ink:#111;--good:#4fc58a;--bad:#ff7a70;--mid:#e0b84a;--chip:#26262b}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45}
+header{padding:22px 24px 10px;max-width:1180px;margin:0 auto}
+h1{margin:0;font-size:24px;letter-spacing:-.01em}h1 span{color:var(--accent)}
+.sub{color:var(--mute);margin:4px 0 0}
+nav{display:flex;gap:6px;max-width:1180px;margin:10px auto 0;padding:0 24px;flex-wrap:wrap}
+nav button{background:none;border:1px solid var(--line);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;font:inherit}
+nav button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+main{max-width:1180px;margin:0 auto;padding:16px 24px 60px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+label{display:block;font-size:13px;color:var(--mute);margin:10px 0 4px}
+textarea,select,input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+textarea{min-height:230px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn:disabled{opacity:.5;cursor:default}
+.msgs{font-size:13px;margin-top:8px}.err{color:var(--bad)}.warn{color:var(--mid)}.ok{color:var(--good)}
+.bar{height:8px;background:var(--chip);border-radius:99px;overflow:hidden;margin:10px 0 4px}.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.big{font-size:38px;font-weight:700;letter-spacing:-.02em}.mute{color:var(--mute)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:12px;color:var(--mute);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;background:var(--chip)}
+.wr{font-weight:600}.hi{color:var(--good)}.lo{color:var(--bad)}
+.heat td{text-align:center;font-variant-numeric:tabular-nums;font-size:13px;padding:6px 4px}
+.heat th{font-size:11px;text-transform:none;letter-spacing:0;max-width:90px;white-space:normal}
+.scroll{overflow-x:auto}
+.decklist{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.decklist span{background:var(--chip);border-radius:6px;padding:2px 8px;font-size:12px}
+details summary{cursor:pointer;color:var(--mute);font-size:13px}
+.note{font-size:13px;color:var(--mute);border-left:3px solid var(--line);padding-left:10px;margin-top:10px}
+.stats{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>OPTCG <span>Deck Lab</span></h1>
+  <p class="sub">Paste a deck, pick a field, and bots play it out right in your browser. All EB-05 and OP-18 cards are in. Results also feed this browser's lab memory.</p>
+</header>
+<nav>
+  <button data-tab="test" class="on">Test my deck</button>
+  <button data-tab="grid">Deck vs deck grid</button>
+  <button data-tab="memory">Lab memory</button>
+  <button data-tab="about">How it works</button>
+</nav>
+<main>
+
+<section id="tab-test">
+  <div class="grid2">
+    <div class="card">
+      <label for="deck">Your deck (OPTCGSim export, like <code>4xOP13-016</code>, one per line or all on one line)</label>
+      <textarea id="deck" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:8px">
+        <select id="loadDeck" aria-label="Load a deck from a field"><option value="">Load a list from the fields…</option></select>
+      </div>
+      <div class="msgs" id="parseMsgs"></div>
+    </div>
+    <div class="card">
+      <label for="field">Test against</label>
+      <select id="field"></select>
+      <div class="row">
+        <div><label for="games">Games per matchup</label><input id="games" type="number" min="2" max="2000" value="50"></div>
+        <div><label for="bot">Bot</label><select id="bot"><option value="fast">Fast (heuristic)</option><option value="deep">Deep (search, slower)</option></select></div>
+        <div><label for="workers">Cores</label><input id="workers" type="number" min="1" max="64"></div>
+      </div>
+      <div class="row" style="margin-top:14px;align-items:center">
+        <button class="btn" id="run">Run tests</button>
+        <button class="btn ghost hidden" id="stop">Stop</button>
+      </div>
+      <div class="bar"><i id="prog"></i></div>
+      <div class="mute" id="progText" style="font-size:13px">Ready.</div>
+      <p class="note">Fast bot: roughly 100–300 games a minute on an 8-core PC (stalled games slow it down). Deep bot plays better but runs about 10× slower. Mirror games are skipped.</p>
+    </div>
+  </div>
+  <div id="report" class="hidden">
+    <div class="card">
+      <div class="stats">
+        <div><div class="mute">Overall win rate</div><div class="big" id="overall">–</div><div class="mute" id="overallCi"></div></div>
+        <div><div class="mute">Going first</div><div class="big" style="font-size:26px" id="first">–</div></div>
+        <div><div class="mute">Going second</div><div class="big" style="font-size:26px" id="second">–</div></div>
+        <div><div class="mute">Games</div><div class="big" style="font-size:26px" id="ngames">–</div></div>
+      </div>
+    </div>
+    <div class="card"><h3 style="margin-top:0">Matchups</h3><div class="scroll"><table id="mu"></table></div></div>
+    <div class="card"><h3 style="margin-top:0">Cards</h3>
+      <p class="mute" style="margin-top:0;font-size:13px">“Played” = how often a copy got used. “Win lift” = win rate in games where it was used minus the deck's win rate. “Stuck” = copies left in hand at game end. Low played + high stuck = a cut candidate.</p>
+      <div class="scroll"><table id="cards"></table></div></div>
+  </div>
+</section>
+
+<section id="tab-grid" class="hidden">
+  <div class="card">
+    <div class="row">
+      <div><label for="gfield">Field</label><select id="gfield"></select></div>
+      <div><label for="ggames">Games per pairing</label><input id="ggames" type="number" min="2" max="1000" value="20"></div>
+      <div><label for="gbot">Bot</label><select id="gbot"><option value="fast">Fast</option><option value="deep">Deep</option></select></div>
+    </div>
+    <div class="row" style="margin-top:14px;align-items:center"><button class="btn" id="grun">Run grid</button><button class="btn ghost hidden" id="gstop">Stop</button></div>
+    <div class="bar"><i id="gprog"></i></div><div class="mute" id="gprogText" style="font-size:13px">Every deck plays every other deck. Cells show the row deck's win rate.</div>
+  </div>
+  <div class="card hidden" id="gout"><h3 style="margin-top:0">Ranking</h3><div class="scroll"><table id="grank"></table></div>
+    <h3>Matchup grid</h3><div class="scroll"><table class="heat" id="gheat"></table></div></div>
+</section>
+
+<section id="tab-memory" class="hidden">
+  <div class="card">
+    <h3 style="margin-top:0">What this lab has learned in this browser</h3>
+    <p class="mute" style="margin-top:0">Every game you or the grid run is added here, so stats sharpen the more you play. It stays in this browser only. Export it to share with friends or to add to the project.</p>
+    <div class="row" style="max-width:520px"><button class="btn ghost" id="mexport">Share data</button><button class="btn ghost" id="mimport">Add a friend's data</button><button class="btn ghost" id="mreset">Reset</button></div>
+    <div id="mbox" class="hidden"><label for="mtext" id="mlabel"></label><textarea id="mtext" spellcheck="false" style="min-height:120px"></textarea><div class="row" style="margin-top:8px;max-width:260px"><button class="btn hidden" id="mload">Add to my lab</button></div></div>
+    <p id="msum" class="mute"></p>
+  </div>
+  <div class="card"><h3 style="margin-top:0">Decks</h3><div class="scroll"><table id="mdecks"></table></div></div>
+  <div class="card"><h3 style="margin-top:0">Cards that win the most when played</h3><p class="mute" style="margin-top:0;font-size:13px">Pooled across every deck that ran them, with at least 30 games used.</p><div class="scroll"><table id="mcards"></table></div></div>
+</section>
+
+<section id="tab-about" class="hidden">
+  <div class="card">
+    <h3 style="margin-top:0">How it works</h3>
+    <p>The full One Piece TCG rules engine (from the open-source tcg-engines project) runs inside your browser in background workers, one per CPU core. Nothing is sent to a server. Each game shuffles both decks, picks who goes first at random, and has two bots play it out under the real rules.</p>
+    <p><b>Fields</b> are real lists: current EB-05 meta, OP-18 lists from X and LogDuel, OP-16 era decks, and classic 2023–24 decks for Extra Regulation.</p>
+    <h3>Known limits (be skeptical of close numbers)</h3>
+    <ul>
+      <li>The bots rarely hold DON!! back, so counter events and "keep DON up" leaders (like OP13-001 Luffy) are under-rated.</li>
+      <li>23 cards still have no coded effect, including the OP-18 Karoo and Ms. All Sunday leaders.</li>
+      <li>Some OP-17 Sabo and Xebec games stall and count as no result.</li>
+      <li>So far the sim matches real-world matchup reports on 7 of 20 checked matchups. Treat it as a research tool, not a tier list.</li>
+    </ul>
+    <p class="mute">Open source, for research: github.com/Porosays. Card data © Bandai; this is a fan project.</p>
+  </div>
+</section>
+</main>
+
+<script>
+const FIELDS = __FIELDS__;
+const $ = (id) => document.getElementById(id);
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+const cores = Math.max(1, Math.min(16, navigator.hardwareConcurrency || 4));
+$("workers").value = cores;
+
+/* ---------- tabs ---------- */
+document.querySelectorAll("nav button").forEach((b) => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("on", x === b));
+  for (const t of ["test", "grid", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
+  if (b.dataset.tab === "memory") renderMemory();
+});
+
+/* ---------- names ---------- */
+const NAMES = {};
+const nm = (id) => NAMES[id]?.name ? `${NAMES[id].name}` : id;
+
+/* ---------- worker pool ---------- */
+let helper; const pending = new Map(); let reqId = 0;
+function helperCall(msg) {
+  if (!helper) { helper = new Worker("worker.js"); helper.onmessage = (e) => { const p = pending.get(e.data.id); if (p) { pending.delete(e.data.id); p(e.data); } }; }
+  const id = ++reqId; return new Promise((res) => { pending.set(id, res); helper.postMessage({ ...msg, id }); });
+}
+async function loadNames(ids) { const need = [...new Set(ids)].filter((i) => !NAMES[i]); if (!need.length) return; const r = await helperCall({ type: "names", ids: need }); Object.assign(NAMES, r.names); }
+
+let running = null;
+function runJobs(jobs, bot, nWorkers, onResult) {
+  return new Promise((resolve) => {
+    const queue = jobs.slice(); const ws = []; let live = 0; let stopped = false;
+    const chunk = bot === "deep" ? 1 : 4;
+    const feed = (w) => { if (stopped || !queue.length) { w.terminate(); if (--live === 0) resolve(); return; } w.postMessage({ type: "run", id: 0, jobs: queue.splice(0, chunk), bot, budget: 16 }); };
+    for (let i = 0; i < Math.min(nWorkers, jobs.length); i++) {
+      const w = new Worker("worker.js"); ws.push(w); live++;
+      w.onmessage = (e) => { const m = e.data; if (m.type === "result") onResult(m.result); else if (m.type === "done" || m.type === "error") feed(w); };
+      feed(w);
+    }
+    if (!live) resolve();
+    running = { stop() { stopped = true; queue.length = 0; ws.forEach((w) => w.terminate()); resolve(); } };
+  });
+}
+
+/* ---------- stats ---------- */
+function wilson(w, n, z = 1.96) { if (!n) return [0, 0]; const p = w / n, d = 1 + z * z / n, c = p + z * z / (2 * n), m = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)); return [(c - m) / d, (c + m) / d]; }
+const pct = (x) => (100 * x).toFixed(0) + "%";
+const cls = (x) => x >= 0.55 ? "hi" : x <= 0.45 ? "lo" : "";
+
+/* ---------- lab memory ---------- */
+let MEM = store.get("optcg-lab-mem-v1", { games: 0, decks: {}, cards: {} });
+function remember(r) {
+  if (r.winner === null) return;
+  MEM.games++;
+  for (const side of ["a", "b"]) {
+    const name = side === "a" ? r.aName : r.bName, opp = side === "a" ? r.bName : r.aName, won = r.winner === side;
+    const d = MEM.decks[name] ??= { g: 0, w: 0, vs: {} }; d.g++; if (won) d.w++;
+    const v = d.vs[opp] ??= [0, 0]; v[1]++; if (won) v[0]++;
+    const played = side === "a" ? r.aPlayed : r.bPlayed;
+    for (const c of Object.keys(played)) { const s = MEM.cards[c] ??= [0, 0]; s[1]++; if (won) s[0]++; }
+  }
+}
+let saveT; function saveMem() { clearTimeout(saveT); saveT = setTimeout(() => store.set("optcg-lab-mem-v1", MEM), 400); }
+async function renderMemory() {
+  $("msum").textContent = `${MEM.games.toLocaleString()} finished games remembered, ${Object.keys(MEM.decks).length} decks, ${Object.keys(MEM.cards).length} cards.`;
+  const decks = Object.entries(MEM.decks).sort((a, b) => b[1].w / b[1].g - a[1].w / a[1].g);
+  $("mdecks").innerHTML = "<tr><th>Deck</th><th class=n>Games</th><th class=n>Win rate</th><th>Best vs</th><th>Worst vs</th></tr>" + decks.map(([n, d]) => {
+    const vs = Object.entries(d.vs).filter(([, v]) => v[1] >= 10).map(([o, v]) => [o, v[0] / v[1]]).sort((a, b) => b[1] - a[1]);
+    const wr = d.w / d.g; return `<tr><td>${esc(n)}</td><td class=n>${d.g}</td><td class="n wr ${cls(wr)}">${pct(wr)}</td><td>${vs[0] ? esc(vs[0][0]) + " " + pct(vs[0][1]) : "–"}</td><td>${vs.length > 1 ? esc(vs.at(-1)[0]) + " " + pct(vs.at(-1)[1]) : "–"}</td></tr>`;
+  }).join("");
+  const cards = Object.entries(MEM.cards).filter(([, s]) => s[1] >= 30).sort((a, b) => b[1][0] / b[1][1] - a[1][0] / a[1][1]).slice(0, 40);
+  await loadNames(cards.map(([c]) => c));
+  $("mcards").innerHTML = "<tr><th>Card</th><th class=n>Games used</th><th class=n>Win rate when used</th></tr>" + cards.map(([c, s]) => `<tr><td>${esc(nm(c))} <span class="pill">${c}</span></td><td class=n>${s[1]}</td><td class="n wr ${cls(s[0] / s[1])}">${pct(s[0] / s[1])}</td></tr>`).join("");
+}
+$("mexport").onclick = () => { $("mbox").classList.remove("hidden"); $("mload").classList.add("hidden"); $("mlabel").textContent = "Copy this and send it to a friend. They paste it under “Add a friend's data”."; $("mtext").value = JSON.stringify(MEM); $("mtext").select(); };
+$("mimport").onclick = () => { $("mbox").classList.remove("hidden"); $("mload").classList.remove("hidden"); $("mlabel").textContent = "Paste a friend's shared data here."; $("mtext").value = ""; $("mtext").focus(); };
+$("mload").onclick = () => { try { mergeMem(JSON.parse($("mtext").value)); saveMem(); $("mbox").classList.add("hidden"); renderMemory(); } catch { alertBox("That text isn't shared lab data."); } };
+function mergeMem(m) { MEM.games += m.games || 0; for (const [n, d] of Object.entries(m.decks || {})) { const t = MEM.decks[n] ??= { g: 0, w: 0, vs: {} }; t.g += d.g; t.w += d.w; for (const [o, v] of Object.entries(d.vs)) { const x = t.vs[o] ??= [0, 0]; x[0] += v[0]; x[1] += v[1]; } } for (const [c, s] of Object.entries(m.cards || {})) { const x = MEM.cards[c] ??= [0, 0]; x[0] += s[0]; x[1] += s[1]; } }
+$("mreset").onclick = () => { MEM = { games: 0, decks: {}, cards: {} }; store.set("optcg-lab-mem-v1", MEM); renderMemory(); };
+function alertBox(t) { $("msum").textContent = t; }
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------- field selects ---------- */
+for (const sel of ["field", "gfield"]) for (const [k, f] of Object.entries(FIELDS)) $(sel).insertAdjacentHTML("beforeend", `<option value="${k}">${esc(f.label)} · ${f.decks.length} decks</option>`);
+for (const [k, f] of Object.entries(FIELDS)) $("loadDeck").insertAdjacentHTML("beforeend", `<optgroup label="${esc(f.label)}">${f.decks.map((d, i) => `<option value="${k}|${i}">${esc(d.name)}</option>`).join("")}</optgroup>`);
+const toText = (d) => { const c = {}; for (const id of d.main) c[id] = (c[id] || 0) + 1; return [`1x${d.leader}`, ...Object.entries(c).map(([id, n]) => `${n}x${id}`)].join("\n"); };
+$("loadDeck").onchange = (e) => { if (!e.target.value) return; const [k, i] = e.target.value.split("|"); $("deck").value = toText(FIELDS[k].decks[+i]); $("deck").dataset.name = FIELDS[k].decks[+i].name; check(); };
+$("deck").value = toText(FIELDS.meta.decks[0]); $("deck").dataset.name = FIELDS.meta.decks[0].name;
+$("deck").oninput = () => { delete $("deck").dataset.name; clearTimeout(window._pt); window._pt = setTimeout(check, 300); };
+
+let parsed = null;
+async function check() {
+  const r = await helperCall({ type: "parse", text: $("deck").value });
+  parsed = r.errors.length ? null : r.deck;
+  const total = r.deck ? r.deck.main.length : 0;
+  $("parseMsgs").innerHTML = r.errors.map((x) => `<div class=err>${esc(x)}</div>`).join("") + r.warnings.map((x) => `<div class=warn>${esc(x)}</div>`).join("") + (parsed ? `<div class=ok>Leader ${esc(parsed.leader)} + ${total} cards. Ready.</div>` : "");
+  $("run").disabled = !parsed;
+}
+check();
+
+/* ---------- test my deck ---------- */
+$("stop").onclick = () => running?.stop();
+$("run").onclick = async () => {
+  if (!parsed) return;
+  const me = { ...parsed, name: $("deck").dataset.name ? $("deck").dataset.name + " (yours)" : "Your deck" };
+  const field = FIELDS[$("field").value].decks.filter((d) => !(d.leader === me.leader && d.main.join() === me.main.join()));
+  const n = Math.max(2, Math.min(2000, +$("games").value || 50));
+  const jobs = []; for (const d of field) for (let k = 0; k < n; k++) jobs.push({ id: d.name, a: me, b: { name: d.name, leader: d.leader, main: d.main }, k });
+  const res = []; const t0 = performance.now();
+  ui(true); $("report").classList.remove("hidden");
+  let lastDraw = 0;
+  await runJobs(jobs, $("bot").value, +$("workers").value || cores, (r) => {
+    res.push(r); remember(r);
+    $("prog").style.width = (100 * res.length / jobs.length) + "%";
+    const s = (performance.now() - t0) / 1000; const eta = s / res.length * (jobs.length - res.length);
+    $("progText").textContent = `${res.length} / ${jobs.length} games · ${s.toFixed(0)}s · ${eta > 1 ? "about " + Math.ceil(eta) + "s left" : "finishing"}`;
+    if (performance.now() - lastDraw > 700) { lastDraw = performance.now(); report(res, me); }
+  });
+  saveMem(); report(res, me); ui(false);
+  $("progText").textContent = `Done: ${res.length} games in ${((performance.now() - t0) / 1000).toFixed(0)}s.`;
+};
+function ui(on) { $("run").disabled = on; $("grun").disabled = on; $("stop").classList.toggle("hidden", !on); $("gstop").classList.toggle("hidden", !on); }
+
+async function report(res, me) {
+  const fin = res.filter((r) => r.winner !== null);
+  const w = fin.filter((r) => r.winner === "a").length;
+  const f = fin.filter((r) => r.aFirst), s = fin.filter((r) => !r.aFirst);
+  const wr = (a) => a.length ? a.filter((r) => r.winner === "a").length / a.length : 0;
+  $("overall").textContent = fin.length ? pct(w / fin.length) : "–";
+  const [lo, hi] = wilson(w, fin.length); $("overallCi").textContent = fin.length ? `likely ${pct(lo)}–${pct(hi)}` : "";
+  $("first").textContent = f.length ? pct(wr(f)) : "–"; $("second").textContent = s.length ? pct(wr(s)) : "–";
+  $("ngames").textContent = res.length + (res.length - fin.length ? ` (${res.length - fin.length} stalled)` : "");
+  const by = {}; for (const r of res) (by[r.bName] ??= []).push(r);
+  const rows = Object.entries(by).map(([name, rs]) => { const fn = rs.filter((r) => r.winner !== null); const ww = fn.filter((r) => r.winner === "a").length; return { name, n: fn.length, stall: rs.length - fn.length, wr: fn.length ? ww / fn.length : 0, ci: wilson(ww, fn.length), f: wr(fn.filter((r) => r.aFirst)), s: wr(fn.filter((r) => !r.aFirst)), turns: fn.reduce((a, r) => a + r.turns, 0) / (fn.length || 1) }; }).sort((a, b) => a.wr - b.wr);
+  $("mu").innerHTML = "<tr><th>Opponent</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>1st</th><th class=n>2nd</th><th class=n>Avg turns</th><th class=n>Games</th></tr>" + rows.map((r) => `<tr><td>${esc(r.name)}</td><td class="n wr ${cls(r.wr)}">${pct(r.wr)}</td><td class="n mute">${pct(r.ci[0])}–${pct(r.ci[1])}</td><td class=n>${pct(r.f)}</td><td class=n>${pct(r.s)}</td><td class=n>${r.turns.toFixed(1)}</td><td class=n>${r.n}${r.stall ? ` <span class=mute>+${r.stall} stalled</span>` : ""}</td></tr>`).join("");
+  const base = fin.length ? w / fin.length : 0;
+  const copies = {}; for (const id of me.main) copies[id] = (copies[id] || 0) + 1;
+  await loadNames([me.leader, ...Object.keys(copies)]);
+  const cards = Object.keys(copies).map((id) => {
+    let used = 0, usedW = 0, played = 0, dead = 0;
+    for (const r of fin) { const p = r.aPlayed[id] || 0; played += p; dead += r.aDead[id] || 0; if (p) { used++; if (r.winner === "a") usedW++; } }
+    return { id, n: copies[id], playRate: fin.length ? played / (fin.length * copies[id]) : 0, lift: used >= 5 ? usedW / used - base : null, dead: fin.length ? dead / fin.length : 0 };
+  }).sort((a, b) => (b.lift ?? -9) - (a.lift ?? -9));
+  $("cards").innerHTML = "<tr><th>Card</th><th class=n>Copies</th><th class=n>Played</th><th class=n>Win lift</th><th class=n>Stuck / game</th></tr>" + cards.map((c) => `<tr><td>${esc(nm(c.id))} <span class=pill>${c.id}</span></td><td class=n>${c.n}</td><td class=n>${pct(c.playRate)}</td><td class="n wr ${c.lift == null ? "" : c.lift > 0.03 ? "hi" : c.lift < -0.03 ? "lo" : ""}">${c.lift == null ? "–" : (c.lift > 0 ? "+" : "") + (100 * c.lift).toFixed(0) + " pts"}</td><td class=n>${c.dead.toFixed(2)}</td></tr>`).join("");
+}
+
+/* ---------- grid ---------- */
+$("gstop").onclick = () => running?.stop();
+$("grun").onclick = async () => {
+  const decks = FIELDS[$("gfield").value].decks; const n = Math.max(2, Math.min(1000, +$("ggames").value || 20));
+  const jobs = []; for (let i = 0; i < decks.length; i++) for (let j = i + 1; j < decks.length; j++) for (let k = 0; k < n; k++) jobs.push({ id: i + "|" + j, a: decks[i], b: decks[j], k });
+  const M = decks.map(() => decks.map(() => [0, 0])); let done = 0; const t0 = performance.now();
+  ui(true); $("gout").classList.remove("hidden"); let last = 0;
+  await runJobs(jobs, $("gbot").value, cores, (r) => {
+    done++; remember(r); const [i, j] = r.id.split("|").map(Number);
+    if (r.winner) { M[i][j][1]++; M[j][i][1]++; if (r.winner === "a") { M[i][j][0]++; } else { M[j][i][0]++; } }
+    $("gprog").style.width = (100 * done / jobs.length) + "%";
+    const s = (performance.now() - t0) / 1000; $("gprogText").textContent = `${done} / ${jobs.length} games · ${s.toFixed(0)}s · about ${Math.ceil(s / done * (jobs.length - done))}s left`;
+    if (performance.now() - last > 900) { last = performance.now(); drawGrid(decks, M); }
+  });
+  saveMem(); drawGrid(decks, M); ui(false); $("gprogText").textContent = `Done: ${done} games in ${((performance.now() - t0) / 1000).toFixed(0)}s.`;
+};
+function drawGrid(decks, M) {
+  const tot = decks.map((_, i) => M[i].reduce((a, c) => [a[0] + c[0], a[1] + c[1]], [0, 0]));
+  const order = decks.map((_, i) => i).sort((a, b) => (tot[b][0] / (tot[b][1] || 1)) - (tot[a][0] / (tot[a][1] || 1)));
+  $("grank").innerHTML = "<tr><th>#</th><th>Deck</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>Games</th></tr>" + order.map((i, r) => { const [w, n] = tot[i]; const ci = wilson(w, n); return `<tr><td>${r + 1}</td><td>${esc(decks[i].name)}</td><td class="n wr ${cls(w / (n || 1))}">${n ? pct(w / n) : "–"}</td><td class="n mute">${n ? pct(ci[0]) + "–" + pct(ci[1]) : ""}</td><td class=n>${n}</td></tr>`; }).join("");
+  const color = (x) => { const h = x >= 0.5 ? 150 : 5; const a = Math.min(1, Math.abs(x - 0.5) * 2.4); return `background:hsla(${h},60%,45%,${(a * 0.55).toFixed(2)})`; };
+  $("gheat").innerHTML = "<tr><th></th>" + order.map((j) => `<th title="${esc(decks[j].name)}">${esc(decks[j].name.slice(0, 22))}</th>`).join("") + "</tr>" + order.map((i) => `<tr><th style="text-align:left">${esc(decks[i].name)}</th>` + order.map((j) => { if (i === j) return "<td class=mute>–</td>"; const [w, n] = M[i][j]; return n ? `<td style="${color(w / n)}" title="${n} games">${pct(w / n)}</td>` : "<td></td>"; }).join("") + "</tr>").join("");
+}
+</script>
+</body>
+</html>
