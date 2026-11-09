@@ -31,8 +31,23 @@ bun run-grid.ts --decks=decks/test-decks.json --games=20 --bot=fast --dir=out
 bun aggregate.ts --decks=decks/test-decks.json --dir=out
 ```
 
-On GitHub: **Actions → Matchup grid → Run workflow**. Results appear on the
-run's summary page and as a downloadable `matchup-grid` artifact.
+On GitHub, open **Actions** and pick one:
+
+- **Test my deck:** paste a list in OPTCGSim format (`1xOP01-001 4xOP01-016 ...`).
+  You get win rates against each deck in the field, going first vs second,
+  per-card stats (how often each card gets played, win-rate lift, how often
+  it is stuck in hand in losses) and tested one-card swap ideas.
+- **Find decks:** bots build decks for every leader from the full card pool
+  (old sets included), evolve them with one-card swaps, ratio tweaks and
+  old-card injections, and keep the best deck in each style bucket. The
+  report ranks the decks, lists the cards that lift decks most, and prints
+  lists ready to paste into OPTCGSim.
+- **Matchup grid:** every deck in a deck file against every other.
+
+Results show on the run's summary page and as downloadable artifacts.
+
+Known bot limit: the bots rarely cast [Counter] Events on defense, so
+event-heavy lists are underrated for now.
 
 ## Caveats
 

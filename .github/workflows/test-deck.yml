@@ -1,0 +1,55 @@
+name: Test my deck
+
+# Paste a decklist (OPTCGSim format, e.g. "1xOP01-001 4xOP01-016 ..."), get a report.
+on:
+  workflow_dispatch:
+    inputs:
+      decklist:
+        description: "Decklist: 1xLEADER then 4xCARD ... (spaces, commas or new lines all work)"
+        required: true
+      games:
+        description: "Games per matchup"
+        default: "40"
+      swaps:
+        description: "Swap ideas to test"
+        default: "12"
+      field:
+        description: "Opponent deck file (inside the search folder)"
+        default: "decks/test-decks.json"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: submodules/one-piece/packages/engine/src/automation/search
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - name: Test the deck
+        env:
+          DECKLIST: ${{ inputs.decklist }}
+          GAMES: ${{ inputs.games }}
+          SWAPS: ${{ inputs.swaps }}
+          FIELD: ${{ inputs.field }}
+        run: |
+          set +e
+          bun test-deck.ts --games="$GAMES" --swaps="$SWAPS" --field="$FIELD" --workers=4 --out=out
+          cat out/report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deck-report
+          path: submodules/one-piece/packages/engine/src/automation/search/out/

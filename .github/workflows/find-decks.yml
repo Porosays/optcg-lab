@@ -1,0 +1,95 @@
+name: Find decks
+
+# Bots build decks for every leader from the full card pool, evolve them, and report the best.
+on:
+  workflow_dispatch:
+    inputs:
+      leaders:
+        description: "all, or comma-separated leader ids (e.g. OP01-001,OP05-060)"
+        default: "all"
+      pop:
+        description: "Decks per generation, per leader"
+        default: "8"
+      gens:
+        description: "Generations of mutation"
+        default: "4"
+      games:
+        description: "Games per matchup per deck"
+        default: "6"
+      field:
+        description: "Opponent deck file (inside the search folder)"
+        default: "decks/test-decks.json"
+
+permissions:
+  contents: read
+
+env:
+  SEARCH_DIR: submodules/one-piece/packages/engine/src/automation/search
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - name: Build and evolve decks
+        working-directory: ${{ env.SEARCH_DIR }}
+        env:
+          LEADERS: ${{ inputs.leaders }}
+          POP: ${{ inputs.pop }}
+          GENS: ${{ inputs.gens }}
+          GAMES: ${{ inputs.games }}
+          FIELD: ${{ inputs.field }}
+          SHARD: ${{ matrix.job }}
+        run: bun find-decks.ts --leaders="$LEADERS" --pop="$POP" --gens="$GENS" --games="$GAMES" --field="$FIELD" --shard="$SHARD" --shards=20 --workers=4 --out=out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: found-${{ matrix.job }}
+          path: ${{ env.SEARCH_DIR }}/out/found-*.json
+
+  report:
+    needs: search
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: found-*
+          path: ${{ env.SEARCH_DIR }}/out
+          merge-multiple: true
+      - name: Build report
+        working-directory: ${{ env.SEARCH_DIR }}
+        run: |
+          bun find-report.ts --dir=out
+          cat out/found.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: found-decks
+          path: |
+            ${{ env.SEARCH_DIR }}/out/found.md
+            ${{ env.SEARCH_DIR }}/out/found-decks.json

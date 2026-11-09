@@ -91,6 +91,8 @@ export interface HeuristicPolicy {
   readonly blockerPlayBonus: number;
   /** Cap on active DON!! reserved for [Counter] Events (0–3). */
   readonly counterDonReserveCap: number;
+  /** Opt-in: also keep the [Counter] reserve when paying for Character plays. Tested 2026-11-08: 46% vs off (288 games), so off by default. */
+  readonly reserveForCharacters?: boolean;
   /** Prefer going first when cheap openers >= this count (lower = more first). */
   readonly firstPlayerCheapThreshold: number;
   /** Max cost treated as a playable opener for mulligan (lower = tighter curve). */
@@ -591,6 +593,9 @@ export function createHeuristicStrategy(policy: HeuristicPolicy): OnePieceBotStr
           if (descriptor.slotChoices !== undefined && descriptor.slotChoices.length === 0) break;
           const card = getCardForInstance(state, descriptor.sourceId);
           if (card.cardType === "character") {
+            // OPTCG Lab fix: without this, Character plays spend the DON!! banked
+            // for [Counter] Events, so those Events were never castable on defense.
+            if (policy.reserveForCharacters === true && donReserve > 0 && activeDon - baseCost(card) < donReserve) break;
             score = scoreCharacterPlay(state, descriptor.sourceId, activeDon, policy);
           } else if (card.cardType === "event") {
             score = scoreEventPlay(state, seat, descriptor.sourceId, policy);
