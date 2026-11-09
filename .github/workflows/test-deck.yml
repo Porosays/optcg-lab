@@ -15,7 +15,7 @@ on:
         default: "12"
       field:
         description: "Opponent deck file (inside the search folder)"
-        default: "decks/test-decks.json"
+        default: "decks/meta.json"
 
 permissions:
   contents: read

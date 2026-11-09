@@ -12,7 +12,7 @@ import type { GameResult, Job } from "./match-worker.ts";
 const arg = (n: string, d?: string) => process.argv.find((x) => x.startsWith(`--${n}=`))?.slice(n.length + 3) ?? d;
 const listArg = arg("list");
 const text = listArg && existsSync(listArg) ? readFileSync(listArg, "utf8") : (process.env.DECKLIST ?? listArg ?? "");
-const field: Deck[] = JSON.parse(readFileSync(arg("field", "decks/test-decks.json")!, "utf8"));
+const field: Deck[] = JSON.parse(readFileSync(arg("field", "decks/meta.json")!, "utf8"));
 const games = Number(arg("games", "40")), swaps = Number(arg("swaps", "12")), bot = arg("bot", "fast")!;
 const outDir = arg("out", "out")!; mkdirSync(outDir, { recursive: true });
 

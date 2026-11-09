@@ -5,6 +5,16 @@
 import { getAllCards, getCard, hasCard, validateDeckForFormat } from "@tcg/op-cards";
 import type { OPCard } from "@tcg/op-types";
 
+/** Official banlist in force since 2026-10-12 (en.onepiece-cardgame.com/news/restriction-261001.html). */
+export const BANNED = new Set(["OP14-020", "OP06-047", "OP03-040", "OP06-086", "ST10-001", "OP06-116"]);
+export const BANNED_PAIRS: Array<[string, string]> = [["OP11-040", "OP11-067"], ["OP11-040", "OP08-069"], ["OP07-115", "EB04-058"]];
+export function banIssues(ids: string[]): string[] {
+  const canon = new Set(ids.map((id) => getCard(id).canonicalId));
+  const out = [...canon].filter((id) => BANNED.has(id)).map((id) => `Banned card: ${id} ${getCard(id).name}`);
+  for (const [a, b] of BANNED_PAIRS) if (canon.has(a) && canon.has(b)) out.push(`Banned pair: ${a} and ${b} can't share a deck`);
+  return out;
+}
+
 export interface Deck { name: string; leader: string; main: string[] }
 
 export interface ParseResult { deck: Deck | null; errors: string[]; warnings: string[] }
@@ -26,6 +36,7 @@ export function parseDecklist(text: string, name = "my-deck"): ParseResult {
   if (errors.length) return { deck: null, errors, warnings };
   const v = validateDeckForFormat("standard", entries);
   for (const r of v.rules) if (!r.passed) errors.push(r.message);
+  errors.push(...banIssues(entries.map((e) => e.cardId)));
   const main = entries.filter((e) => getCard(e.cardId).cardType !== "leader" && getCard(e.cardId).cardType !== "don")
     .flatMap((e) => Array(e.quantity).fill(e.cardId) as string[]);
   return { deck: errors.length ? null : { name, leader: leaders[0]!.cardId, main }, errors, warnings };
@@ -43,7 +54,8 @@ export function deckToText(deck: Deck): string {
 export function isLegal(deck: Deck): boolean {
   const counts = new Map<string, number>([[deck.leader, 1]]);
   for (const id of deck.main) counts.set(id, (counts.get(id) ?? 0) + 1);
-  return validateDeckForFormat("standard", [...counts].map(([cardId, quantity]) => ({ cardId, quantity }))).valid;
+  return validateDeckForFormat("standard", [...counts].map(([cardId, quantity]) => ({ cardId, quantity }))).valid
+    && banIssues([...counts.keys()]).length === 0;
 }
 
 export const cost = (id: string) => { const c = getCard(id) as any; return typeof c.cost === "number" ? c.cost : 0; };
@@ -57,7 +69,7 @@ export function donCount(leaderId: string): number {
 }
 
 export function leaders(): OPCard[] {
-  return getAllCards().filter((c) => c.cardType === "leader" && !(c as any).designatedEventsOnly);
+  return getAllCards().filter((c) => c.cardType === "leader" && !(c as any).designatedEventsOnly && !BANNED.has(c.canonicalId));
 }
 
 /** Every main-deck card a leader may legally include (colors + leader restrictions). */
@@ -66,7 +78,7 @@ export function poolFor(leaderId: string): string[] {
   const out: string[] = [];
   for (const c of getAllCards()) {
     if (c.cardType !== "character" && c.cardType !== "event" && c.cardType !== "stage") continue;
-    if (c.id !== c.canonicalId) continue;
+    if (c.id !== c.canonicalId || BANNED.has(c.canonicalId)) continue;
     if (!c.color.some((col) => leader.color.includes(col))) continue;
     out.push(c.id);
   }

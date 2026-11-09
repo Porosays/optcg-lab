@@ -15,7 +15,7 @@ import { runJobs, wilson } from "./pool.ts";
 import type { Job } from "./match-worker.ts";
 
 const arg = (n: string, d?: string) => process.argv.find((x) => x.startsWith(`--${n}=`))?.slice(n.length + 3) ?? d;
-const field: Deck[] = JSON.parse(readFileSync(arg("field", "decks/test-decks.json")!, "utf8"));
+const field: Deck[] = JSON.parse(readFileSync(arg("field", "decks/meta.json")!, "utf8"));
 const POP = Number(arg("pop", "8")), GENS = Number(arg("gens", "5")), GAMES = Number(arg("games", "6"));
 const shard = Number(arg("shard", "0")), shards = Number(arg("shards", "1"));
 const workers = arg("workers") ? Number(arg("workers")) : undefined;
