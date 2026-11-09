@@ -13,7 +13,7 @@ import { commandFromDescriptor, type OnePieceBotAgent, type OnePieceBotDecisionC
 import { heuristicAgent } from "../heuristic-strategy.ts";
 import { getCardForInstance, getCardPower } from "../../shared.ts";
 import { cloneApply, trimmed } from "./fast-apply.ts";
-import { nextCommand } from "./fast-play.ts";
+import { stepSafe } from "./fast-play.ts";
 
 export interface SearchOptions {
   /** Total imagined futures per decision. */
@@ -125,9 +125,7 @@ function rollout(state: MatchState, seat: MatchSeat, first: EngineCommand, opts:
   const ctx = { random };
   for (let i = 0; i < opts.maxRolloutCommands; i++) {
     if (s.status === "finished" || s.turnNumber >= stopAt) break;
-    const { command } = nextCommand(s, agents, ctx);
-    if (!command) break;
-    const r = cloneApply(s, command);
+    const r = stepSafe(s, agents, ctx, cloneApply);
     if (!r.accepted) break;
     s = r.state;
   }

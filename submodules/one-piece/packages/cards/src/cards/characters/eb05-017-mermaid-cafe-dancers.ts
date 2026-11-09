@@ -27,5 +27,16 @@ export const eb05MermaidCafeDancers017: CharacterCard = {
   attribute: "wisdom",
   effect:
     "[On Your Opponent's Attack] You may rest 1 of your DON!! cards and trash this Character: Your {Fish-Man} or {Merfolk} type Leader gains +4000 power during this battle.",
+  effects: {
+    effects: [
+      {
+        trigger: "onOpponentAttack",
+        costs: [{ cost: "restDon", amount: 1 }, { cost: "trashThisCard" }],
+        conditions: [{ condition: "compound", operator: "or", conditions: [{ condition: "leaderTrait", trait: "Fish-Man", match: "exact" }, { condition: "leaderTrait", trait: "Merfolk", match: "exact" }] }],
+        actions: [{ action: "modifyPower", target: { player: "self", zones: ["leader"], count: { amount: 1 } }, value: 4000, duration: "thisBattle" }],
+        optional: true,
+      },
+    ],
+  },
   i18n: eb05MermaidCafeDancers017I18n,
 };

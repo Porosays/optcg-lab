@@ -56,3 +56,40 @@ export function playOut(
   }
   return { state: s, commands: opts.maxCommands, broken: false };
 }
+
+type ApplyFn = (s: MatchState, c: EngineCommand) => { accepted: boolean; state: MatchState };
+
+/**
+ * One decision plus apply, with a fallback when a prompt answer is rejected.
+ * Some effects limit the total cost of what you pick (e.g. "K.O. Characters with a total cost of 4 or less");
+ * the bots can pick an illegal combination there. Instead of stalling the game, try smaller picks,
+ * then the engine's default answer, then each single option.
+ */
+export function stepSafe(
+  state: MatchState,
+  agents: Record<MatchSeat, OnePieceBotAgent>,
+  ctx: OnePieceBotDecisionContext,
+  apply: ApplyFn,
+): { state: MatchState; command: EngineCommand | null; accepted: boolean; fallback: boolean } {
+  const { command } = nextCommand(state, agents, ctx);
+  if (!command) return { state, command: null, accepted: false, fallback: false };
+  const r = apply(state, command);
+  if (r.accepted) return { state: r.state, command, accepted: true, fallback: false };
+  const c: any = command;
+  if (c.type !== "resolvePrompt") return { state, command, accepted: false, fallback: false };
+  const prompt: any = state.promptQueue.find((p: any) => p.id === c.promptId);
+  const tries: EngineCommand[] = [];
+  const sel: string[] = c.selectedIds ?? [];
+  for (let n = sel.length - 1; n >= (prompt?.minSelections ?? 0); n--) tries.push({ ...c, selectedIds: sel.slice(0, n) });
+  if (prompt) {
+    const d = resolveBotPromptCommand(state, prompt);
+    if (d) tries.push(d);
+    for (const o of prompt.options ?? []) tries.push({ ...c, optionId: undefined, selectedIds: [o.id] });
+    for (const o of prompt.options ?? []) tries.push({ ...c, selectedIds: undefined, optionId: o.id });
+  }
+  for (const t of tries) {
+    const rr = apply(state, t);
+    if (rr.accepted) return { state: rr.state, command: t, accepted: true, fallback: true };
+  }
+  return { state, command, accepted: false, fallback: true };
+}

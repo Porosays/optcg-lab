@@ -27,5 +27,14 @@ export const op18Mr1DazBonez047: CharacterCard = {
   attribute: "slash",
   effect:
     "[On Play] Your Leader with the {Cross Guild} type or a type including \"Baroque Works\" gains [Unblockable] during this turn.(This card cannot be blocked.)",
+  effects: {
+    effects: [
+      {
+        trigger: "onPlay",
+        conditions: [{ condition: "compound", operator: "or", conditions: [{ condition: "leaderTrait", trait: "Cross Guild", match: "exact" }, { condition: "leaderTrait", trait: "Baroque Works", match: "includes" }] }],
+        actions: [{ action: "grantKeyword", target: { player: "self", zones: ["leader"], count: { amount: 1 } }, keyword: "unblockable", duration: "thisTurn" }],
+      },
+    ],
+  },
   i18n: op18Mr1DazBonez047I18n,
 };

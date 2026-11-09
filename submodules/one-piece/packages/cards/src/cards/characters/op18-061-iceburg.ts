@@ -27,5 +27,23 @@ export const op18Iceburg061: CharacterCard = {
   attribute: "wisdom",
   effect:
     "[On Play] Look at 5 cards from the top of your deck; reveal up to a total of 2 Stage cards or {Water Seven} type cards and add them to your hand. Then, place the rest at the bottom of your deck in any order.",
+  effects: {
+    effects: [
+      {
+        trigger: "onPlay",
+        actions: [
+          {
+            action: "search",
+            lookCount: 5,
+            source: { player: "self", zone: "deck" },
+            revealCount: { amount: 2, upTo: true },
+            revealFilters: [{ filter: "anyOf", filters: [{ filter: "cardCategory", value: "stage" }, { filter: "trait", value: "Water Seven", match: "exact" }] }],
+            revealDestination: "hand",
+            remainderPosition: "bottom",
+          },
+        ],
+      },
+    ],
+  },
   i18n: op18Iceburg061I18n,
 };

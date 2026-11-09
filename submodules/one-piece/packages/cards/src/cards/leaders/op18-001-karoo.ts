@@ -26,5 +26,41 @@ export const op18Karoo001: LeaderCard = {
   attribute: "strike",
   effect:
     "All of your Characters with both the {Animal} and {Alabasta} types gain [Rush] and +1000 power.[Once Per Turn] When your {Alabasta} type Character is K.O.'d, draw 1 card.",
+  effects: {
+    effects: [
+      {
+        // [Once Per Turn] When your {Alabasta} type Character is K.O.'d, draw 1 card.
+        trigger: "whenCharacterKod",
+        eventFilter: { player: "self", filters: [{ filter: "trait", value: "Alabasta", match: "exact" }] },
+        actions: [{ action: "draw", player: "self", amount: 1 }],
+        oncePerTurn: true,
+      },
+    ],
+    permanentEffects: [
+      {
+        // All of your Characters with both the {Animal} and {Alabasta} types gain [Rush] and +1000 power.
+        actions: [
+          {
+            action: "modifyPower",
+            target: { player: "self", zones: ["character"], count: { amount: "all" }, filters: [
+                { filter: "trait", value: "Animal", match: "exact" },
+                { filter: "trait", value: "Alabasta", match: "exact" },
+              ] },
+            value: 1000,
+            duration: "permanent",
+          },
+          {
+            action: "grantKeyword",
+            target: { player: "self", zones: ["character"], count: { amount: "all" }, filters: [
+                { filter: "trait", value: "Animal", match: "exact" },
+                { filter: "trait", value: "Alabasta", match: "exact" },
+              ] },
+            keyword: "rush",
+            duration: "permanent",
+          },
+        ],
+      },
+    ],
+  },
   i18n: op18Karoo001I18n,
 };

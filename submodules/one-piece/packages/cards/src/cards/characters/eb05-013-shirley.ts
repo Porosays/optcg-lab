@@ -27,5 +27,17 @@ export const eb05Shirley013: CharacterCard = {
   attribute: "wisdom",
   effect:
     "[On Your Opponent's Attack] [Once Per Turn] You may rest 1 of your DON!! cards: Your {Fish-Man} or {Merfolk} type Leader gains +2000 power during this battle.",
+  effects: {
+    effects: [
+      {
+        trigger: "onOpponentAttack",
+        costs: [{ cost: "restDon", amount: 1 }],
+        conditions: [{ condition: "compound", operator: "or", conditions: [{ condition: "leaderTrait", trait: "Fish-Man", match: "exact" }, { condition: "leaderTrait", trait: "Merfolk", match: "exact" }] }],
+        actions: [{ action: "modifyPower", target: { player: "self", zones: ["leader"], count: { amount: 1 } }, value: 2000, duration: "thisBattle" }],
+        optional: true,
+        oncePerTurn: true,
+      },
+    ],
+  },
   i18n: eb05Shirley013I18n,
 };

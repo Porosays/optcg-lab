@@ -9,7 +9,7 @@ import { createMatch } from "../../core.ts";
 import { heuristicAgent } from "../heuristic-strategy.ts";
 import type { MatchConfig, MatchSeat } from "../../types.ts";
 import { cloneApply, trimmed } from "./fast-apply.ts";
-import { nextCommand } from "./fast-play.ts";
+import { stepSafe } from "./fast-play.ts";
 import { createSearchAgent, DEFAULT_SEARCH } from "./search-agent.ts";
 import type { OnePieceBotAgent } from "../bot-strategies.ts";
 
@@ -43,9 +43,8 @@ for (const [i, j, k] of mine) {
   const agents = { south: mkAgent(), north: mkAgent() };
   let cmds = 0, broken = false;
   for (; cmds < 2000 && s.status !== "finished"; cmds++) {
-    const { command } = nextCommand(s, agents, ctx);
-    if (!command) { broken = true; break; }
-    const res = cloneApply(s, command);
+    let res;
+    try { res = stepSafe(s, agents, ctx, cloneApply); } catch { broken = true; break; }
     if (!res.accepted) { broken = true; break; }
     s = res.state;
   }

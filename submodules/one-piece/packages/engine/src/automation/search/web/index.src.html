@@ -47,23 +47,47 @@ details summary{cursor:pointer;color:var(--mute);font-size:13px}
 .zone{display:flex;flex-wrap:wrap;gap:6px;min-height:52px}.unit{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 8px;font-size:12px;width:118px;line-height:1.25}.unit.rest{opacity:.55;transform:rotate(-3deg)}.unit.lead{border-color:var(--accent)}.unit b{display:block;font-size:12.5px}.don{color:var(--mid);font-weight:600}
 .counts{font-size:12px;color:var(--mute);display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
 .watch{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}@media(max-width:900px){.watch{grid-template-columns:1fr}}
-.log{max-height:520px;overflow:auto;font-size:13px;border:1px solid var(--line);border-radius:8px}.log div{padding:5px 10px;border-bottom:1px solid var(--line);cursor:pointer}.log div.t{background:var(--chip);font-weight:600}.log div.on{background:var(--accent);color:var(--accent-ink)}
+.log{max-height:520px;overflow:auto;font-size:13px;border:1px solid var(--line);border-radius:8px}.log div{padding:5px 10px;border-bottom:1px solid var(--line);cursor:pointer}.log div.t{background:var(--chip);font-weight:600}.log div.key{color:var(--accent);font-weight:600}.log div.key.on{color:var(--accent-ink)}.log div.on{background:var(--accent);color:var(--accent-ink)}
 .ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0}.ctrl .btn{padding:7px 12px}
 .now{font-size:15px;font-weight:600;min-height:22px;margin:6px 0}
 .tier{display:inline-block;width:22px;text-align:center;border-radius:5px;font-weight:700;font-size:12px;padding:1px 0}.tS{background:#c8102e;color:#fff}.tA{background:#e46a2e;color:#fff}.tB{background:#d9b23a;color:#111}.tC{background:#8aa1b4;color:#111}.tD{background:#666;color:#fff}
 input.w{width:64px;padding:3px 6px;text-align:right}
+.lthumb{width:40px;height:40px;border-radius:8px;object-fit:cover;object-position:50% 16%;vertical-align:middle;background:var(--chip);flex:0 0 auto}
+.lthumb.lg{width:64px;height:64px;border-radius:10px}
+.who{display:flex;align-items:center;gap:10px}.who .nm{line-height:1.2}.who .nm small{display:block;color:var(--mute);font-size:12px}
+.cimg{display:block;width:100%;aspect-ratio:600/838;border-radius:6px;object-fit:cover;background:var(--chip)}
+.ctext{display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;padding:6px;width:100%;aspect-ratio:600/838;border-radius:6px;background:var(--chip);border:1px solid var(--line);color:var(--ink)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.cg{position:relative;cursor:pointer}.cg .cnt{position:absolute;top:4px;left:4px;background:var(--ink);color:var(--bg);font-weight:700;font-size:12px;border-radius:99px;padding:1px 7px}
+.cg .lbl{font-size:11.5px;margin-top:4px;line-height:1.25}.cg .lbl small{color:var(--mute)}
+.strip{display:flex;gap:6px;overflow-x:auto;padding:6px 0 2px}.strip .cg{width:62px;flex:0 0 auto}.strip .cnt{font-size:10px;padding:0 5px}
+.leaders{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.leaders .lt{display:flex;flex-direction:column;align-items:center;width:64px;font-size:10.5px;text-align:center;line-height:1.15;cursor:pointer}
+.mini{width:74px;position:relative;cursor:pointer}.mini.rest{transform:rotate(-8deg);opacity:.7}.mini .ov{position:absolute;left:3px;right:3px;bottom:3px;background:rgba(0,0,0,.72);color:#fff;font-size:10.5px;border-radius:4px;padding:1px 4px;display:flex;justify-content:space-between}
+.mini.lead{width:86px;outline:2px solid var(--accent);border-radius:7px}
+.handrow{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.handrow .cg{width:46px}
+.pop{position:fixed;z-index:50;width:280px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.25);padding:10px;display:none}
+.pop img,.pop .ctext{width:100%;border-radius:8px}.pop .t{font-size:12.5px;margin-top:8px;line-height:1.4;white-space:pre-wrap}.pop b{display:block;margin-top:6px}
+.vs{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:4px 0 2px}
+.heat th img{display:block;margin:0 auto 2px}
+.hand .hcard{width:132px;padding:0;border:0;background:none}
+
+.grid2>*,.watch>*,.row>*{min-width:0}
+@media(max-width:600px){main{padding:12px 12px 48px}header,nav{padding-left:12px;padding-right:12px}.card{padding:14px}.big{font-size:30px}.row>*{min-width:110px}table{font-size:13px}th,td{padding:6px 5px}.mini{width:58px}.mini.lead{width:66px}}
 </style>
 </head>
 <body>
+<div class="pop" id="pop"></div>
 <header>
   <h1>OPTCG <span>Deck Lab</span></h1>
-  <p class="sub">Paste a deck, pick a field, and bots play it out right in your browser. All EB-05 and OP-18 cards are in. Results also feed this browser's lab memory.</p>
+  <p class="sub">Paste a deck, pick a field, and bots play it out right in your browser. Every card through EB-05 and OP-18 is in. Results also feed this browser's lab memory.</p>
 </header>
 <nav>
   <button data-tab="test" class="on">Test my deck</button>
+  <button data-tab="compare">Compare versions</button>
   <button data-tab="stats">Deck stats</button>
   <button data-tab="watch">Watch a game</button>
   <button data-tab="grid">Deck vs deck grid</button>
+  <button data-tab="finds">Bot finds</button>
   <button data-tab="memory">Lab memory</button>
   <button data-tab="about">How it works</button>
 </nav>
@@ -79,10 +103,12 @@ input.w{width:64px;padding:3px 6px;text-align:right}
       </div>
       <div class="row" style="margin-top:8px;align-items:center"><button class="btn ghost" id="share" style="flex:0 0 auto">Copy share link</button><span class="mute" id="shareMsg" style="font-size:13px"></span></div>
       <div class="msgs" id="parseMsgs"></div>
+      <div id="deckPreview"></div>
     </div>
     <div class="card">
       <label for="field">Test against</label>
       <select id="field"></select>
+      <div class="leaders" id="fieldPreview"></div>
       <div class="row">
         <div><label for="games">Games per matchup</label><input id="games" type="number" min="2" max="2000" value="50"></div>
         <div><label for="bot">Bot</label><select id="bot"><option value="fast">Fast (heuristic)</option><option value="deep">Deep (search, slower)</option></select></div>
@@ -116,6 +142,25 @@ input.w{width:64px;padding:3px 6px;text-align:right}
   </div>
 </section>
 
+<section id="tab-compare" class="hidden">
+  <div class="card"><p class="mute" style="margin:0">Paste two versions of a deck (say, with and without a tech card). Both play the same opponents with the same shuffles, so the difference comes from your changes and not from luck.</p></div>
+  <div class="grid2">
+    <div class="card"><label for="cmpA">Version A (starts as your Test my deck list)</label><textarea id="cmpA" spellcheck="false" style="min-height:180px"></textarea><div class="msgs" id="cmpAMsg"></div></div>
+    <div class="card"><label for="cmpB">Version B</label><textarea id="cmpB" spellcheck="false" style="min-height:180px"></textarea><div class="msgs" id="cmpBMsg"></div></div>
+  </div>
+  <div class="card">
+    <div id="cmpDiff"></div>
+    <div class="row" style="margin-top:8px">
+      <div><label for="cmpField">Against</label><select id="cmpField"></select></div>
+      <div><label for="cmpGames">Games per matchup, each version</label><input id="cmpGames" type="number" min="4" max="1000" value="40"></div>
+    </div>
+    <div class="row" style="margin-top:14px;align-items:center"><button class="btn" id="cmpRun" style="flex:0 0 auto">Compare</button><button class="btn ghost hidden" id="cmpStop" style="flex:0 0 auto">Stop</button></div>
+    <div class="bar"><i id="cmpProg"></i></div><div class="mute" id="cmpText" style="font-size:13px"></div>
+  </div>
+  <div class="card hidden" id="cmpOut"><div class="stats" id="cmpHead"></div><div class="scroll" style="margin-top:12px"><table id="cmpTable"></table></div>
+    <p class="note">A difference under about 5 points with a few hundred games is usually noise. Run more games before trusting a small edge.</p></div>
+</section>
+
 <section id="tab-stats" class="hidden">
   <div class="card"><div class="mute" style="font-size:13px">Stats for the deck in the “Test my deck” box.</div><h3 style="margin:6px 0 10px" id="stName">–</h3><div class="chips" id="stChips"></div></div>
   <div class="grid2">
@@ -129,7 +174,7 @@ input.w{width:64px;padding:3px 6px;text-align:right}
     <div class="ctrl"><button class="btn" id="thDraw">Draw opening hand</button><button class="btn ghost" id="thMull">Mulligan</button><button class="btn ghost" id="thNext">Next draw</button>
       <label style="margin:0 0 0 8px;display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" id="thSecond" style="width:auto"> Going second</label></div>
     <div class="mute" id="thInfo" style="font-size:13px"></div><div class="hand" id="thHand"></div></div>
-  <div class="card"><h3 style="margin-top:0">Card list</h3><div class="scroll"><table id="stList"></table></div></div>
+  <div class="card"><h3 style="margin-top:0">Card list</h3><p class="mute" style="margin-top:0;font-size:13px">Hover or tap a card to read it.</p><div class="cgrid" id="stList"></div></div>
 </section>
 
 <section id="tab-watch" class="hidden">
@@ -142,7 +187,7 @@ input.w{width:64px;padding:3px 6px;text-align:right}
     <div class="row" style="margin-top:12px;align-items:center"><button class="btn" id="wGo" style="flex:0 0 auto">Play a game</button><span class="mute" id="wMsg" style="font-size:13px"></span></div>
   </div>
   <div class="card hidden" id="wOut">
-    <div class="ctrl"><button class="btn ghost" id="wFirst">⏮</button><button class="btn ghost" id="wPrev">◀</button><button class="btn" id="wPlay">▶ Play</button><button class="btn ghost" id="wNext">▶|</button><button class="btn ghost" id="wTurn">Next turn ⏭</button>
+    <div class="ctrl"><button class="btn ghost" id="wFirst">⏮</button><button class="btn ghost" id="wPrev">◀</button><button class="btn" id="wPlay">▶ Play</button><button class="btn ghost" id="wNext">▶|</button><button class="btn ghost" id="wTurn">Next turn ⏭</button><button class="btn ghost" id="wKey">Next key moment ★</button>
       <select id="wSpeed" style="width:auto"><option value="1200">Slow</option><option value="600" selected>Normal</option><option value="200">Fast</option></select>
       <label style="margin:0 0 0 8px;display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" id="wHands" style="width:auto" checked> Show hands</label></div>
     <div class="now" id="wNow"></div>
@@ -165,6 +210,13 @@ input.w{width:64px;padding:3px 6px;text-align:right}
     <h3>Matchup grid</h3><div class="scroll"><table class="heat" id="gheat"></table></div></div>
 </section>
 
+<section id="tab-finds" class="hidden">
+  <div class="card"><h3 style="margin-top:0">What the bots found last night</h3><p class="mute" style="margin:0" id="fInfo"></p></div>
+  <div class="card" id="fRankCard"><h3 style="margin-top:0">OP-18 field ranking</h3><div class="scroll"><table id="fRank"></table></div></div>
+  <div class="card" id="fDeckCard"><h3 style="margin-top:0">Decks the bots built</h3><p class="mute" style="margin-top:0;font-size:13px">Built and evolved from the full card pool, tested on few games each. Load one into Test my deck and run more games before trusting it.</p><div class="scroll"><table id="fDecks"></table></div></div>
+  <div class="card" id="fCardCard"><h3 style="margin-top:0">Cards that lifted decks the most</h3><div class="cgrid" id="fCards"></div></div>
+</section>
+
 <section id="tab-memory" class="hidden">
   <div class="card">
     <h3 style="margin-top:0">What this lab has learned in this browser</h3>
@@ -184,18 +236,31 @@ input.w{width:64px;padding:3px 6px;text-align:right}
     <p><b>Fields</b> are real lists: current EB-05 meta, OP-18 lists from X and LogDuel, OP-16 era decks, and classic 2023–24 decks for Extra Regulation.</p>
     <h3>Known limits (be skeptical of close numbers)</h3>
     <ul>
-      <li>The bots rarely hold DON!! back, so counter events and "keep DON up" leaders (like OP13-001 Luffy) are under-rated.</li>
-      <li>23 cards still have no coded effect, including the OP-18 Karoo and Ms. All Sunday leaders.</li>
-      <li>Some OP-17 Sabo and Xebec games stall and count as no result.</li>
-      <li>So far the sim matches real-world matchup reports on 7 of 20 checked matchups. Treat it as a research tool, not a tier list.</li>
+      <li>The bots now hold DON!! for leaders that turn it into defense (like OP13-001 Luffy), but they still rarely save DON!! for [Counter] Events, so counter-event-heavy decks are a bit under-rated.</li>
+      <li>11 cards still have no coded effect (mostly OP-18 cards with unusual text). The OP-18 Karoo and Ms. All Sunday leaders are in.</li>
+      <li>The sim matched real-world matchup reports on 7 of 20 checked matchups before the latest fixes. Treat it as a research tool, not a tier list.</li>
     </ul>
-    <p class="mute">Open source, for research: github.com/Porosays. Card data © Bandai; this is a fan project.</p>
+    <p class="mute">Open source, for research: github.com/Porosays/optcg-lab. Card images and data © Bandai, images served by Limitless TCG and OPTCG API. This is an unofficial fan project.</p>
   </div>
 </section>
 </main>
 
 <script>
 const FIELDS = __FIELDS__;
+const IMGS = __IMGS__;
+/* ---------- card pictures ---------- */
+const setOf = (id) => id.split("-")[0];
+const imgUrl = (id) => `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/one-piece/${setOf(id)}/${id}_EN.webp`;
+const backupUrl = (id) => IMGS[id] ? `https://www.optcgapi.com/media/static/Card_Images/${id}_${IMGS[id]}.jpg` : null;
+function imgFail(el) {
+  const id = el.dataset.card, b = backupUrl(id);
+  if (!el.dataset.tried && b) { el.dataset.tried = 1; el.src = b; return; }
+  const d = document.createElement("div"); d.className = "ctext"; d.dataset.card = id; d.textContent = (CARDS[id]?.name ?? NAMES[id]?.name ?? "") + " " + id; el.replaceWith(d);
+}
+const cimg = (id, cls = "cimg") => `<img class="${cls}" data-card="${id}" src="${imgUrl(id)}" loading="lazy" alt="" onerror="imgFail(this)">`;
+const LEADER_OF = {}; for (const f of Object.values(FIELDS)) for (const d of f.decks) LEADER_OF[d.name] = d.leader;
+const lthumb = (leader, big) => leader ? `<img class="lthumb${big ? " lg" : ""}" data-card="${leader}" src="${imgUrl(leader)}" loading="lazy" alt="" onerror="imgFail(this)">` : "";
+const who = (name, leader, sub) => `<div class=who>${lthumb(leader ?? LEADER_OF[name])}<div class=nm>${esc(name)}${sub ? `<small>${sub}</small>` : ""}</div></div>`;
 const $ = (id) => document.getElementById(id);
 const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
 const cores = Math.max(1, Math.min(16, navigator.hardwareConcurrency || 4));
@@ -204,7 +269,7 @@ $("workers").value = cores;
 /* ---------- tabs ---------- */
 document.querySelectorAll("nav button").forEach((b) => b.onclick = () => {
   document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("on", x === b));
-  for (const t of ["test", "stats", "watch", "grid", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
+  for (const t of ["test", "compare", "stats", "watch", "grid", "finds", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
   if (b.dataset.tab === "memory") renderMemory();
   if (b.dataset.tab === "stats") renderStats();
 });
@@ -261,11 +326,11 @@ async function renderMemory() {
   const decks = Object.entries(MEM.decks).sort((a, b) => b[1].w / b[1].g - a[1].w / a[1].g);
   $("mdecks").innerHTML = "<tr><th>Deck</th><th class=n>Games</th><th class=n>Win rate</th><th>Best vs</th><th>Worst vs</th></tr>" + decks.map(([n, d]) => {
     const vs = Object.entries(d.vs).filter(([, v]) => v[1] >= 10).map(([o, v]) => [o, v[0] / v[1]]).sort((a, b) => b[1] - a[1]);
-    const wr = d.w / d.g; return `<tr><td>${esc(n)}</td><td class=n>${d.g}</td><td class="n wr ${cls(wr)}">${pct(wr)}</td><td>${vs[0] ? esc(vs[0][0]) + " " + pct(vs[0][1]) : "–"}</td><td>${vs.length > 1 ? esc(vs.at(-1)[0]) + " " + pct(vs.at(-1)[1]) : "–"}</td></tr>`;
+    const wr = d.w / d.g; return `<tr><td>${who(n)}</td><td class=n>${d.g}</td><td class="n wr ${cls(wr)}">${pct(wr)}</td><td>${vs[0] ? esc(vs[0][0]) + " " + pct(vs[0][1]) : "–"}</td><td>${vs.length > 1 ? esc(vs.at(-1)[0]) + " " + pct(vs.at(-1)[1]) : "–"}</td></tr>`;
   }).join("");
   const cards = Object.entries(MEM.cards).filter(([, s]) => s[1] >= 30).sort((a, b) => b[1][0] / b[1][1] - a[1][0] / a[1][1]).slice(0, 40);
   await loadNames(cards.map(([c]) => c));
-  $("mcards").innerHTML = "<tr><th>Card</th><th class=n>Games used</th><th class=n>Win rate when used</th></tr>" + cards.map(([c, s]) => `<tr><td>${esc(nm(c))} <span class="pill">${c}</span></td><td class=n>${s[1]}</td><td class="n wr ${cls(s[0] / s[1])}">${pct(s[0] / s[1])}</td></tr>`).join("");
+  $("mcards").innerHTML = "<tr><th>Card</th><th class=n>Games used</th><th class=n>Win rate when used</th></tr>" + cards.map(([c, s]) => `<tr><td><div class=who><div style="width:40px">${cimg(c)}</div><div class=nm>${esc(nm(c))}<small>${c}</small></div></div></td><td class=n>${s[1]}</td><td class="n wr ${cls(s[0] / s[1])}">${pct(s[0] / s[1])}</td></tr>`).join("");
 }
 $("mexport").onclick = () => { $("mbox").classList.remove("hidden"); $("mload").classList.add("hidden"); $("mlabel").textContent = "Copy this and send it to a friend. They paste it under “Add a friend's data”."; $("mtext").value = JSON.stringify(MEM); $("mtext").select(); };
 $("mimport").onclick = () => { $("mbox").classList.remove("hidden"); $("mload").classList.remove("hidden"); $("mlabel").textContent = "Paste a friend's shared data here."; $("mtext").value = ""; $("mtext").focus(); };
@@ -290,6 +355,7 @@ async function check() {
   const total = r.deck ? r.deck.main.length : 0;
   $("parseMsgs").innerHTML = r.errors.map((x) => `<div class=err>${esc(x)}</div>`).join("") + r.warnings.map((x) => `<div class=warn>${esc(x)}</div>`).join("") + (parsed ? `<div class=ok>Leader ${esc(parsed.leader)} + ${total} cards. Ready.</div>` : "");
   $("run").disabled = !parsed;
+  renderDeckPreview();
 }
 check();
 
@@ -326,12 +392,12 @@ async function report(res, me) {
   $("first").textContent = f.length ? pct(wr(f)) : "–"; $("second").textContent = s.length ? pct(wr(s)) : "–";
   $("ngames").textContent = res.length + (res.length - fin.length ? ` (${res.length - fin.length} stalled)` : "");
   const by = {}; for (const r of res) (by[r.bName] ??= []).push(r);
-  const rows = Object.entries(by).map(([name, rs]) => { const fn = rs.filter((r) => r.winner !== null); const ww = fn.filter((r) => r.winner === "a").length; return { name, n: fn.length, stall: rs.length - fn.length, wr: fn.length ? ww / fn.length : 0, ci: wilson(ww, fn.length), f: wr(fn.filter((r) => r.aFirst)), s: wr(fn.filter((r) => !r.aFirst)), turns: fn.reduce((a, r) => a + r.turns, 0) / (fn.length || 1) }; }).sort((a, b) => a.wr - b.wr);
+  const rows = Object.entries(by).map(([name, rs]) => { const fn = rs.filter((r) => r.winner !== null); const ww = fn.filter((r) => r.winner === "a").length; return { name, fn, n: fn.length, stall: rs.length - fn.length, wr: fn.length ? ww / fn.length : 0, ci: wilson(ww, fn.length), f: wr(fn.filter((r) => r.aFirst)), s: wr(fn.filter((r) => !r.aFirst)), turns: fn.reduce((a, r) => a + r.turns, 0) / (fn.length || 1) }; }).sort((a, b) => a.wr - b.wr);
   lastRes = res; lastMe = me;
   const W = weightsFor($("field").value);
   let ws = 0, wsum = 0; for (const r of rows) { const w = W[r.name] ?? 1; if (r.n) { ws += w * r.wr; wsum += w; } }
   $("weighted").textContent = wsum ? pct(ws / wsum) : "–";
-  if (!document.activeElement?.classList?.contains("w")) $("mu").innerHTML = "<tr><th>Opponent</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>1st</th><th class=n>2nd</th><th class=n>Avg turns</th><th class=n>Games</th><th class=n>Field share</th><th></th></tr>" + rows.map((r) => `<tr><td>${esc(r.name)}</td><td class="n wr ${cls(r.wr)}">${pct(r.wr)}</td><td class="n mute">${pct(r.ci[0])}–${pct(r.ci[1])}</td><td class=n>${pct(r.f)}</td><td class=n>${pct(r.s)}</td><td class=n>${r.turns.toFixed(1)}</td><td class=n>${r.n}${r.stall ? ` <span class=mute>+${r.stall} stalled</span>` : ""}</td><td class=n><input class=w type=number min=0 step=1 value="${W[r.name] ?? 1}" data-opp="${esc(r.name)}" aria-label="Field share for ${esc(r.name)}"></td><td><button class="btn ghost" style="padding:4px 10px" data-watch="${esc(r.name)}">Watch</button></td></tr>`).join("");
+  if (!document.activeElement?.classList?.contains("w")) $("mu").innerHTML = "<tr><th>Opponent</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>1st</th><th class=n>2nd</th><th class=n>Avg turns</th><th class=n>Games</th><th>Notes</th><th class=n>Field share</th><th></th></tr>" + rows.map((r) => `<tr><td>${who(r.name)}</td><td class="n wr ${cls(r.wr)}">${pct(r.wr)}</td><td class="n mute">${pct(r.ci[0])}–${pct(r.ci[1])}</td><td class=n>${pct(r.f)}</td><td class=n>${pct(r.s)}</td><td class=n>${r.turns.toFixed(1)}</td><td class=n>${r.n}${r.stall ? ` <span class=mute>+${r.stall} stalled</span>` : ""}</td><td class=mute style="font-size:12px;max-width:260px">${noteFor(r)}</td><td class=n><input class=w type=number min=0 step=1 value="${W[r.name] ?? 1}" data-opp="${esc(r.name)}" aria-label="Field share for ${esc(r.name)}"></td><td><button class="btn ghost" style="padding:4px 10px" data-watch="${esc(r.name)}">Watch</button></td></tr>`).join("");
   const base = fin.length ? w / fin.length : 0;
   const copies = {}; for (const id of me.main) copies[id] = (copies[id] || 0) + 1;
   await loadNames([me.leader, ...Object.keys(copies)]);
@@ -340,7 +406,7 @@ async function report(res, me) {
     for (const r of fin) { const p = r.aPlayed[id] || 0; played += p; dead += r.aDead[id] || 0; if (p) { used++; if (r.winner === "a") usedW++; } }
     return { id, n: copies[id], playRate: fin.length ? played / (fin.length * copies[id]) : 0, lift: used >= 5 ? usedW / used - base : null, dead: fin.length ? dead / fin.length : 0 };
   }).sort((a, b) => (b.lift ?? -9) - (a.lift ?? -9));
-  $("cards").innerHTML = "<tr><th>Card</th><th class=n>Copies</th><th class=n>Played</th><th class=n>Win lift</th><th class=n>Stuck / game</th></tr>" + cards.map((c) => `<tr><td>${esc(nm(c.id))} <span class=pill>${c.id}</span></td><td class=n>${c.n}</td><td class=n>${pct(c.playRate)}</td><td class="n wr ${c.lift == null ? "" : c.lift > 0.03 ? "hi" : c.lift < -0.03 ? "lo" : ""}">${c.lift == null ? "–" : (c.lift > 0 ? "+" : "") + (100 * c.lift).toFixed(0) + " pts"}</td><td class=n>${c.dead.toFixed(2)}</td></tr>`).join("");
+  $("cards").innerHTML = "<tr><th>Card</th><th class=n>Copies</th><th class=n>Played</th><th class=n>Win lift</th><th class=n>Stuck / game</th></tr>" + cards.map((c) => `<tr><td><div class=who><div style="width:40px">${cimg(c.id)}</div><div class=nm>${esc(nm(c.id))}<small>${c.id}</small></div></div></td><td class=n>${c.n}</td><td class=n>${pct(c.playRate)}</td><td class="n wr ${c.lift == null ? "" : c.lift > 0.03 ? "hi" : c.lift < -0.03 ? "lo" : ""}">${c.lift == null ? "–" : (c.lift > 0 ? "+" : "") + (100 * c.lift).toFixed(0) + " pts"}</td><td class=n>${c.dead.toFixed(2)}</td></tr>`).join("");
 }
 
 /* ---------- grid ---------- */
@@ -362,9 +428,9 @@ $("grun").onclick = async () => {
 function drawGrid(decks, M) {
   const tot = decks.map((_, i) => M[i].reduce((a, c) => [a[0] + c[0], a[1] + c[1]], [0, 0]));
   const adj = (i) => (tot[i][0] + 10) / (tot[i][1] + 20); const order = decks.map((_, i) => i).sort((a, b) => adj(b) - adj(a));
-  $("grank").innerHTML = "<tr><th>#</th><th>Tier</th><th>Deck</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>Games</th></tr>" + order.map((i, r) => { const [w, n] = tot[i]; const ci = wilson(w, n); const t = tierOf(w, n); return `<tr><td>${r + 1}</td><td>${n ? `<span class="tier t${t}">${t}</span>` : ""}</td><td>${esc(decks[i].name)}</td><td class="n wr ${cls(w / (n || 1))}">${n ? pct(w / n) : "–"}</td><td class="n mute">${n ? pct(ci[0]) + "–" + pct(ci[1]) : ""}</td><td class=n>${n}</td></tr>`; }).join("");
+  $("grank").innerHTML = "<tr><th>#</th><th>Tier</th><th>Deck</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>Games</th></tr>" + order.map((i, r) => { const [w, n] = tot[i]; const ci = wilson(w, n); const t = tierOf(w, n); return `<tr><td>${r + 1}</td><td>${n ? `<span class="tier t${t}">${t}</span>` : ""}</td><td>${who(decks[i].name, decks[i].leader)}</td><td class="n wr ${cls(w / (n || 1))}">${n ? pct(w / n) : "–"}</td><td class="n mute">${n ? pct(ci[0]) + "–" + pct(ci[1]) : ""}</td><td class=n>${n}</td></tr>`; }).join("");
   const color = (x) => { const h = x >= 0.5 ? 150 : 5; const a = Math.min(1, Math.abs(x - 0.5) * 2.4); return `background:hsla(${h},60%,45%,${(a * 0.55).toFixed(2)})`; };
-  $("gheat").innerHTML = "<tr><th></th>" + order.map((j) => `<th title="${esc(decks[j].name)}">${esc(decks[j].name.slice(0, 22))}</th>`).join("") + "</tr>" + order.map((i) => `<tr><th style="text-align:left">${esc(decks[i].name)}</th>` + order.map((j) => { if (i === j) return "<td class=mute>–</td>"; const [w, n] = M[i][j]; return n ? `<td style="${color(w / n)}" title="${n} games">${pct(w / n)}</td>` : "<td></td>"; }).join("") + "</tr>").join("");
+  $("gheat").innerHTML = "<tr><th></th>" + order.map((j) => `<th title="${esc(decks[j].name)}">${lthumb(decks[j].leader)}${esc(decks[j].name.slice(0, 18))}</th>`).join("") + "</tr>" + order.map((i) => `<tr><th style="text-align:left;min-width:170px">${who(decks[i].name, decks[i].leader)}</th>` + order.map((j) => { if (i === j) return "<td class=mute>–</td>"; const [w, n] = M[i][j]; return n ? `<td style="${color(w / n)}" title="${n} games">${pct(w / n)}</td>` : "<td></td>"; }).join("") + "</tr>").join("");
 }
 
 /* ---------- card info ---------- */
@@ -401,7 +467,7 @@ async function renderStats() {
   if (!parsed) { $("stName").textContent = "Paste a legal deck in “Test my deck” first."; return; }
   const d = parsed; await loadCards([d.leader, ...d.main]);
   const L = CARDS[d.leader] || {};
-  $("stName").textContent = `${L.name ?? d.leader} (${d.leader}) · ${(L.color || []).join("/")} · ${L.life ?? "?"} life`;
+  $("stName").innerHTML = `<div class=vs>${lthumb(d.leader, true)}<div>${esc(L.name ?? d.leader)} <span class=pill>${d.leader}</span><div class=mute style="font-size:13px;font-weight:400">${(L.color || []).join("/")} · ${L.life ?? "?"} life</div></div></div>`;
   const cards = d.main.map((id) => CARDS[id] || {});
   const c1 = cards.filter((c) => c.counter === 1000).length, c2 = cards.filter((c) => c.counter === 2000).length;
   const chars = cards.filter((c) => c.type === "character"), evs = cards.filter((c) => c.type === "event"), stages = cards.filter((c) => c.type === "stage");
@@ -418,7 +484,7 @@ async function renderStats() {
   $("oddsPick").innerHTML = ids.map((id) => `<option value="${id}" ${prev.has(id) ? "selected" : ""}>${counts[id]}× ${esc(cn(id))} (${CARDS[id].cost ?? "-"})</option>`).join("");
   if (!prev.size && $("oddsPick").options.length) $("oddsPick").options[0].selected = true;
   odds(counts);
-  $("stList").innerHTML = "<tr><th class=n>#</th><th>Card</th><th>Type</th><th class=n>Cost</th><th class=n>Power</th><th class=n>Counter</th><th>Text</th></tr>" + ids.map((id) => { const c = CARDS[id]; return `<tr><td class=n>${counts[id]}</td><td>${esc(c.name)} <span class=pill>${id}</span></td><td>${c.type}</td><td class=n>${c.cost ?? ""}</td><td class=n>${c.power ?? ""}</td><td class=n>${c.counter ?? ""}</td><td class=mute style="font-size:12px;max-width:420px">${esc(c.text).slice(0, 220)}${c.text.length > 220 ? "…" : ""}</td></tr>`; }).join("");
+  $("stList").innerHTML = ids.map((id) => { const c = CARDS[id]; return `<div class=cg data-card="${id}">${cimg(id)}<span class=cnt>${counts[id]}×</span><div class=lbl>${esc(c.name)}<br><small>${c.type} · cost ${c.cost ?? "-"}${c.counter ? " · +" + c.counter / 1000 + "k" : ""}</small></div></div>`; }).join("");
 }
 function odds(counts) {
   const K = [...$("oddsPick").selectedOptions].reduce((a, o) => a + (counts[o.value] || 0), 0);
@@ -433,7 +499,7 @@ async function thNew(mull) { if (!parsed) return; await loadCards(parsed.main); 
 function thDraw() {
   const sec = $("thSecond").checked;
   $("thInfo").textContent = `${TH.mull ? "After mulligan · " : ""}Turn ${TH.turn} ${sec ? "(going second)" : "(going first)"} · ${TH.hand.length} in hand · ${TH.deck.length} left in deck`;
-  $("thHand").innerHTML = TH.hand.map((id) => { const c = CARDS[id] || {}; return `<div class=hcard><b>${esc(c.name ?? id)}</b><span class=m>${c.type ?? ""} · cost ${c.cost ?? "-"}${c.power ? " · " + c.power / 1000 + "k" : ""}${c.counter ? " · +" + c.counter / 1000 + "k ctr" : ""}${c.trigger ? " · Trigger" : ""}</span></div>`; }).join("");
+  $("thHand").innerHTML = TH.hand.map((id) => `<div class=hcard>${cimg(id)}</div>`).join("");
 }
 $("thDraw").onclick = () => thNew(false);
 $("thMull").onclick = () => thNew(true);
@@ -459,17 +525,17 @@ async function watchGame(a, b) {
   RP = r.replay; RPi = 0;
   const ids = new Set(); for (const f of RP.frames) for (const sd of [f.a, f.b]) { ids.add(sd.leader.id); sd.chars.forEach((c) => ids.add(c.id)); sd.stage.forEach((x) => ids.add(x)); sd.handIds.forEach((x) => ids.add(x)); }
   await loadCards([...ids]);
-  $("wMsg").textContent = `${RP.aName} (A) vs ${RP.bName} (B) · ${RP.aFirst ? "A" : "B"} goes first · ${RP.winner ? (RP.winner === "a" ? RP.aName : RP.bName) + " wins" : "no result"} on turn ${RP.turns}`;
+  $("wMsg").innerHTML = `<span class=vs>${who(RP.aName + " (A)", a.leader)}<b>vs</b>${who(RP.bName + " (B)", b.leader)}</span>${RP.aFirst ? "A" : "B"} goes first · ${RP.winner ? esc(RP.winner === "a" ? RP.aName : RP.bName) + " wins" : "no result"} on turn ${RP.turns}`;
   $("wOut").classList.remove("hidden");
-  $("wLog").innerHTML = RP.frames.map((f, i) => `<div data-i="${i}" class="${f.kind === "turn" ? "t" : ""}">${esc(f.text)}</div>`).join("");
+  $("wLog").innerHTML = RP.frames.map((f, i) => `<div data-i="${i}" class="${f.kind === "turn" ? "t" : ""}${isKey(f) ? " key" : ""}">${isKey(f) ? "★ " : ""}${esc(f.text)}</div>`).join("");
   showFrame(0);
 }
 function side(sd, label, name, active) {
-  const u = (id, don, rested, lead, power) => `<div class="unit ${rested ? "rest" : ""} ${lead ? "lead" : ""}" title="${esc(CARDS[id]?.text ?? "")}"><b>${esc(cn(id))}</b>${power != null ? (power / 1000) + "k" : ""}${don ? ` <span class=don>+${don} DON!!</span>` : ""}</div>`;
-  const hand = $("wHands").checked ? `<div class=mute style="font-size:12px;margin-top:6px">Hand: ${sd.handIds.map((x) => esc(cn(x))).join(", ") || "empty"}</div>` : "";
-  return `<h4><span>${label} · ${esc(name)}${active ? " <span class=pill>to act</span>" : ""}</span><span class=mute>${sd.life} life</span></h4>
-    <div class=zone>${u(sd.leader.id, sd.leader.don, sd.leader.rested, true, sd.leader.power)}${sd.chars.map((c) => u(c.id, c.don, c.rested, false, c.power)).join("")}${sd.stage.map((x) => u(x, 0, false, false, null)).join("")}</div>
-    <div class=counts><span>Hand ${sd.hand}</span><span>Deck ${sd.deck}</span><span>Trash ${sd.trash}</span><span>DON!! ${sd.donActive} active · ${sd.donRested} rested · ${sd.donDeck} in DON!! deck</span></div>${hand}`;
+  const u = (id, don, rested, lead, power) => `<div class="mini ${rested ? "rest" : ""} ${lead ? "lead" : ""}">${cimg(id)}<div class=ov><span>${power != null ? power / 1000 + "k" : ""}</span><span>${don ? "+" + don + " DON" : ""}</span></div></div>`;
+  const hand = $("wHands").checked ? `<div class=handrow>${sd.handIds.map((x) => `<div class=cg>${cimg(x)}</div>`).join("") || "<span class=mute style='font-size:12px'>empty hand</span>"}</div>` : "";
+  return `<h4><span class=who>${lthumb(sd.leader.id)}<span>${label} · ${esc(name)}${active ? " <span class=pill>to act</span>" : ""}</span></span><span class=mute>${sd.life} life</span></h4>
+    <div class=zone style="align-items:flex-end">${u(sd.leader.id, sd.leader.don, sd.leader.rested, true, sd.leader.power)}${sd.chars.map((c) => u(c.id, c.don, c.rested, false, c.power)).join("")}${sd.stage.map((x) => u(x, 0, false, false, null)).join("")}</div>
+    <div class=counts><span>Hand ${sd.hand}</span><span>Deck ${sd.deck}</span><span>Trash ${sd.trash}</span><span>DON!! ${sd.donActive} active · ${sd.donRested} rested · ${sd.donDeck} left</span></div>${hand}`;
 }
 function showFrame(i) {
   if (!RP) return; RPi = Math.max(0, Math.min(RP.frames.length - 1, i)); const f = RP.frames[RPi];
@@ -485,6 +551,129 @@ $("wNext").onclick = () => { stopAuto(); showFrame(RPi + 1); };
 $("wTurn").onclick = () => { stopAuto(); const j = RP.frames.findIndex((f, k) => k > RPi && f.kind === "turn"); showFrame(j < 0 ? RP.frames.length - 1 : j); };
 $("wPlay").onclick = () => { if (RPtimer) return stopAuto(); $("wPlay").textContent = "⏸ Pause"; RPtimer = setInterval(() => { if (RPi >= RP.frames.length - 1) return stopAuto(); showFrame(RPi + 1); }, +$("wSpeed").value); };
 $("wHands").onchange = () => showFrame(RPi);
+$("wKey").onclick = () => { stopAuto(); const j = RP.frames.findIndex((f, k) => k > RPi && isKey(f)); showFrame(j < 0 ? RP.frames.length - 1 : j); };
+
+
+/* ---------- compare versions ---------- */
+for (const [k, f] of Object.entries(FIELDS)) $("cmpField").insertAdjacentHTML("beforeend", `<option value="${k}">${esc(f.label)} · ${f.decks.length} decks</option>`);
+let cmpA = null, cmpB = null;
+document.querySelector('nav button[data-tab="compare"]').addEventListener("click", () => { if (!$("cmpA").value.trim()) { $("cmpA").value = $("deck").value; cmpCheck(); } });
+async function cmpParse(which) {
+  const r = await helperCall({ type: "parse", text: $(which === "A" ? "cmpA" : "cmpB").value });
+  const ok = !r.errors.length && r.deck;
+  $(which === "A" ? "cmpAMsg" : "cmpBMsg").innerHTML = r.errors.map((x) => `<div class=err>${esc(x)}</div>`).join("") + (ok ? `<div class=ok>${r.deck.main.length} cards, ready.</div>` : "");
+  return ok ? r.deck : null;
+}
+async function cmpCheck() {
+  [cmpA, cmpB] = await Promise.all([cmpParse("A"), cmpParse("B")]);
+  $("cmpRun").disabled = !(cmpA && cmpB);
+  if (!(cmpA && cmpB)) { $("cmpDiff").innerHTML = ""; return; }
+  const cnt = (d) => { const c = {}; for (const id of d.main) c[id] = (c[id] || 0) + 1; return c; };
+  const a = cnt(cmpA), b = cnt(cmpB); const ids = [...new Set([...Object.keys(a), ...Object.keys(b)])].filter((id) => (a[id] || 0) !== (b[id] || 0));
+  await loadCards(ids);
+  const ch = ids.map((id) => ({ id, d: (b[id] || 0) - (a[id] || 0) })).sort((x, y) => x.d - y.d);
+  $("cmpDiff").innerHTML = cmpA.leader !== cmpB.leader ? `<div class=warn>The two versions use different leaders. That works, but it's no longer a tech-swap test.</div>` :
+    ch.length ? `<div class=mute style="font-size:13px">B changes ${ch.length} card${ch.length > 1 ? "s" : ""} from A:</div><div class=strip>${ch.map((c) => `<div class=cg>${cimg(c.id)}<span class=cnt style="background:${c.d > 0 ? "var(--good)" : "var(--bad)"};color:#fff">${c.d > 0 ? "+" : ""}${c.d}</span></div>`).join("")}</div>` : `<div class=warn>The two versions are identical.</div>`;
+}
+$("cmpA").oninput = $("cmpB").oninput = () => { clearTimeout(window._ct); window._ct = setTimeout(cmpCheck, 300); };
+$("cmpStop").onclick = () => running?.stop();
+$("cmpRun").onclick = async () => {
+  if (!(cmpA && cmpB)) return;
+  const A = { ...cmpA, name: "Version A" }, B = { ...cmpB, name: "Version B" };
+  const field = FIELDS[$("cmpField").value].decks; const n = Math.max(4, Math.min(1000, +$("cmpGames").value || 40));
+  const jobs = []; for (const d of field) for (let k = 0; k < n; k++) for (const v of [A, B]) jobs.push({ id: d.name, a: v, b: { name: d.name, leader: d.leader, main: d.main }, k });
+  const res = { "Version A": {}, "Version B": {} }; let done = 0; const t0 = performance.now();
+  $("cmpRun").disabled = true; $("cmpStop").classList.remove("hidden"); $("cmpOut").classList.remove("hidden");
+  let last = 0;
+  await runJobs(jobs, "fast", +$("workers").value || cores, (r) => {
+    done++; remember(r); if (r.winner) { const x = res[r.aName][r.bName] ??= [0, 0]; x[1]++; if (r.winner === "a") x[0]++; }
+    $("cmpProg").style.width = (100 * done / jobs.length) + "%";
+    const s = (performance.now() - t0) / 1000; $("cmpText").textContent = `${done} / ${jobs.length} games · about ${Math.ceil(s / done * (jobs.length - done))}s left`;
+    if (performance.now() - last > 800) { last = performance.now(); cmpDraw(field, res); }
+  });
+  cmpDraw(field, res); $("cmpRun").disabled = false; $("cmpStop").classList.add("hidden"); $("cmpText").textContent = `Done: ${done} games.`;
+};
+function cmpDraw(field, res) {
+  const tot = (v) => Object.values(res[v]).reduce((a, x) => [a[0] + x[0], a[1] + x[1]], [0, 0]);
+  const [aw, an] = tot("Version A"), [bw, bn] = tot("Version B");
+  const pa = an ? aw / an : 0, pb = bn ? bw / bn : 0, d = pb - pa;
+  const se = Math.sqrt((pa * (1 - pa)) / (an || 1) + (pb * (1 - pb)) / (bn || 1));
+  $("cmpHead").innerHTML = `<div><div class=mute>Version A</div><div class=big style="font-size:30px">${an ? pct(pa) : "–"}</div></div><div><div class=mute>Version B</div><div class=big style="font-size:30px">${bn ? pct(pb) : "–"}</div></div>
+    <div><div class=mute>B minus A</div><div class="big ${d > 0.02 ? "hi" : d < -0.02 ? "lo" : ""}" style="font-size:30px">${an && bn ? (d > 0 ? "+" : "") + (100 * d).toFixed(1) + " pts" : "–"}</div><div class=mute>${an && bn ? (Math.abs(d) > 2 * se ? "likely a real difference" : "could still be noise") : ""}</div></div>`;
+  $("cmpTable").innerHTML = "<tr><th>Opponent</th><th class=n>A</th><th class=n>B</th><th class=n>B − A</th><th class=n>Games each</th></tr>" + field.map((f) => {
+    const x = res["Version A"][f.name] ?? [0, 0], y = res["Version B"][f.name] ?? [0, 0]; const ra = x[1] ? x[0] / x[1] : null, rb = y[1] ? y[0] / y[1] : null;
+    const dd = ra != null && rb != null ? rb - ra : null;
+    return `<tr><td>${who(f.name, f.leader)}</td><td class=n>${ra != null ? pct(ra) : "–"}</td><td class=n>${rb != null ? pct(rb) : "–"}</td><td class="n wr ${dd > 0.03 ? "hi" : dd < -0.03 ? "lo" : ""}">${dd != null ? (dd > 0 ? "+" : "") + (100 * dd).toFixed(0) : "–"}</td><td class=n>${Math.min(x[1], y[1])}</td></tr>`;
+  }).join("");
+}
+
+/* ---------- matchup notes ---------- */
+function noteFor(r) {
+  const fn = r.fn || []; if (fn.length < 6) return "";
+  const won = fn.filter((g) => g.winner === "a"), lost = fn.filter((g) => g.winner === "b");
+  const avg = (a) => a.length ? (a.reduce((x, g) => x + g.turns, 0) / a.length).toFixed(0) : "–";
+  const base = won.length / fn.length; let best = null;
+  const ids = new Set(fn.flatMap((g) => Object.keys(g.aPlayed)));
+  for (const id of ids) { const used = fn.filter((g) => g.aPlayed[id]); if (used.length < 5) continue; const lift = used.filter((g) => g.winner === "a").length / used.length - base; if (!best || lift > best.lift) best = { id, lift }; }
+  const parts = [];
+  if (won.length && lost.length) parts.push(`wins end ~turn ${avg(won)}, losses ~turn ${avg(lost)}`);
+  if (best && best.lift > 0.05) parts.push(`best card here: ${esc(nm(best.id))} (+${(100 * best.lift).toFixed(0)})`);
+  return parts.join(" · ");
+}
+
+/* ---------- replay key moments ---------- */
+function isKey(f) { return /K\.O\.'d|wins/.test(f.text) || /\((?:[0-2]) life left\)/.test(f.text) || /\(cost (?:[7-9]|1\d)\)/.test(f.text); }
+
+/* ---------- bot finds (nightly) ---------- */
+const NIGHTLY = __NIGHTLY__;
+function renderFinds() {
+  const F = NIGHTLY?.found, G = NIGHTLY?.grid;
+  if (!F && !G) { $("fInfo").textContent = "No nightly results yet. The first nightly run happens around 2 AM New York time; check back tomorrow."; ["fRankCard", "fDeckCard", "fCardCard"].forEach((x) => $(x).classList.add("hidden")); return; }
+  $("fInfo").textContent = `Run on ${F?.date ?? "?"}. ${G ? G.games + " games across the OP-18 field. " : ""}${F ? F.decks.length + " bot-built decks shown." : ""}`;
+  if (G) { const o = [...G.overall].sort((a, b) => b.wr - a.wr);
+    $("fRank").innerHTML = "<tr><th>#</th><th>Tier</th><th>Deck</th><th class=n>Win rate</th><th class=n>1st</th><th class=n>2nd</th><th class=n>Games</th></tr>" + o.map((r, i) => { const t = tierOf(Math.round(r.wr * r.games), r.games); return `<tr><td>${i + 1}</td><td><span class="tier t${t}">${t}</span></td><td>${who(r.deck)}</td><td class="n wr ${cls(r.wr)}">${pct(r.wr)}</td><td class=n>${pct(r.first)}</td><td class=n>${pct(r.second)}</td><td class=n>${r.games}</td></tr>`; }).join(""); }
+  else $("fRankCard").classList.add("hidden");
+  if (F) {
+    $("fDecks").innerHTML = "<tr><th>#</th><th>Leader</th><th>Style</th><th class=n>Win rate</th><th class=n>Range</th><th></th></tr>" + F.decks.map((d, i) => `<tr><td>${i + 1}</td><td><div class=who>${lthumb(d.leader)}<span class=nm>${esc(NAMES[d.leader]?.name ?? d.leader)}<small>${d.leader}</small></span></div></td><td class=mute>${esc(d.style)}</td><td class="n wr ${cls(d.wr)}">${pct(d.wr)}</td><td class="n mute">${pct(d.ci[0])}–${pct(d.ci[1])}</td><td><button class="btn ghost" style="padding:4px 10px" data-load="${i}">Load</button></td></tr>`).join("");
+    $("fCards").innerHTML = (F.cards || []).slice(0, 18).map((c) => `<div class=cg data-card="${c.id}">${cimg(c.id)}<span class=cnt style="background:var(--good);color:#fff">+${Math.round(100 * c.lift)}</span><div class=lbl><small>${c.n} decks${c.old ? " · old card" : ""}</small></div></div>`).join("");
+    loadNames(F.decks.map((d) => d.leader)).then(() => { /* names fill in on next open */ });
+  }
+}
+document.querySelector('nav button[data-tab="finds"]').addEventListener("click", renderFinds);
+$("fDecks").addEventListener("click", (e) => { const b = e.target.closest("[data-load]"); if (!b) return; const d = NIGHTLY.found.decks[+b.dataset.load]; $("deck").value = toText({ leader: d.leader, main: d.main }); $("deck").dataset.name = `Bot deck: ${d.leader} ${d.style}`; check(); document.querySelector('nav button[data-tab="test"]').click(); });
+
+/* ---------- card popover (hover on desktop, tap on phones) ---------- */
+let popFor = null;
+async function showPop(el, x, y) {
+  const id = el.dataset.card; if (!id) return; popFor = el;
+  await loadCards([id]); if (popFor !== el) return;
+  const c = CARDS[id] || {};
+  const meta = [c.type, c.cost != null ? "cost " + c.cost : c.life != null ? c.life + " life" : "", c.power ? c.power / 1000 + "k power" : "", c.counter ? "+" + c.counter / 1000 + "k counter" : "", (c.color || []).join("/")].filter(Boolean).join(" · ");
+  $("pop").innerHTML = `${cimg(id)}<b>${esc(c.name ?? id)} <span class=pill>${id}</span></b><div class=mute style="font-size:12px">${esc(meta)}</div><div class=t>${esc(c.text ?? "")}</div>`;
+  const p = $("pop"); p.style.display = "block";
+  const w = 290, h = p.offsetHeight || 520;
+  p.style.left = Math.min(window.innerWidth - w - 8, x + 16) + "px";
+  p.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, y - 40)) + "px";
+}
+function hidePop() { popFor = null; $("pop").style.display = "none"; }
+document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-card]"); if (el && matchMedia("(hover:hover)").matches) showPop(el, e.clientX, e.clientY); });
+document.addEventListener("mouseout", (e) => { if (e.target.closest("[data-card]") && matchMedia("(hover:hover)").matches) hidePop(); });
+document.addEventListener("click", (e) => { if (matchMedia("(hover:hover)").matches) return; const el = e.target.closest("[data-card]"); if (el) { e.preventDefault(); showPop(el, e.clientX, e.clientY); } else if (!e.target.closest("#pop")) hidePop(); });
+
+/* ---------- deck + field previews ---------- */
+async function renderDeckPreview() {
+  if (!parsed) { $("deckPreview").innerHTML = ""; return; }
+  const c = {}; for (const id of parsed.main) c[id] = (c[id] || 0) + 1;
+  await loadCards([parsed.leader, ...Object.keys(c)]);
+  const ids = Object.keys(c).sort((a, b) => (CARDS[a]?.cost ?? 0) - (CARDS[b]?.cost ?? 0));
+  $("deckPreview").innerHTML = `<div class=vs style="margin-top:10px">${lthumb(parsed.leader, true)}<div><b>${esc(CARDS[parsed.leader]?.name ?? parsed.leader)}</b><div class=mute style="font-size:12px">${(CARDS[parsed.leader]?.color || []).join("/")} leader · ${CARDS[parsed.leader]?.life ?? "?"} life</div></div></div>
+    <div class=strip>${ids.map((id) => `<div class=cg>${cimg(id)}<span class=cnt>${c[id]}</span></div>`).join("")}</div>`;
+}
+function renderFieldPreview() {
+  const k = $("field").value; const f = FIELDS[k]; if (!f) return;
+  $("fieldPreview").innerHTML = f.decks.map((d) => `<div class=lt title="${esc(d.name)}">${lthumb(d.leader, true)}<span>${esc(d.name)}</span></div>`).join("");
+}
+$("field").addEventListener("change", renderFieldPreview); renderFieldPreview();
 </script>
 </body>
 </html>

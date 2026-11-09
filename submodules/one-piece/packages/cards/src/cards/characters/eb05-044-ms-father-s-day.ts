@@ -27,5 +27,19 @@ export const eb05MsFatherSDay044: CharacterCard = {
   attribute: "ranged",
   effect:
     "[On Play] If your Leader's type includes \"Baroque Works\" and your opponent has a Character with a cost of 0, give your opponent's Leader -1000 power during this turn.",
+  effects: {
+    effects: [
+      {
+        trigger: "onPlay",
+        conditions: [
+          { condition: "leaderTrait", trait: "Baroque Works", match: "includes" },
+          { condition: "existsOnField", player: "opponent", zone: "character", filters: [{ filter: "cost", comparison: "eq", value: 0 }] },
+        ],
+        actions: [
+          { action: "modifyPower", target: { player: "opponent", zones: ["leader"], count: { amount: 1 } }, value: -1000, duration: "thisTurn" },
+        ],
+      },
+    ],
+  },
   i18n: eb05MsFatherSDay044I18n,
 };

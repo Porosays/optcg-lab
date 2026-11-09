@@ -25,4 +25,9 @@ md += `\n## Decklists (top 10, paste into OPTCGSim or Test my deck)\n\n`;
 elites.slice(0, 10).forEach((e: any, i: number) => { md += `**${i + 1}. ${cardName(e.deck.leader)} — ${pct(e.wr)} (${e.style})**\n\n\`\`\`\n${e.text}\n\`\`\`\n\n`; });
 writeFileSync(`${dir}/found.md`, md);
 writeFileSync(`${dir}/found-decks.json`, JSON.stringify(elites.map((e: any) => ({ ...e.deck, name: `${e.deck.leader}-${e.style}` })), null, 1));
+writeFileSync(`${dir}/found-summary.json`, JSON.stringify({
+  date: new Date().toISOString().slice(0, 10), field, games: parts[0]?.games ?? null,
+  decks: elites.slice(0, 40).map((e: any) => ({ leader: e.deck.leader, style: e.style, wr: e.wr, ci: e.ci, vs: e.vs, main: e.deck.main })),
+  cards: top.map(([id, m]) => ({ id, lift: m.lift, n: m.n, old: m.old })),
+}));
 console.log(md);

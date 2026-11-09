@@ -9,7 +9,7 @@ import { heuristicAgent } from "../heuristic-strategy.ts";
 import type { MatchConfig, MatchSeat, MatchState } from "../../types.ts";
 import type { OnePieceBotAgent } from "../bot-strategies.ts";
 import { cloneApply, trimmed } from "./fast-apply.ts";
-import { nextCommand } from "./fast-play.ts";
+import { stepSafe } from "./fast-play.ts";
 import { createSearchAgent, DEFAULT_SEARCH } from "./search-agent.ts";
 import { donCount, type Deck } from "./decklist.ts";
 
@@ -55,11 +55,8 @@ export function playJob(job: Job, bot: string, budget: number): GameResult {
   let broken = false;
   const used = new Set<string>();
   for (let i = 0; i < 2000 && s.status !== "finished"; i++) {
-    let command;
-    try { command = nextCommand(s, agents, ctx).command; } catch { broken = true; break; }
-    if (!command) { broken = true; break; }
     let res;
-    try { res = cloneApply(s, command); } catch { broken = true; break; }
+    try { res = stepSafe(s, agents, ctx, cloneApply); } catch { broken = true; break; }
     if (!res.accepted) { broken = true; break; }
     if (s.status === "active") trackHands(s, res.state, used);
     s = res.state;

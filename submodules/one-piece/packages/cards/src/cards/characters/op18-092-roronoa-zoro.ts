@@ -27,5 +27,21 @@ export const op18RoronoaZoro092: CharacterCard = {
   attribute: "slash",
   effect:
     "If there is a Character with a cost of 12 or more, this Character gains +3000 power.If you have 10 or more cards in your trash, this Character gains [Rush].(This card can attack on the turn in which it is played.)",
+  effects: {
+    effects: [],
+    permanentEffects: [
+      {
+        conditions: [{ condition: "compound", operator: "or", conditions: [
+          { condition: "existsOnField", player: "self", zone: "character", filters: [{ filter: "cost", comparison: "gte", value: 12 }] },
+          { condition: "existsOnField", player: "opponent", zone: "character", filters: [{ filter: "cost", comparison: "gte", value: 12 }] },
+        ] }],
+        actions: [{ action: "modifyPower", target: { player: "self", zones: ["character"], count: { amount: 1 }, self: true }, value: 3000, duration: "permanent" }],
+      },
+      {
+        conditions: [{ condition: "zoneCount", player: "self", zone: "trash", comparison: "gte", value: 10 }],
+        actions: [{ action: "grantKeyword", target: { player: "self", zones: ["character"], count: { amount: 1 }, self: true }, keyword: "rush", duration: "permanent" }],
+      },
+    ],
+  },
   i18n: op18RoronoaZoro092I18n,
 };

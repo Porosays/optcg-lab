@@ -37,5 +37,14 @@ export const eb05BoaHancock028: CharacterCard = {
   attribute: "special",
   effect:
     "[On Play] If your opponent has 9 or more cards in their hand, they trash 4 cards from their hand.",
+  effects: {
+    effects: [
+      {
+        trigger: "onPlay",
+        conditions: [{ condition: "handCount", player: "opponent", comparison: "gte", value: 9 }],
+        actions: [{ action: "trashFromHand", player: "opponent", amount: 4 }],
+      },
+    ],
+  },
   i18n: eb05BoaHancock028I18n,
 };

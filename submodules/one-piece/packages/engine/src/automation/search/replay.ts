@@ -9,7 +9,7 @@ import { heuristicAgent } from "../heuristic-strategy.ts";
 import type { MatchConfig, MatchSeat, MatchState } from "../../types.ts";
 import type { OnePieceBotAgent } from "../bot-strategies.ts";
 import { cloneApply, trimmed } from "./fast-apply.ts";
-import { nextCommand } from "./fast-play.ts";
+import { stepSafe } from "./fast-play.ts";
 import { createSearchAgent, DEFAULT_SEARCH } from "./search-agent.ts";
 import { donCount } from "./decklist.ts";
 import type { Job } from "./play.ts";
@@ -119,11 +119,8 @@ export function playReplay(job: Job, bot: string, budget: number): Replay {
   let lastTurn = -1;
   const countered = new Set<string>();
   for (let i = 0; i < 2000 && s.status !== "finished"; i++) {
-    let command: any;
-    try { command = nextCommand(s, agents, ctx).command; } catch { break; }
-    if (!command) break;
-    let res;
-    try { res = cloneApply(s, command); } catch { break; }
+    let res, command: any;
+    try { res = stepSafe(s, agents, ctx, cloneApply); command = res.command; } catch { break; }
     if (!res.accepted) break;
     const next = res.state;
     const d = describe(s, next, command, countered);

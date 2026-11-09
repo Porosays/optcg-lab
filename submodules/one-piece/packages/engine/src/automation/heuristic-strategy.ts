@@ -93,6 +93,8 @@ export interface HeuristicPolicy {
   readonly counterDonReserveCap: number;
   /** Opt-in: also keep the [Counter] reserve when paying for Character plays. Tested 2026-11-08: 46% vs off (288 games), so off by default. */
   readonly reserveForCharacters?: boolean;
+  /** OPTCG Lab: plan DON!! per attacker (spread to make swings connect, hold for leader defense). Default on. */
+  readonly donPlanner?: boolean;
   /** Prefer going first when cheap openers >= this count (lower = more first). */
   readonly firstPlayerCheapThreshold: number;
   /** Max cost treated as a playable opener for mulligan (lower = tighter curve). */
@@ -545,6 +547,112 @@ function handleSetupCommand(
   return null;
 }
 
+
+// ─────────────────────────────────────────────────────────────────────────────
+// OPTCG Lab: DON!! planner
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Leader text like OP13-001 Luffy: "[DON!! x1] [On Your Opponent's Attack] If you have 5 or less active DON!! ... rest ... +2000". */
+export function leaderDonDefense(state: MatchState, seat: MatchSeat): { perDon: number; maxActive: number; needAttached: number } | null {
+  const me = getPlayer(state, seat);
+  const text = String((getCardForInstance(state, me.leaderInstanceId) as any).effect ?? "");
+  const m = text.match(/\[On Your Opponent's Attack\][^\n]*?rest[^\n]*?DON!![^\n]*?\+(\d+) power/i);
+  if (!m) return null;
+  const cap = text.match(/(\d+) or (?:less|fewer) active DON/i);
+  const need = text.match(/\[DON!! x(\d+)\][^\n]*\[On Your Opponent's Attack\]/i);
+  return { perDon: Number(m[1]), maxActive: cap ? Number(cap[1]) : 10, needAttached: need ? Number(need[1]) : 0 };
+}
+
+/**
+ * How many active DON!! a DON!!-defense leader (OP13-001 style) should still have when the turn ends:
+ * each one is worth +2000 on every opponent attack, so hold more as the game goes on. None when racing for lethal.
+ */
+export function defenseHoldTarget(state: MatchState, seat: MatchSeat): number {
+  const def = leaderDonDefense(state, seat);
+  if (!def) return 0;
+  const me = getPlayer(state, seat), opp = getPlayer(state, otherSeat(seat));
+  if (opp.life.length <= 2) return 0;
+  let attached = 0;
+  for (const id of [me.leaderInstanceId, ...((me as any).characterArea ?? [])]) if (id) attached += (state.cards[id] as any)?.attachedDon ?? 0;
+  const total = me.activeDon + me.restedDon + attached;
+  const want = total >= 9 ? 4 : total >= 7 ? 3 : total >= 5 ? 2 : total >= 3 ? 1 : 0;
+  return Math.min(def.maxActive, want);
+}
+
+/** DON!! a leader needs attached for its "[DON!! xN]" text to be on during the opponent's turn. */
+function leaderAttachNeed(state: MatchState, seat: MatchSeat): number {
+  const me = getPlayer(state, seat);
+  const def = leaderDonDefense(state, seat);
+  if (!def || def.needAttached === 0) return 0;
+  const attached = (state.cards[me.leaderInstanceId] as any)?.attachedDon ?? 0;
+  return Math.max(0, def.needAttached - attached);
+}
+
+/**
+ * Split this turn's DON!! across attackers the way a player would:
+ * 1. make as many attackers as possible reach the opponent's Leader power (an attack that can't connect is wasted),
+ * 2. hold DON!! back for defense (cheapest [Counter] Event, or a leader that rests DON!! for power on the opponent's turn),
+ * 3. push live attackers to Leader power +1000 so each swing needs a 2000 counter, then
+ * 4. put the rest on the strongest attacker.
+ * Holding is skipped when the attacks can take the opponent's last life.
+ */
+export function planDon(state: MatchState, seat: MatchSeat, attackerIds: Iterable<string>, policy: HeuristicPolicy): Map<string, number> {
+  const me = getPlayer(state, seat);
+  const opp = getPlayer(state, otherSeat(seat));
+  const plan = new Map<string, number>();
+  let budget = me.activeDon;
+  if (budget <= 0) return plan;
+  const add = (id: string, n: number) => { plan.set(id, (plan.get(id) ?? 0) + n); budget -= n; };
+  const T = getCardPower(state, opp.leaderInstanceId);
+  const atk = [...attackerIds].map((id) => ({ id, p: getCardPower(state, id) }));
+
+  // Leader "[DON!! xN]" upkeep first: it powers the defensive ability.
+  const ln = Math.min(budget, leaderAttachNeed(state, seat));
+  if (ln > 0) { add(me.leaderInstanceId, ln); const a = atk.find((x) => x.id === me.leaderInstanceId); if (a) a.p += ln * 1000; }
+
+  // 1. make swings connect, cheapest first
+  const need = atk.filter((a) => a.p < T).map((a) => ({ ...a, n: Math.ceil((T - a.p) / 1000) })).sort((a, b) => a.n - b.n);
+  for (const a of need) if (a.n <= budget) { add(a.id, a.n); a.p += a.n * 1000; const x = atk.find((y) => y.id === a.id)!; x.p = a.p; }
+  const live = atk.filter((a) => a.p >= T);
+  const lethal = opp.life.length <= 2 || (live.length > 0 && opp.life.length < live.length);
+
+  // 2. hold for defense
+  if (!lethal) {
+    const def = leaderDonDefense(state, seat);
+    let hold = computeDonReserve(state, seat, live.length, policy);
+    if (def) hold = Math.max(hold, defenseHoldTarget(state, seat));
+    budget = Math.max(0, budget - hold);
+  }
+
+  // 3. +1000 over leader power on each live attacker (forces a 2000 counter)
+  for (const a of [...live].sort((x, y) => y.p - x.p)) {
+    if (budget <= 0) break;
+    if (a.p < T + 1000) { const n = Math.min(budget, Math.ceil((T + 1000 - a.p) / 1000)); add(a.id, n); a.p += n * 1000; }
+  }
+  // 4. rest on the strongest live attacker
+  if (budget > 0 && live.length) { const best = [...live].sort((x, y) => y.p - x.p)[0]!; add(best.id, budget); }
+  return plan;
+}
+
+/** OP13-001-style "rest any number of DON!! for +X power" on the opponent's attack: rest just enough to win the battle. */
+function resolveRestDonForPower(state: MatchState, prompt: PromptState): EngineCommand | null {
+  const ctx: any = prompt.resolutionContext;
+  const battle = state.battle;
+  const seat = prompt.seat as MatchSeat;
+  const max = Number(ctx?.maximum ?? 0);
+  const per = Number(ctx?.action?.valuePerDon ?? 1000) || 1000;
+  let count = 0;
+  if (battle && max > 0) {
+    const me = getPlayer(state, seat);
+    const targetIsLeader = battle.targetId === me.leaderInstanceId;
+    const worth = targetIsLeader || baseCost(getCardForInstance(state, battle.targetId)) >= 3;
+    const deficit = getCardPower(state, battle.attackerId) - (getCardPower(state, battle.targetId) + (battle.counterTotal ?? 0));
+    if (worth && deficit >= 0) { const n = Math.ceil((deficit + 1) / per); count = n <= max ? n : 0; }
+  }
+  const opt = prompt.options.find((o) => o.id === String(count)) ?? prompt.options[0];
+  return opt ? ({ type: "resolvePrompt", seat, promptId: prompt.id, optionId: opt.id } as EngineCommand) : null;
+}
+
 export function createHeuristicStrategy(policy: HeuristicPolicy): OnePieceBotStrategy {
   return (state, seat, legalCommands) => {
     const mine = legalCommands.filter((c) => c.seat === seat);
@@ -582,6 +690,10 @@ export function createHeuristicStrategy(policy: HeuristicPolicy): OnePieceBotStr
     // Adaptive DON!! reserve: bank for [Counter] Events unless we are racing
     // for lethal (opp life ≤2 or multi-attacker close) — see computeDonReserve.
     const donReserve = computeDonReserve(state, seat, attackerIds.size, policy);
+    const usePlanner = policy.donPlanner !== false;
+    // A/B on the EB-05 meta: the full planner helped Sabo/Luffy decks but hurt Xebec/Enel/Shanks,
+    // so it only takes over for leaders that turn held DON!! into defense (OP13-001 style).
+    const donPlan = usePlanner && leaderDonDefense(state, seat) ? planDon(state, seat, attackerIds, policy) : null;
 
     const scored: ScoredCommand[] = [];
     for (const descriptor of mine) {
@@ -592,6 +704,7 @@ export function createHeuristicStrategy(policy: HeuristicPolicy): OnePieceBotStr
           if (!descriptor.sourceId) break;
           if (descriptor.slotChoices !== undefined && descriptor.slotChoices.length === 0) break;
           const card = getCardForInstance(state, descriptor.sourceId);
+          // (Tried: skipping Character plays to keep DON!! up for OP13-001 Luffy. A/B: 38% vs 62%, board > held DON!!.)
           if (card.cardType === "character") {
             // OPTCG Lab fix: without this, Character plays spend the DON!! banked
             // for [Counter] Events, so those Events were never castable on defense.
@@ -613,6 +726,15 @@ export function createHeuristicStrategy(policy: HeuristicPolicy): OnePieceBotStr
           break;
         }
         case "attachDon": {
+          if (donPlan) {
+            const n = descriptor.sourceId ? donPlan.get(descriptor.sourceId) ?? 0 : 0;
+            if (n <= 0) break;
+            attachAmount = n;
+            // The leader's [DON!! x1] upkeep comes before anything else spends DON!!.
+            score = descriptor.sourceId === player.leaderInstanceId && leaderAttachNeed(state, seat) > 0
+              ? 760 : scoreAttachDon(state, seat, descriptor.sourceId!, bestAttackerId, policy);
+            break;
+          }
           if (!descriptor.sourceId || !attackerIds.has(descriptor.sourceId)) break;
           // Attach everything above the [Counter] reserve in one command so
           // the DON!! assignment reads as a single log line. The engine's
@@ -1015,6 +1137,10 @@ export function createHeuristicPromptResolver(policy: HeuristicPolicy): OnePiece
 
     if (prompt.choiceKind === "costPayment") {
       return resolveCostSelection(state, prompt);
+    }
+
+    if (intent === "effectRestDonForPowerCount" && policy.donPlanner !== false) {
+      return resolveRestDonForPower(state, prompt);
     }
 
     if (prompt.choiceKind === "orderCards") {

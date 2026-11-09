@@ -10,5 +10,21 @@ data = {}
 for k, label in fields:
     d = json.load(open(os.path.join(search, "decks", f"{k}.json")))
     data[k] = {"label": label, "decks": [{"name": x["name"], "leader": x["leader"], "main": x["main"]} for x in d]}
-html = open(os.path.join(here, "index.src.html")).read().replace("__FIELDS__", json.dumps(data, separators=(",", ":")))
+# Backup image links from the optcgapi snapshots: card id -> file suffix (…/Card_Images/<id>_<suffix>.jpg).
+import glob, re
+snaps = os.path.abspath(os.path.join(engine, "../../tools/op-card-parser/snapshots"))
+imgs = {}
+for f in sorted(glob.glob(os.path.join(snaps, "*", "*.json"))):
+    d = json.load(open(f))
+    if isinstance(d, dict): d = d.get("cards") or list(d.values())
+    for x in d:
+        if not isinstance(x, dict): continue
+        m = re.match(r"https://www\.optcgapi\.com/media/static/Card_Images/(.+?)_([A-Za-z0-9]+)\.jpg$", str(x.get("card_image") or ""))
+        if m and m.group(1) == x.get("card_image_id"): imgs.setdefault(m.group(1), m.group(2))
+root = os.path.dirname(out)
+def maybe(path):
+    try: return json.load(open(os.path.join(root, path)))
+    except Exception: return None
+nightly = {"found": maybe("nightly/latest/found-summary.json"), "grid": maybe("nightly/latest/grid.json")}
+html = open(os.path.join(here, "index.src.html")).read().replace("__NIGHTLY__", json.dumps(nightly, separators=(",", ":"))).replace("__FIELDS__", json.dumps(data, separators=(",", ":"))).replace("__IMGS__", json.dumps(imgs, separators=(",", ":")))
 open(os.path.join(out, "index.html"), "w").write(html); print("built", out)

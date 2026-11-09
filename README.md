@@ -7,13 +7,24 @@ times to measure how every deck does against every other deck.
 
 ## Try it in your browser (Deck Lab)
 
-Deck Lab is a web app: paste a deck, pick a field (current meta, OP-18 lists,
-classic decks) and bots play the games on your own computer, one worker per CPU core.
-It also runs a full deck-vs-deck grid, and keeps a running "lab memory" of every game
-played in that browser that friends can share with each other by copy and paste.
-GitHub Pages rebuilds and publishes it on every push (`.github/workflows/pages.yml`).
-To build it locally into `site/`, run
+**https://porosays.github.io/optcg-lab/**: nothing to install. Bots play on your own computer, one per CPU core.
+
+- **Test my deck:** paste an OPTCGSim list, pick a field, get win rates per matchup, going first vs second, card-by-card stats, field-weighted win rate and short matchup notes.
+- **Compare versions:** two versions of a deck play the same opponents with the same shuffles, so you see what a tech swap is worth.
+- **Deck stats:** card pictures, cost curve, counter totals, draw odds by turn, and test hands.
+- **Watch a game:** step through a bot game with the board, hands, plain-English moves and ★ key moments.
+- **Deck vs deck grid:** every deck in a field against every other, with S–D tiers.
+- **Bot finds:** last night's automatic run (see below).
+- **Share links** open the app with your deck loaded. Card images come from Limitless TCG, with OPTCG API as backup.
+
+The site rebuilds itself on every push (`.github/workflows/pages.yml`). To build it locally into `site/`, run
 `python3 submodules/one-piece/packages/engine/src/automation/search/web/build.py`.
+
+## Nightly run
+
+`.github/workflows/nightly.yml` runs every night at about 2 AM New York time on free GitHub machines:
+it plays the OP-18 field against itself, lets the bots build and evolve new decks, saves results to
+`nightly/latest/`, rebuilds the site, and opens an issue if a bot-built deck beats the field by a wide margin.
 
 ## How it works
 

@@ -36,5 +36,23 @@ export const eb05Sugar034: CharacterCard = {
   attribute: "special",
   effect:
     "[On Play] DON!! -2: If you have 7 or more DON!! cards on your field, give up to 1 of your opponent's Characters-4000 power during this turn.",
+  effects: {
+    effects: [
+      {
+        trigger: "onPlay",
+        costs: [{ cost: "returnDon", amount: 2 }],
+        conditions: [{ condition: "donFieldCount", player: "self", comparison: "gte", value: 7 }],
+        actions: [
+          {
+            action: "modifyPower",
+            target: { player: "opponent", zones: ["character"], count: { amount: 1, upTo: true } },
+            value: -4000,
+            duration: "thisTurn",
+          },
+        ],
+        optional: true,
+      },
+    ],
+  },
   i18n: eb05Sugar034I18n,
 };

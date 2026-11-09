@@ -1,0 +1,121 @@
+name: Nightly lab run
+
+# Every night: play the OP-18 field against itself, let the bots build and evolve new decks,
+# save the results to nightly/latest/, rebuild the Deck Lab site, and open an issue if a found deck
+# beats the field by a wide margin. Also runnable by hand from the Actions tab.
+on:
+  schedule:
+    - cron: "17 7 * * *" # 2:17 AM New York time (UTC-5)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SEARCH_DIR: submodules/one-piece/packages/engine/src/automation/search
+  FIELD: decks/op18-preview.json
+
+jobs:
+  grid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10.33.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - name: Play the field
+        working-directory: ${{ env.SEARCH_DIR }}
+        env: { JOB: "${{ matrix.job }}" }
+        run: bun run-grid.ts --decks="$FIELD" --games=40 --bot=fast --workers=4 --shards=40 --shardBase=$(( JOB * 4 )) --dir=out
+      - uses: actions/upload-artifact@v4
+        with: { name: "grid-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/*.jsonl" }
+
+  find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10.33.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - name: Build and evolve decks
+        working-directory: ${{ env.SEARCH_DIR }}
+        env: { SHARD: "${{ matrix.job }}" }
+        run: bun find-decks.ts --leaders=all --pop=8 --gens=4 --games=6 --field=decks/meta.json --shard="$SHARD" --shards=10 --workers=4 --out=out
+      - uses: actions/upload-artifact@v4
+        with: { name: "found-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/found-*.json" }
+
+  report:
+    needs: [grid, find]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10.33.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - uses: oven-sh/setup-bun@v2
+      - name: Install engine
+        working-directory: submodules/one-piece
+        run: CI=1 pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@v4
+        with: { pattern: "grid-*", path: "${{ env.SEARCH_DIR }}/out", merge-multiple: true }
+      - uses: actions/download-artifact@v4
+        with: { pattern: "found-*", path: "${{ env.SEARCH_DIR }}/found", merge-multiple: true }
+      - name: Build reports
+        working-directory: ${{ env.SEARCH_DIR }}
+        run: |
+          bun aggregate.ts --decks="$FIELD" --dir=out || true
+          bun find-report.ts --dir=found > /dev/null || true
+          mkdir -p "$GITHUB_WORKSPACE/nightly/latest" "$GITHUB_WORKSPACE/nightly/history"
+          cp out/grid.md out/grid.json found/found.md found/found-summary.json "$GITHUB_WORKSPACE/nightly/latest/" 2>/dev/null || true
+          cp found/found-summary.json "$GITHUB_WORKSPACE/nightly/history/$(date -u +%F)-found.json" 2>/dev/null || true
+          { echo "# Nightly lab run $(date -u +%F)"; echo; cat out/grid.md 2>/dev/null; echo; cat found/found.md 2>/dev/null; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Save results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add nightly
+          git diff --cached --quiet || git commit -m "Nightly lab results $(date -u +%F)"
+          git push
+      - name: Rebuild the site with tonight's results
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh workflow run pages.yml --ref main
+      - name: Flag a breakout deck
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          try: s = json.load(open("nightly/latest/found-summary.json"))
+          except Exception: raise SystemExit(0)
+          top = [d for d in s.get("decks", []) if d["ci"][0] >= 0.55][:3]
+          if not top: raise SystemExit(0)
+          body = "The bots found deck(s) whose win rate stays above 55% even at the low end of the range:\n\n" + "\n".join(
+            f"- {d['leader']} ({d['style']}): {round(100*d['wr'])}% (range {round(100*d['ci'][0])}–{round(100*d['ci'][1])}%)" for d in top
+          ) + "\n\nOpen the Deck Lab site, tab **Bot finds**, to load and test them. Re-test with more games before trusting it."
+          subprocess.run(["gh", "issue", "create", "--title", f"Breakout deck found {s.get('date','')}", "--body", body], check=False)
+          PY

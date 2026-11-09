@@ -26,5 +26,25 @@ export const op18MsAllSunday041: LeaderCard = {
   attribute: "wisdom",
   effect:
     "When your Character with a type including \"Baroque Works\" and 3000 base power or more is K.O.'d, draw 1 card, and your opponent trashes 1 card from their hand.",
+  effects: {
+    effects: [
+      {
+        // When your Character with a type including "Baroque Works" and 3000 base power or more is K.O.'d,
+        // draw 1 card, and your opponent trashes 1 card from their hand.
+        trigger: "whenCharacterKod",
+        eventFilter: {
+          player: "self",
+          filters: [
+            { filter: "trait", value: "Baroque Works", match: "includes" },
+            { filter: "basePower", comparison: "gte", value: 3000 },
+          ],
+        },
+        actions: [
+          { action: "draw", player: "self", amount: 1 },
+          { action: "trashFromHand", player: "opponent", amount: 1 },
+        ],
+      },
+    ],
+  },
   i18n: op18MsAllSunday041I18n,
 };
