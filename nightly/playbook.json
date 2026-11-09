@@ -1,0 +1,119 @@
+{
+ "OP05-098": {
+  "policy": {
+   "style": "aggressive"
+  },
+  "gain": 0.023809523809523836,
+  "games": 504,
+  "updated": "2026-11-09",
+  "history": [
+   {
+    "date": "2026-11-09",
+    "gain": 0.023809523809523836
+   }
+  ]
+ },
+ "OP18-022": {
+  "policy": {
+   "counterWorthLife": 5
+  },
+  "gain": 0.08333333333333337,
+  "games": 504,
+  "updated": "2026-11-09",
+  "history": [
+   {
+    "date": "2026-11-09",
+    "gain": 0.08333333333333337
+   }
+  ]
+ },
+ "OP18-060": {
+  "policy": {
+   "style": "aggressive"
+  },
+  "gain": 0.035714285714285754,
+  "games": 504,
+  "updated": "2026-11-09",
+  "history": [
+   {
+    "date": "2026-11-09",
+    "gain": 0.06349206349206349
+   },
+   {
+    "date": "2026-11-09",
+    "gain": 0.035714285714285754
+   }
+  ]
+ },
+ "OP18-001": {
+  "policy": {
+   "rushPlayBonus": 30,
+   "blockerPlayBonus": 80,
+   "leaderAttackBias": 1.15
+  },
+  "gain": 0.06746031746031744,
+  "games": 504,
+  "updated": "2026-11-09",
+  "history": [
+   {
+    "date": "2026-11-09",
+    "gain": 0.031746031746031744
+   },
+   {
+    "date": "2026-11-09",
+    "gain": 0.0357142857142857
+   },
+   {
+    "date": "2026-11-09",
+    "gain": 0.06746031746031744
+   }
+  ]
+ },
+ "OP18-041": {
+  "policy": {
+   "style": "aggressive"
+  },
+  "gain": 0.051587301587301626,
+  "games": 504,
+  "updated": "2026-11-09",
+  "history": [
+   {
+    "date": "2026-11-09",
+    "gain": 0.051587301587301626
+   }
+  ]
+ },
+ "ST30-001": {
+  "policy": {
+   "aggressiveBlocking": true,
+   "style": "aggressive",
+   "mulliganHeavyCards": 5
+  },
+  "gain": 0.11111111111111105,
+  "games": 504,
+  "updated": "2026-11-09",
+  "history": [
+   {
+    "date": "2026-11-09",
+    "gain": 0.11111111111111105
+   }
+  ]
+ },
+ "OP18-079": {
+  "policy": {
+   "style": "aggressive",
+   "leaderAttackBias": 1.55,
+   "rushPlayBonus": 120,
+   "mulliganMaxCost": 2
+  },
+  "gain": 0.11904761904761905,
+  "games": 504,
+  "updated": "2026-11-09",
+  "history": [
+   {
+    "date": "2026-11-09",
+    "gain": 0.11904761904761905
+   }
+  ]
+ }
+}
