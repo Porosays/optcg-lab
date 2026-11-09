@@ -1,0 +1,23 @@
+{
+ "source": "https://optcgdeckexplorer.com/tier-list/",
+ "asOf": "2026-11-07",
+ "note": "Published Beats/Struggles from 1,040 results across 20 events since the 2026-10-12 ban list. Used as a reality check for sim results, not as ground truth.",
+ "leaders": [
+  {"id":"OP13-001","name":"Luffy (OP-13)","tier":"1","beats":["ST30-001","OP17-079","OP09-042","OP13-004"],"struggles":["OP05-098"]},
+  {"id":"OP05-098","name":"Yellow Enel","tier":"2","beats":["OP13-004","OP13-001","ST30-001","OP17-039"],"struggles":["OP09-042","OP14-041","OP12-061"]},
+  {"id":"OP09-042","name":"Buggy","tier":"2","beats":["OP17-079","OP05-098","OP12-061","OP13-004"],"struggles":["ST10-002","OP13-001"]},
+  {"id":"ST30-001","name":"Luffy & Ace","tier":"2","beats":["OP17-020","OP17-079"],"struggles":["OP13-001","OP05-098","OP11-022"]},
+  {"id":"OP17-039","name":"Rocks.D.Xebec","tier":"2","beats":["OP11-022","OP17-020","OP13-004","Law"],"struggles":["OP17-079","ST10-002","OP05-098"]},
+  {"id":"ST10-002","name":"Luffy (ST-10)","tier":"2","beats":["OP09-042","OP17-039"],"struggles":["OP05-098","EB05-010","ST30-001"]},
+  {"id":"EB05-010","name":"Nico Robin","tier":"2","beats":["OP12-061","ST10-002","OP17-039","OP09-042"],"struggles":["OP05-098"]},
+  {"id":"OP12-061","name":"Rosinante","tier":"3","beats":["OP05-098"],"struggles":["OP13-004","OP09-042","OP13-001"]},
+  {"id":"OP16-080","name":"Teach","tier":"3","beats":["ST10-002","OP12-061"],"struggles":["EB05-010","OP17-039","OP14-041"]},
+  {"id":"OP17-020","name":"Shanks","tier":"3","beats":["ST10-002","OP13-001","OP12-061","OP09-042"],"struggles":["EB05-010","ST30-001","OP17-039"]},
+  {"id":"OP14-041","name":"Boa Hancock","tier":"3","beats":["OP12-061","ST10-002","OP05-098","OP09-042"],"struggles":["OP13-001"]},
+  {"id":"OP11-022","name":"Shirahoshi","tier":"falling","beats":["OP13-001","OP12-061","ST10-002","OP09-042"],"struggles":["OP17-039"]},
+  {"id":"OP13-004","name":"Sabo","tier":"falling","beats":["OP12-061","ST30-001"],"struggles":["OP05-098","OP17-039","OP13-001"]},
+  {"id":"OP17-079","name":"Elbaph Luffy","tier":"falling","beats":["OP17-039","OP05-098"],"struggles":["OP09-042","OP13-001","ST30-001"]},
+  {"id":"OP17-058","name":"Kaido","tier":"falling","beats":["OP05-098","OP17-039"],"struggles":["OP13-001","OP12-061","OP13-004"]},
+  {"id":"OP15-058","name":"Purple Enel","tier":"falling","beats":["ST10-002","OP13-001","OP12-061"],"struggles":["EB05-010","OP14-041","OP17-039"]}
+ ]
+}

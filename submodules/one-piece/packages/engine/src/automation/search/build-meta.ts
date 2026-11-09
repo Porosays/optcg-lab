@@ -13,5 +13,5 @@ for (const l of lists) {
   console.log(`${p.deck && !banned.length && !pairs.length ? "OK " : "BAD"} ${l.name} (${main} main) ${p.errors.join("; ")} ${banned.length ? "banned:" + banned : ""} ${pairs.length ? "pair:" + pairs : ""}`);
   if (p.deck && !banned.length && !pairs.length) out.push({ name: l.name, leader: p.deck.leader, main: p.deck.main, source: l.src, note: l.note });
 }
-writeFileSync(new URL("./decks/meta.json", import.meta.url), JSON.stringify(out, null, 1));
+writeFileSync(new URL(process.argv[3] ?? "./decks/meta.json", import.meta.url), JSON.stringify(out, null, 1));
 console.log(`wrote ${out.length} decks`);
