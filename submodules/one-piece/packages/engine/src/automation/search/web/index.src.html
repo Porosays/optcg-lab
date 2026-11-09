@@ -40,6 +40,18 @@ details summary{cursor:pointer;color:var(--mute);font-size:13px}
 .note{font-size:13px;color:var(--mute);border-left:3px solid var(--line);padding-left:10px;margin-top:10px}
 .stats{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end}
 .hidden{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{background:var(--chip);border-radius:8px;padding:8px 12px;min-width:110px}.chip b{display:block;font-size:20px}.chip span{font-size:12px;color:var(--mute)}
+.curve{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:8px}.curve div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:12px;color:var(--mute)}.curve i{display:block;width:100%;background:var(--accent);border-radius:4px 4px 0 0}.curve i.ev{background:var(--mid)}.curve em{font-style:normal;color:var(--ink);font-size:12px}
+.hand{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.hcard{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:8px;width:132px;font-size:12px;line-height:1.3}.hcard b{display:block;font-size:13px}.hcard .m{color:var(--mute)}
+.board{border:1px solid var(--line);border-radius:var(--r);padding:12px;margin-bottom:10px}.board h4{margin:0 0 8px;font-size:14px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.zone{display:flex;flex-wrap:wrap;gap:6px;min-height:52px}.unit{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 8px;font-size:12px;width:118px;line-height:1.25}.unit.rest{opacity:.55;transform:rotate(-3deg)}.unit.lead{border-color:var(--accent)}.unit b{display:block;font-size:12.5px}.don{color:var(--mid);font-weight:600}
+.counts{font-size:12px;color:var(--mute);display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.watch{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}@media(max-width:900px){.watch{grid-template-columns:1fr}}
+.log{max-height:520px;overflow:auto;font-size:13px;border:1px solid var(--line);border-radius:8px}.log div{padding:5px 10px;border-bottom:1px solid var(--line);cursor:pointer}.log div.t{background:var(--chip);font-weight:600}.log div.on{background:var(--accent);color:var(--accent-ink)}
+.ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:10px 0}.ctrl .btn{padding:7px 12px}
+.now{font-size:15px;font-weight:600;min-height:22px;margin:6px 0}
+.tier{display:inline-block;width:22px;text-align:center;border-radius:5px;font-weight:700;font-size:12px;padding:1px 0}.tS{background:#c8102e;color:#fff}.tA{background:#e46a2e;color:#fff}.tB{background:#d9b23a;color:#111}.tC{background:#8aa1b4;color:#111}.tD{background:#666;color:#fff}
+input.w{width:64px;padding:3px 6px;text-align:right}
 </style>
 </head>
 <body>
@@ -49,6 +61,8 @@ details summary{cursor:pointer;color:var(--mute);font-size:13px}
 </header>
 <nav>
   <button data-tab="test" class="on">Test my deck</button>
+  <button data-tab="stats">Deck stats</button>
+  <button data-tab="watch">Watch a game</button>
   <button data-tab="grid">Deck vs deck grid</button>
   <button data-tab="memory">Lab memory</button>
   <button data-tab="about">How it works</button>
@@ -63,6 +77,7 @@ details summary{cursor:pointer;color:var(--mute);font-size:13px}
       <div class="row" style="margin-top:8px">
         <select id="loadDeck" aria-label="Load a deck from a field"><option value="">Load a list from the fields…</option></select>
       </div>
+      <div class="row" style="margin-top:8px;align-items:center"><button class="btn ghost" id="share" style="flex:0 0 auto">Copy share link</button><span class="mute" id="shareMsg" style="font-size:13px"></span></div>
       <div class="msgs" id="parseMsgs"></div>
     </div>
     <div class="card">
@@ -88,13 +103,51 @@ details summary{cursor:pointer;color:var(--mute);font-size:13px}
         <div><div class="mute">Overall win rate</div><div class="big" id="overall">–</div><div class="mute" id="overallCi"></div></div>
         <div><div class="mute">Going first</div><div class="big" style="font-size:26px" id="first">–</div></div>
         <div><div class="mute">Going second</div><div class="big" style="font-size:26px" id="second">–</div></div>
+        <div><div class="mute">Field-weighted</div><div class="big" style="font-size:26px" id="weighted">–</div></div>
         <div><div class="mute">Games</div><div class="big" style="font-size:26px" id="ngames">–</div></div>
       </div>
     </div>
-    <div class="card"><h3 style="margin-top:0">Matchups</h3><div class="scroll"><table id="mu"></table></div></div>
+    <div class="card"><h3 style="margin-top:0">Matchups</h3>
+      <p class="mute" style="margin-top:0;font-size:13px">“Field share” is how often you expect to face each deck. Change it and the field-weighted win rate updates. “Watch” plays a fresh game of that matchup you can step through.</p>
+      <div class="scroll"><table id="mu"></table></div></div>
     <div class="card"><h3 style="margin-top:0">Cards</h3>
       <p class="mute" style="margin-top:0;font-size:13px">“Played” = how often a copy got used. “Win lift” = win rate in games where it was used minus the deck's win rate. “Stuck” = copies left in hand at game end. Low played + high stuck = a cut candidate.</p>
       <div class="scroll"><table id="cards"></table></div></div>
+  </div>
+</section>
+
+<section id="tab-stats" class="hidden">
+  <div class="card"><div class="mute" style="font-size:13px">Stats for the deck in the “Test my deck” box.</div><h3 style="margin:6px 0 10px" id="stName">–</h3><div class="chips" id="stChips"></div></div>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Cost curve</h3><div class="curve" id="stCurve"></div><div class="mute" style="font-size:12px;margin-top:6px">Red = Characters, gold = Events and Stages.</div></div>
+    <div class="card"><h3 style="margin-top:0">Draw odds</h3>
+      <label for="oddsPick">Chance to see at least one of</label><select id="oddsPick" multiple size="6"></select>
+      <div class="mute" style="font-size:12px;margin-top:4px">Ctrl/Cmd-click to pick several cards (like all your 4-cost searchers). Counts the opening 5 plus normal draws, no mulligan.</div>
+      <div class="scroll" style="margin-top:10px"><table id="oddsTable"></table></div></div>
+  </div>
+  <div class="card"><h3 style="margin-top:0">Test hands</h3>
+    <div class="ctrl"><button class="btn" id="thDraw">Draw opening hand</button><button class="btn ghost" id="thMull">Mulligan</button><button class="btn ghost" id="thNext">Next draw</button>
+      <label style="margin:0 0 0 8px;display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" id="thSecond" style="width:auto"> Going second</label></div>
+    <div class="mute" id="thInfo" style="font-size:13px"></div><div class="hand" id="thHand"></div></div>
+  <div class="card"><h3 style="margin-top:0">Card list</h3><div class="scroll"><table id="stList"></table></div></div>
+</section>
+
+<section id="tab-watch" class="hidden">
+  <div class="card">
+    <div class="row">
+      <div><label for="wA">Deck A</label><select id="wA"></select></div>
+      <div><label for="wB">Deck B</label><select id="wB"></select></div>
+      <div><label for="wBot">Bot</label><select id="wBot"><option value="fast">Fast</option><option value="deep">Deep (slower, better)</option></select></div>
+    </div>
+    <div class="row" style="margin-top:12px;align-items:center"><button class="btn" id="wGo" style="flex:0 0 auto">Play a game</button><span class="mute" id="wMsg" style="font-size:13px"></span></div>
+  </div>
+  <div class="card hidden" id="wOut">
+    <div class="ctrl"><button class="btn ghost" id="wFirst">⏮</button><button class="btn ghost" id="wPrev">◀</button><button class="btn" id="wPlay">▶ Play</button><button class="btn ghost" id="wNext">▶|</button><button class="btn ghost" id="wTurn">Next turn ⏭</button>
+      <select id="wSpeed" style="width:auto"><option value="1200">Slow</option><option value="600" selected>Normal</option><option value="200">Fast</option></select>
+      <label style="margin:0 0 0 8px;display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" id="wHands" style="width:auto" checked> Show hands</label></div>
+    <div class="now" id="wNow"></div>
+    <div class="watch"><div><div class="board" id="wBoardB"></div><div class="board" id="wBoardA"></div></div><div class="log" id="wLog"></div></div>
+    <p class="note">Both sides are bots, so this shows how the bot plays the deck, mistakes included. It's best for seeing curves, key turns and how games are won or lost, not as a perfect guide.</p>
   </div>
 </section>
 
@@ -106,7 +159,7 @@ details summary{cursor:pointer;color:var(--mute);font-size:13px}
       <div><label for="gbot">Bot</label><select id="gbot"><option value="fast">Fast</option><option value="deep">Deep</option></select></div>
     </div>
     <div class="row" style="margin-top:14px;align-items:center"><button class="btn" id="grun">Run grid</button><button class="btn ghost hidden" id="gstop">Stop</button></div>
-    <div class="bar"><i id="gprog"></i></div><div class="mute" id="gprogText" style="font-size:13px">Every deck plays every other deck. Cells show the row deck's win rate.</div>
+    <div class="bar"><i id="gprog"></i></div><div class="mute" id="gprogText" style="font-size:13px">Every deck plays every other deck. Cells show the row deck's win rate. Tiers use a win rate pulled toward 50% when games are few, so small samples don't top the list.</div>
   </div>
   <div class="card hidden" id="gout"><h3 style="margin-top:0">Ranking</h3><div class="scroll"><table id="grank"></table></div>
     <h3>Matchup grid</h3><div class="scroll"><table class="heat" id="gheat"></table></div></div>
@@ -151,8 +204,9 @@ $("workers").value = cores;
 /* ---------- tabs ---------- */
 document.querySelectorAll("nav button").forEach((b) => b.onclick = () => {
   document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("on", x === b));
-  for (const t of ["test", "grid", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
+  for (const t of ["test", "stats", "watch", "grid", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
   if (b.dataset.tab === "memory") renderMemory();
+  if (b.dataset.tab === "stats") renderStats();
 });
 
 /* ---------- names ---------- */
@@ -273,7 +327,11 @@ async function report(res, me) {
   $("ngames").textContent = res.length + (res.length - fin.length ? ` (${res.length - fin.length} stalled)` : "");
   const by = {}; for (const r of res) (by[r.bName] ??= []).push(r);
   const rows = Object.entries(by).map(([name, rs]) => { const fn = rs.filter((r) => r.winner !== null); const ww = fn.filter((r) => r.winner === "a").length; return { name, n: fn.length, stall: rs.length - fn.length, wr: fn.length ? ww / fn.length : 0, ci: wilson(ww, fn.length), f: wr(fn.filter((r) => r.aFirst)), s: wr(fn.filter((r) => !r.aFirst)), turns: fn.reduce((a, r) => a + r.turns, 0) / (fn.length || 1) }; }).sort((a, b) => a.wr - b.wr);
-  $("mu").innerHTML = "<tr><th>Opponent</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>1st</th><th class=n>2nd</th><th class=n>Avg turns</th><th class=n>Games</th></tr>" + rows.map((r) => `<tr><td>${esc(r.name)}</td><td class="n wr ${cls(r.wr)}">${pct(r.wr)}</td><td class="n mute">${pct(r.ci[0])}–${pct(r.ci[1])}</td><td class=n>${pct(r.f)}</td><td class=n>${pct(r.s)}</td><td class=n>${r.turns.toFixed(1)}</td><td class=n>${r.n}${r.stall ? ` <span class=mute>+${r.stall} stalled</span>` : ""}</td></tr>`).join("");
+  lastRes = res; lastMe = me;
+  const W = weightsFor($("field").value);
+  let ws = 0, wsum = 0; for (const r of rows) { const w = W[r.name] ?? 1; if (r.n) { ws += w * r.wr; wsum += w; } }
+  $("weighted").textContent = wsum ? pct(ws / wsum) : "–";
+  if (!document.activeElement?.classList?.contains("w")) $("mu").innerHTML = "<tr><th>Opponent</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>1st</th><th class=n>2nd</th><th class=n>Avg turns</th><th class=n>Games</th><th class=n>Field share</th><th></th></tr>" + rows.map((r) => `<tr><td>${esc(r.name)}</td><td class="n wr ${cls(r.wr)}">${pct(r.wr)}</td><td class="n mute">${pct(r.ci[0])}–${pct(r.ci[1])}</td><td class=n>${pct(r.f)}</td><td class=n>${pct(r.s)}</td><td class=n>${r.turns.toFixed(1)}</td><td class=n>${r.n}${r.stall ? ` <span class=mute>+${r.stall} stalled</span>` : ""}</td><td class=n><input class=w type=number min=0 step=1 value="${W[r.name] ?? 1}" data-opp="${esc(r.name)}" aria-label="Field share for ${esc(r.name)}"></td><td><button class="btn ghost" style="padding:4px 10px" data-watch="${esc(r.name)}">Watch</button></td></tr>`).join("");
   const base = fin.length ? w / fin.length : 0;
   const copies = {}; for (const id of me.main) copies[id] = (copies[id] || 0) + 1;
   await loadNames([me.leader, ...Object.keys(copies)]);
@@ -303,11 +361,130 @@ $("grun").onclick = async () => {
 };
 function drawGrid(decks, M) {
   const tot = decks.map((_, i) => M[i].reduce((a, c) => [a[0] + c[0], a[1] + c[1]], [0, 0]));
-  const order = decks.map((_, i) => i).sort((a, b) => (tot[b][0] / (tot[b][1] || 1)) - (tot[a][0] / (tot[a][1] || 1)));
-  $("grank").innerHTML = "<tr><th>#</th><th>Deck</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>Games</th></tr>" + order.map((i, r) => { const [w, n] = tot[i]; const ci = wilson(w, n); return `<tr><td>${r + 1}</td><td>${esc(decks[i].name)}</td><td class="n wr ${cls(w / (n || 1))}">${n ? pct(w / n) : "–"}</td><td class="n mute">${n ? pct(ci[0]) + "–" + pct(ci[1]) : ""}</td><td class=n>${n}</td></tr>`; }).join("");
+  const adj = (i) => (tot[i][0] + 10) / (tot[i][1] + 20); const order = decks.map((_, i) => i).sort((a, b) => adj(b) - adj(a));
+  $("grank").innerHTML = "<tr><th>#</th><th>Tier</th><th>Deck</th><th class=n>Win rate</th><th class=n>Range</th><th class=n>Games</th></tr>" + order.map((i, r) => { const [w, n] = tot[i]; const ci = wilson(w, n); const t = tierOf(w, n); return `<tr><td>${r + 1}</td><td>${n ? `<span class="tier t${t}">${t}</span>` : ""}</td><td>${esc(decks[i].name)}</td><td class="n wr ${cls(w / (n || 1))}">${n ? pct(w / n) : "–"}</td><td class="n mute">${n ? pct(ci[0]) + "–" + pct(ci[1]) : ""}</td><td class=n>${n}</td></tr>`; }).join("");
   const color = (x) => { const h = x >= 0.5 ? 150 : 5; const a = Math.min(1, Math.abs(x - 0.5) * 2.4); return `background:hsla(${h},60%,45%,${(a * 0.55).toFixed(2)})`; };
   $("gheat").innerHTML = "<tr><th></th>" + order.map((j) => `<th title="${esc(decks[j].name)}">${esc(decks[j].name.slice(0, 22))}</th>`).join("") + "</tr>" + order.map((i) => `<tr><th style="text-align:left">${esc(decks[i].name)}</th>` + order.map((j) => { if (i === j) return "<td class=mute>–</td>"; const [w, n] = M[i][j]; return n ? `<td style="${color(w / n)}" title="${n} games">${pct(w / n)}</td>` : "<td></td>"; }).join("") + "</tr>").join("");
 }
+
+/* ---------- card info ---------- */
+const CARDS = {};
+async function loadCards(ids) { const need = [...new Set(ids)].filter((i) => !CARDS[i]); if (need.length) Object.assign(CARDS, (await helperCall({ type: "cards", ids: need })).cards); }
+const cn = (id) => CARDS[id]?.name ?? NAMES[id]?.name ?? id;
+
+/* ---------- tiers ---------- */
+function tierOf(w, n) { const a = (w + 10) / (n + 20); return a >= 0.57 ? "S" : a >= 0.53 ? "A" : a >= 0.47 ? "B" : a >= 0.43 ? "C" : "D"; }
+
+/* ---------- field weights ---------- */
+let lastRes = null, lastMe = null;
+function weightsFor(field) { return store.get("optcg-lab-w-" + field, {}); }
+$("mu").addEventListener("change", (e) => { const t = e.target; if (!t.classList.contains("w")) return; const W = weightsFor($("field").value); W[t.dataset.opp] = Math.max(0, +t.value || 0); store.set("optcg-lab-w-" + $("field").value, W); t.blur(); if (lastRes) report(lastRes, lastMe); });
+$("mu").addEventListener("click", (e) => { const b = e.target.closest("[data-watch]"); if (!b || !lastMe) return; watchGame(lastMe, findDeck(b.dataset.watch)); });
+function findDeck(name) { for (const f of Object.values(FIELDS)) { const d = f.decks.find((x) => x.name === name); if (d) return d; } return null; }
+
+/* ---------- share link ---------- */
+const PAGES = "https://porosays.github.io/optcg-lab/";
+function encodeDeck(d) { const c = {}; for (const id of d.main) c[id] = (c[id] || 0) + 1; return d.leader + ";" + Object.entries(c).map(([id, n]) => n + "x" + id).join(","); }
+$("share").onclick = async () => {
+  if (!parsed) return;
+  const base = /github\.io$/.test(location.hostname) ? location.origin + location.pathname : PAGES;
+  const url = base + "#deck=" + encodeURIComponent(encodeDeck(parsed));
+  let ok = false; try { await navigator.clipboard.writeText(url); ok = true; } catch {}
+  $("shareMsg").innerHTML = ok ? "Link copied. Anyone who opens it gets this deck loaded." : `Copy this: <input value="${esc(url)}" readonly style="width:260px" onclick="this.select()">`;
+};
+(function readHash() { const m = location.hash.match(/deck=([^&]+)/); if (!m) return; try { const [lead, rest] = decodeURIComponent(m[1]).split(";"); $("deck").value = ["1x" + lead, ...rest.split(",")].join("\n"); delete $("deck").dataset.name; check(); } catch {} })();
+
+/* ---------- deck stats ---------- */
+function choose(n, k) { if (k < 0 || k > n) return 0; let r = 1; for (let i = 1; i <= k; i++) r = r * (n - k + i) / i; return r; }
+function pAtLeastOne(N, K, n) { return K <= 0 ? 0 : 1 - choose(N - K, n) / choose(N, n); }
+async function renderStats() {
+  if (!parsed) { $("stName").textContent = "Paste a legal deck in “Test my deck” first."; return; }
+  const d = parsed; await loadCards([d.leader, ...d.main]);
+  const L = CARDS[d.leader] || {};
+  $("stName").textContent = `${L.name ?? d.leader} (${d.leader}) · ${(L.color || []).join("/")} · ${L.life ?? "?"} life`;
+  const cards = d.main.map((id) => CARDS[id] || {});
+  const c1 = cards.filter((c) => c.counter === 1000).length, c2 = cards.filter((c) => c.counter === 2000).length;
+  const chars = cards.filter((c) => c.type === "character"), evs = cards.filter((c) => c.type === "event"), stages = cards.filter((c) => c.type === "stage");
+  const avg = cards.reduce((a, c) => a + (c.cost ?? 0), 0) / cards.length;
+  const chip = (v, l) => `<div class=chip><b>${v}</b><span>${l}</span></div>`;
+  $("stChips").innerHTML = chip(chars.length, "Characters") + chip(evs.length, "Events") + chip(stages.length, "Stages") + chip(c1, "1k counters") + chip(c2, "2k counters") +
+    chip(((c1 * 1000 + c2 * 2000) / 1000).toFixed(0) + "k", "total counter") + chip(cards.filter((c) => c.trigger).length, "Triggers") + chip(cards.filter((c) => c.blocker).length, "Blockers") + chip(avg.toFixed(2), "average cost");
+  const by = {}; for (const c of cards) { const k = Math.min(10, c.cost ?? 0); (by[k] ??= { ch: 0, ev: 0 }); c.type === "character" ? by[k].ch++ : by[k].ev++; }
+  const max = Math.max(1, ...Object.values(by).map((x) => x.ch + x.ev));
+  $("stCurve").innerHTML = Array.from({ length: 11 }, (_, k) => { const x = by[k] || { ch: 0, ev: 0 }; return `<div><em>${x.ch + x.ev || ""}</em><i class=ev style="height:${(100 * x.ev / max).toFixed(0)}%"></i><i style="height:${(100 * x.ch / max).toFixed(0)}%;border-radius:${x.ev ? 0 : "4px 4px 0 0"}"></i>${k}${k === 10 ? "+" : ""}</div>`; }).join("");
+  const counts = {}; for (const id of d.main) counts[id] = (counts[id] || 0) + 1;
+  const ids = Object.keys(counts).sort((a, b) => (CARDS[a].cost ?? 0) - (CARDS[b].cost ?? 0));
+  const prev = new Set([...$("oddsPick").selectedOptions].map((o) => o.value));
+  $("oddsPick").innerHTML = ids.map((id) => `<option value="${id}" ${prev.has(id) ? "selected" : ""}>${counts[id]}× ${esc(cn(id))} (${CARDS[id].cost ?? "-"})</option>`).join("");
+  if (!prev.size && $("oddsPick").options.length) $("oddsPick").options[0].selected = true;
+  odds(counts);
+  $("stList").innerHTML = "<tr><th class=n>#</th><th>Card</th><th>Type</th><th class=n>Cost</th><th class=n>Power</th><th class=n>Counter</th><th>Text</th></tr>" + ids.map((id) => { const c = CARDS[id]; return `<tr><td class=n>${counts[id]}</td><td>${esc(c.name)} <span class=pill>${id}</span></td><td>${c.type}</td><td class=n>${c.cost ?? ""}</td><td class=n>${c.power ?? ""}</td><td class=n>${c.counter ?? ""}</td><td class=mute style="font-size:12px;max-width:420px">${esc(c.text).slice(0, 220)}${c.text.length > 220 ? "…" : ""}</td></tr>`; }).join("");
+}
+function odds(counts) {
+  const K = [...$("oddsPick").selectedOptions].reduce((a, o) => a + (counts[o.value] || 0), 0);
+  const row = (label, f, s2) => `<tr><td>${label}</td><td class=n>${pct(pAtLeastOne(50, K, f))}</td><td class=n>${pct(pAtLeastOne(50, K, s2))}</td></tr>`;
+  $("oddsTable").innerHTML = `<tr><th>${K} cop${K === 1 ? "y" : "ies"} in 50</th><th class=n>Going 1st</th><th class=n>Going 2nd</th></tr>` + row("Opening hand", 5, 5) + [2, 3, 4, 5, 6].map((t) => row(`By your turn ${t}`, 5 + t - 1, 5 + t)).join("");
+}
+$("oddsPick").onchange = () => { if (!parsed) return; const c = {}; for (const id of parsed.main) c[id] = (c[id] || 0) + 1; odds(c); };
+
+let TH = null;
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+async function thNew(mull) { if (!parsed) return; await loadCards(parsed.main); const deck = shuffle([...parsed.main]); TH = { deck, hand: deck.splice(0, 5), turn: 1, mull }; thDraw(); }
+function thDraw() {
+  const sec = $("thSecond").checked;
+  $("thInfo").textContent = `${TH.mull ? "After mulligan · " : ""}Turn ${TH.turn} ${sec ? "(going second)" : "(going first)"} · ${TH.hand.length} in hand · ${TH.deck.length} left in deck`;
+  $("thHand").innerHTML = TH.hand.map((id) => { const c = CARDS[id] || {}; return `<div class=hcard><b>${esc(c.name ?? id)}</b><span class=m>${c.type ?? ""} · cost ${c.cost ?? "-"}${c.power ? " · " + c.power / 1000 + "k" : ""}${c.counter ? " · +" + c.counter / 1000 + "k ctr" : ""}${c.trigger ? " · Trigger" : ""}</span></div>`; }).join("");
+}
+$("thDraw").onclick = () => thNew(false);
+$("thMull").onclick = () => thNew(true);
+$("thNext").onclick = () => { if (!TH) return thNew(false); const sec = $("thSecond").checked; if (TH.turn === 1 && sec && !TH.d1) TH.d1 = true; else TH.turn++; if (TH.deck.length) TH.hand.push(TH.deck.shift()); thDraw(); };
+
+/* ---------- watch a game ---------- */
+function fillWatchSelects() {
+  const opts = (sel) => `<option value="__me">Your deck (Test my deck box)</option>` + Object.entries(FIELDS).map(([k, f]) => `<optgroup label="${esc(f.label)}">${f.decks.map((d, i) => `<option value="${k}|${i}">${esc(d.name)}</option>`).join("")}</optgroup>`).join("");
+  $("wA").innerHTML = opts(); $("wB").innerHTML = opts(); $("wB").value = "meta|1";
+}
+fillWatchSelects();
+const pickDeck = (v) => v === "__me" ? (parsed ? { ...parsed, name: $("deck").dataset.name || "Your deck" } : null) : (() => { const [k, i] = v.split("|"); return FIELDS[k].decks[+i]; })();
+$("wGo").onclick = () => { const a = pickDeck($("wA").value), b = pickDeck($("wB").value); if (!a || !b) { $("wMsg").textContent = "Your deck box doesn't have a legal deck yet."; return; } watchGame(a, b); };
+let RP = null, RPi = 0, RPtimer = null;
+async function watchGame(a, b) {
+  if (!a || !b) return;
+  document.querySelector('nav button[data-tab="watch"]').click();
+  $("wMsg").textContent = "Playing the game…"; $("wGo").disabled = true; stopAuto();
+  const job = { id: "watch-" + Date.now(), a: { name: a.name, leader: a.leader, main: a.main }, b: { name: b.name, leader: b.leader, main: b.main }, k: Math.floor(Math.random() * 1e6) };
+  const r = await helperCall({ type: "replay", job, bot: $("wBot").value, budget: 16 });
+  $("wGo").disabled = false;
+  if (r.type !== "replay") { $("wMsg").textContent = "That game hit an engine error. Try again."; return; }
+  RP = r.replay; RPi = 0;
+  const ids = new Set(); for (const f of RP.frames) for (const sd of [f.a, f.b]) { ids.add(sd.leader.id); sd.chars.forEach((c) => ids.add(c.id)); sd.stage.forEach((x) => ids.add(x)); sd.handIds.forEach((x) => ids.add(x)); }
+  await loadCards([...ids]);
+  $("wMsg").textContent = `${RP.aName} (A) vs ${RP.bName} (B) · ${RP.aFirst ? "A" : "B"} goes first · ${RP.winner ? (RP.winner === "a" ? RP.aName : RP.bName) + " wins" : "no result"} on turn ${RP.turns}`;
+  $("wOut").classList.remove("hidden");
+  $("wLog").innerHTML = RP.frames.map((f, i) => `<div data-i="${i}" class="${f.kind === "turn" ? "t" : ""}">${esc(f.text)}</div>`).join("");
+  showFrame(0);
+}
+function side(sd, label, name, active) {
+  const u = (id, don, rested, lead, power) => `<div class="unit ${rested ? "rest" : ""} ${lead ? "lead" : ""}" title="${esc(CARDS[id]?.text ?? "")}"><b>${esc(cn(id))}</b>${power != null ? (power / 1000) + "k" : ""}${don ? ` <span class=don>+${don} DON!!</span>` : ""}</div>`;
+  const hand = $("wHands").checked ? `<div class=mute style="font-size:12px;margin-top:6px">Hand: ${sd.handIds.map((x) => esc(cn(x))).join(", ") || "empty"}</div>` : "";
+  return `<h4><span>${label} · ${esc(name)}${active ? " <span class=pill>to act</span>" : ""}</span><span class=mute>${sd.life} life</span></h4>
+    <div class=zone>${u(sd.leader.id, sd.leader.don, sd.leader.rested, true, sd.leader.power)}${sd.chars.map((c) => u(c.id, c.don, c.rested, false, c.power)).join("")}${sd.stage.map((x) => u(x, 0, false, false, null)).join("")}</div>
+    <div class=counts><span>Hand ${sd.hand}</span><span>Deck ${sd.deck}</span><span>Trash ${sd.trash}</span><span>DON!! ${sd.donActive} active · ${sd.donRested} rested · ${sd.donDeck} in DON!! deck</span></div>${hand}`;
+}
+function showFrame(i) {
+  if (!RP) return; RPi = Math.max(0, Math.min(RP.frames.length - 1, i)); const f = RP.frames[RPi];
+  $("wNow").textContent = `Turn ${f.turn} · ${f.text}`;
+  $("wBoardB").innerHTML = side(f.b, "B", RP.bName, f.seat === "b"); $("wBoardA").innerHTML = side(f.a, "A", RP.aName, f.seat === "a");
+  const log = $("wLog"); log.querySelector(".on")?.classList.remove("on"); const el = log.querySelector(`[data-i="${RPi}"]`); if (el) { el.classList.add("on"); el.scrollIntoView({ block: "nearest" }); }
+}
+function stopAuto() { clearInterval(RPtimer); RPtimer = null; $("wPlay").textContent = "▶ Play"; }
+$("wLog").onclick = (e) => { const d = e.target.closest("[data-i]"); if (d) { stopAuto(); showFrame(+d.dataset.i); } };
+$("wFirst").onclick = () => { stopAuto(); showFrame(0); };
+$("wPrev").onclick = () => { stopAuto(); showFrame(RPi - 1); };
+$("wNext").onclick = () => { stopAuto(); showFrame(RPi + 1); };
+$("wTurn").onclick = () => { stopAuto(); const j = RP.frames.findIndex((f, k) => k > RPi && f.kind === "turn"); showFrame(j < 0 ? RP.frames.length - 1 : j); };
+$("wPlay").onclick = () => { if (RPtimer) return stopAuto(); $("wPlay").textContent = "⏸ Pause"; RPtimer = setInterval(() => { if (RPi >= RP.frames.length - 1) return stopAuto(); showFrame(RPi + 1); }, +$("wSpeed").value); };
+$("wHands").onchange = () => showFrame(RPi);
 </script>
 </body>
 </html>
