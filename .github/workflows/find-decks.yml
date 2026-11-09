@@ -19,6 +19,14 @@ on:
       field:
         description: "Opponent deck file (inside the search folder)"
         default: "decks/meta.json"
+      mode:
+        description: "smart = read cards and learn (default), random = old blind builder"
+        type: choice
+        options: [smart, random]
+        default: smart
+      confirm:
+        description: "Fresh games per opponent to re-test each leader's best deck (0 = skip)"
+        default: "0"
 
 permissions:
   contents: read
@@ -54,12 +62,14 @@ jobs:
           GENS: ${{ inputs.gens }}
           GAMES: ${{ inputs.games }}
           FIELD: ${{ inputs.field }}
+          MODE: ${{ inputs.mode }}
+          CONFIRM: ${{ inputs.confirm }}
           SHARD: ${{ matrix.job }}
-        run: bun find-decks.ts --leaders="$LEADERS" --pop="$POP" --gens="$GENS" --games="$GAMES" --field="$FIELD" --shard="$SHARD" --shards=20 --workers=4 --out=out
+        run: bun find-decks.ts --leaders="$LEADERS" --pop="$POP" --gens="$GENS" --games="$GAMES" --field="$FIELD" --mode="$MODE" --confirm="$CONFIRM" --knowledge="$GITHUB_WORKSPACE/nightly/knowledge.json" --shard="$SHARD" --shards=20 --workers=4 --out=out
       - uses: actions/upload-artifact@v4
         with:
           name: found-${{ matrix.job }}
-          path: ${{ env.SEARCH_DIR }}/out/found-*.json
+          path: ${{ env.SEARCH_DIR }}/out/*.json
 
   report:
     needs: search
@@ -85,7 +95,7 @@ jobs:
       - name: Build report
         working-directory: ${{ env.SEARCH_DIR }}
         run: |
-          bun find-report.ts --dir=out
+          bun find-report.ts --dir=out --base="$GITHUB_WORKSPACE/nightly/knowledge.json"
           cat out/found.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:

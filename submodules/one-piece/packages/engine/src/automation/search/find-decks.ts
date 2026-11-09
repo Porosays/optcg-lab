@@ -13,6 +13,9 @@ import { getCard } from "@tcg/op-cards";
 import { cardName, cost, counter, deckToText, isBlock1, isLegal, leaders, poolFor, type Deck } from "./decklist.ts";
 import { runJobs, wilson } from "./pool.ts";
 import type { Job } from "./match-worker.ts";
+import { buildDeck, improve } from "./builder.ts";
+import { emptyKnowledge, loadKnowledge, record, saveKnowledge, topCombos } from "./knowledge.ts";
+import { features, pairSynergy, isOld } from "./synergy.ts";
 
 const arg = (n: string, d?: string) => process.argv.find((x) => x.startsWith(`--${n}=`))?.slice(n.length + 3) ?? d;
 const field: Deck[] = JSON.parse(readFileSync(arg("field", "decks/meta.json")!, "utf8"));
@@ -23,6 +26,11 @@ const outDir = arg("out", "out")!; mkdirSync(outDir, { recursive: true });
 const leaderArg = arg("leaders", "all")!;
 const allLeaders = leaderArg === "all" ? leaders().map((l) => l.id) : leaderArg.split(",").map((s) => s.trim()).filter(Boolean);
 const myLeaders = allLeaders.filter((_, i) => i % shards === shard);
+// smart = read cards, build like a player, learn from games (default). random = the old blind generator.
+const MODE = arg("mode", "smart")!;
+const knowledge = loadKnowledge(arg("knowledge")); // everything learned so far (used for building)
+const learned = emptyKnowledge(); // only this run's games (saved, then merged by find-report)
+const CONFIRM = Number(arg("confirm", "0")); // fresh games per field deck to re-test each leader's best deck
 
 let seed = 0x9e3779b9 ^ (shard * 7919);
 const rnd = () => ((seed = (seed * 1103515245 + 12345) >>> 0) / 4294967296);
@@ -97,6 +105,13 @@ async function evaluate(decks: Deck[]): Promise<Scored[]> {
   const jobs: Job[] = decks.flatMap((d, i) => { d.name = `${d.leader}#${allScored.length + i}`;
     return field.flatMap((opp) => Array.from({ length: GAMES }, (_, k) => ({ id: `f-${opp.name}`, a: d, b: opp, k }))); });
   const rs = await runJobs(jobs, { workers });
+  for (const r of rs) if (r.winner && !r.broken) {
+    const d = decks.find((x) => x.name === r.aName)!; const opp = field.find((f) => f.name === r.bName);
+    for (const k of [knowledge, learned]) {
+      record(k, d.leader, r.winner === "a", Object.keys(r.aPlayed));
+      if (opp) record(k, opp.leader, r.winner === "b", Object.keys(r.bPlayed));
+    }
+  }
   return decks.map((d) => {
     const mine = rs.filter((r) => r.aName === d.name && !r.broken && r.winner);
     const w = mine.filter((r) => r.winner === "a").length, g = mine.length;
@@ -113,7 +128,8 @@ for (const leader of myLeaders) {
   const pool = poolFor(leader);
   if (pool.length < 15) { console.log(`skip ${leader}: pool ${pool.length}`); continue; }
   const seen = new Set<string>();
-  const init = Array.from({ length: POP }, () => generate(leader, pool)).filter((d): d is Deck => !!d);
+  const init = Array.from({ length: POP }, (_, i) => MODE === "random" ? generate(leader, pool)
+    : buildDeck(leader, pool, { random: rnd, temperature: 0.6 + (i % 4) * 0.5, oldBias: i % 3 === 2 ? 2.5 : 0, knowledge })).filter((d): d is Deck => !!d);
   init.forEach((d) => seen.add(key(d)));
   let scored = await evaluate(init);
   const elites = new Map<string, Scored>(); // best per style bucket
@@ -122,18 +138,33 @@ for (const leader of myLeaders) {
   for (let gen = 0; gen < GENS; gen++) {
     const parents = [...elites.values(), ...scored.sort((a, b) => b.wr - a.wr).slice(0, 3)];
     const kids: Deck[] = [];
-    for (let i = 0; i < POP * 3 && kids.length < POP; i++) { const k = mutate(pick(parents).deck, pool); if (!seen.has(key(k))) { seen.add(key(k)); kids.push(k); } }
+    for (let i = 0; i < POP * 3 && kids.length < POP; i++) { const par = pick(parents).deck; const k = MODE === "random" ? mutate(par, pool) : improve(par, pool, { random: rnd, knowledge, explore: 0.2, oldBias: par.main.filter(isBlock1).length >= 12 ? 2 : 0 }); if (!seen.has(key(k))) { seen.add(key(k)); kids.push(k); } }
     scored = await evaluate(kids);
     keep(scored);
   }
   const best = [...elites.values()].sort((a, b) => b.wr - a.wr);
+  if (CONFIRM && best[0]) {
+    const d = best[0].deck; const jobs: Job[] = field.flatMap((opp) => Array.from({ length: CONFIRM }, (_, k) => ({ id: `c-${opp.name}`, a: d, b: opp, k: 100000 + k })));
+    const rs = (await runJobs(jobs, { workers })).filter((r) => r.winner && !r.broken);
+    (best[0] as any).confirmed = { w: rs.filter((r) => r.winner === "a").length, g: rs.length };
+  }
   elitesAll.push(...best);
-  console.log(`${leader} ${cardName(leader)}: best ${Math.round(100 * (best[0]?.wr ?? 0))}% (${best[0]?.style}), ${best.length} styles, ${Math.round((Date.now() - t0) / 1000)}s`);
+  const cf = (best[0] as any)?.confirmed;
+  console.log(`${leader} ${cardName(leader)}: best ${Math.round(100 * (best[0]?.wr ?? 0))}% (${best[0]?.style})${cf ? `, confirmed ${Math.round(100 * cf.w / Math.max(1, cf.g))}% over ${cf.g} fresh games` : ""}, ${best.length} styles, ${Math.round((Date.now() - t0) / 1000)}s`);
 }
 
 writeFileSync(`${outDir}/found-${shard}.json`, JSON.stringify({ field: field.map((f) => f.name), games: GAMES,
   elites: elitesAll.map((e) => ({ ...e, ci: wilson(e.w, e.g), text: deckToText(e.deck) })),
-  cards: cardStats() }, null, 0));
+  cards: cardStats(), combos: combosFor(myLeaders) }, null, 0));
+saveKnowledge(`${outDir}/knowledge-${shard}.json`, learned);
+
+/** Pairs that won more together than apart, with the card-text reason when there is one. */
+function combosFor(ls: string[]) {
+  return ls.flatMap((l) => topCombos(knowledge, l, 12).map((c) => {
+    const fa = features(c.a), fb = features(c.b); const why = fa && fb ? pairSynergy(fa, fb).why[0] ?? null : null;
+    return { leader: l, ...c, why, old: [isOld(c.a), isOld(c.b)] };
+  }));
+}
 
 /** How decks containing each card scored, relative to that leader's average (combo/old-card hints). */
 function cardStats() {

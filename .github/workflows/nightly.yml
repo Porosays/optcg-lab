@@ -60,9 +60,9 @@ jobs:
       - name: Build and evolve decks
         working-directory: ${{ env.SEARCH_DIR }}
         env: { SHARD: "${{ matrix.job }}" }
-        run: bun find-decks.ts --leaders=all --pop=8 --gens=4 --games=6 --field=decks/meta.json --shard="$SHARD" --shards=10 --workers=4 --out=out
+        run: bun find-decks.ts --leaders=all --pop=8 --gens=4 --games=6 --field=decks/meta.json --mode=smart --confirm=10 --knowledge="$GITHUB_WORKSPACE/nightly/knowledge.json" --shard="$SHARD" --shards=10 --workers=4 --out=out
       - uses: actions/upload-artifact@v4
-        with: { name: "found-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/found-*.json" }
+        with: { name: "found-${{ matrix.job }}", path: "${{ env.SEARCH_DIR }}/out/*.json" }
 
   report:
     needs: [grid, find]
@@ -90,9 +90,10 @@ jobs:
         working-directory: ${{ env.SEARCH_DIR }}
         run: |
           bun aggregate.ts --decks="$FIELD" --dir=out || true
-          bun find-report.ts --dir=found > /dev/null || true
+          bun find-report.ts --dir=found --base="$GITHUB_WORKSPACE/nightly/knowledge.json" > /dev/null || true
           mkdir -p "$GITHUB_WORKSPACE/nightly/latest" "$GITHUB_WORKSPACE/nightly/history"
           cp out/grid.md out/grid.json found/found.md found/found-summary.json "$GITHUB_WORKSPACE/nightly/latest/" 2>/dev/null || true
+          cp found/knowledge.json "$GITHUB_WORKSPACE/nightly/knowledge.json" 2>/dev/null || true
           cp found/found-summary.json "$GITHUB_WORKSPACE/nightly/history/$(date -u +%F)-found.json" 2>/dev/null || true
           { echo "# Nightly lab run $(date -u +%F)"; echo; cat out/grid.md 2>/dev/null; echo; cat found/found.md 2>/dev/null; } >> "$GITHUB_STEP_SUMMARY"
       - name: Save results
@@ -101,7 +102,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add nightly
           git diff --cached --quiet || git commit -m "Nightly lab results $(date -u +%F)"
-          git push
+          git pull --rebase origin main && git push
       - name: Rebuild the site with tonight's results
         env: { GH_TOKEN: "${{ github.token }}" }
         run: gh workflow run pages.yml --ref main

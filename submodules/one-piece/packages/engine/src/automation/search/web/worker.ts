@@ -11,6 +11,9 @@ import { getCard, hasCard } from "@tcg/op-cards";
 import { playJob } from "../play.ts";
 import { parseDecklist } from "../decklist.ts";
 import { playReplay } from "../replay.ts";
+import { leaders, poolFor, deckToText } from "../decklist.ts";
+import { features, pairSynergy, isOld } from "../synergy.ts";
+import { poolScores, buildDeck } from "../builder.ts";
 
 self.onmessage = (e: MessageEvent<any>) => {
   const m = e.data;
@@ -31,6 +34,32 @@ self.onmessage = (e: MessageEvent<any>) => {
           color: c.color ?? [], traits: c.traits ?? [], trigger: /\[Trigger\]/i.test(text), blocker: /\[Blocker\]/i.test(text), text };
       }
       post({ type: "cards", id: m.id, cards });
+    } else if (m.type === "leaders") {
+      post({ type: "leaders", id: m.id, leaders: leaders().map((l: any) => ({ id: l.id, name: l.name, color: l.color, traits: l.traits ?? [] })) });
+    } else if (m.type === "combos") {
+      const L = features(m.leader)!;
+      const pool = poolFor(m.leader);
+      const sc = poolScores(m.leader, pool).sort((a, b) => b.base - a.base);
+      const fit = sc.filter((x) => x.fit > 0);
+      const top = sc.slice(0, 70);
+      const pairs: any[] = [];
+      for (let i = 0; i < top.length; i++) for (let j = i + 1; j < top.length; j++) {
+        const p = pairSynergy(top[i]!.f, top[j]!.f);
+        if (p.score) pairs.push({ a: top[i]!.id, b: top[j]!.id, why: p.why[0], score: top[i]!.base + top[j]!.base + p.score * 2, old: [isOld(top[i]!.id), isOld(top[j]!.id)] });
+      }
+      pairs.sort((x, y) => y.score - x.score);
+      // variety: each card shows up in at most 2 pairs, and one pair per card couple
+      const uses = new Map<string, number>(), seenPair = new Set<string>(), picked: any[] = [];
+      for (const p of pairs) { const k = [p.a, p.b].sort().join("|"); if (seenPair.has(k) || (uses.get(p.a) ?? 0) >= 2 || (uses.get(p.b) ?? 0) >= 2) continue; seenPair.add(k); uses.set(p.a, (uses.get(p.a) ?? 0) + 1); uses.set(p.b, (uses.get(p.b) ?? 0) + 1); picked.push(p); }
+      pairs.length = 0; pairs.push(...picked);
+      const card = (x: any) => ({ id: x.id, fit: x.fit, why: x.why[0] ?? null, roles: [...x.f.roles], old: isOld(x.id), cost: x.f.cost, type: x.f.type });
+      post({ type: "combos", id: m.id, leader: { id: L.id, name: L.name, traits: L.traits, colors: L.colors, wants: L.wants.map((w) => w.how) },
+        poolSize: pool.length, engine: fit.slice(0, 30).map(card), oldFits: fit.filter((x) => isOld(x.id)).slice(0, 16).map(card),
+        stars: sc.filter((x) => x.fit <= 0).slice(0, 12).map(card), pairs: pairs.slice(0, 40) });
+    } else if (m.type === "build") {
+      let r = (m.seed ?? Date.now()) >>> 0 || 1; const random = () => ((r = (r * 1103515245 + 12345) >>> 0) / 4294967296);
+      const d = buildDeck(m.leader, poolFor(m.leader), { random, temperature: 0.8, oldBias: m.old ? 2.5 : 0 });
+      post({ type: "built", id: m.id, deck: d, text: d ? deckToText(d) : null });
     } else if (m.type === "replay") {
       post({ type: "replay", id: m.id, replay: playReplay(m.job, m.bot, m.budget ?? 16) });
     } else if (m.type === "run") {

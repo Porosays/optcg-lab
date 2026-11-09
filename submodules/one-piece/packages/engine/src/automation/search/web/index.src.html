@@ -84,6 +84,7 @@ input.w{width:64px;padding:3px 6px;text-align:right}
 <nav>
   <button data-tab="test" class="on">Test my deck</button>
   <button data-tab="compare">Compare versions</button>
+  <button data-tab="combos">Combo finder</button>
   <button data-tab="stats">Deck stats</button>
   <button data-tab="watch">Watch a game</button>
   <button data-tab="grid">Deck vs deck grid</button>
@@ -159,6 +160,24 @@ input.w{width:64px;padding:3px 6px;text-align:right}
   </div>
   <div class="card hidden" id="cmpOut"><div class="stats" id="cmpHead"></div><div class="scroll" style="margin-top:12px"><table id="cmpTable"></table></div>
     <p class="note">A difference under about 5 points with a few hundred games is usually noise. Run more games before trusting a small edge.</p></div>
+</section>
+
+<section id="tab-combos" class="hidden">
+  <div class="card">
+    <h3 style="margin-top:0">Pick a leader</h3>
+    <p class="mute" style="margin-top:0;font-size:13px">The bot reads every legal card for that leader, old and new, and shows what works together and why. Combos proven in the bots' games are marked ✔.</p>
+    <input id="cfSearch" placeholder="Search leaders by name, color or type (e.g. Luffy, red, Alabasta)" style="max-width:520px">
+    <div class="leaders" id="cfLeaders" style="max-height:330px;overflow:auto;margin-top:10px"></div>
+  </div>
+  <div id="cfOut" class="hidden">
+    <div class="card"><div id="cfHead"></div>
+      <div class="row" style="margin-top:12px;max-width:640px"><button class="btn" id="cfBuild" style="flex:0 0 auto">Build a deck around this</button><button class="btn ghost" id="cfBuildOld" style="flex:0 0 auto">Build one with old cards</button></div>
+      <div class="mute" id="cfBuildMsg" style="font-size:13px;margin-top:6px"></div></div>
+    <div class="card" id="cfLearnedCard"><h3 style="margin-top:0">✔ Combos proven in bot games</h3><div id="cfLearned"></div></div>
+    <div class="card"><h3 style="margin-top:0">Combos on paper</h3><p class="mute" style="margin-top:0;font-size:13px">Pairs where one card finds, plays or powers up the other. Old cards (OP-01 to OP-04, early starters) are tagged.</p><div id="cfPairs"></div></div>
+    <div class="card"><h3 style="margin-top:0">Engine cards for this leader</h3><div class="cgrid" id="cfEngine"></div></div>
+    <div class="card"><h3 style="margin-top:0">Old cards that fit</h3><div class="cgrid" id="cfOld"></div></div>
+  </div>
 </section>
 
 <section id="tab-stats" class="hidden">
@@ -269,7 +288,7 @@ $("workers").value = cores;
 /* ---------- tabs ---------- */
 document.querySelectorAll("nav button").forEach((b) => b.onclick = () => {
   document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("on", x === b));
-  for (const t of ["test", "compare", "stats", "watch", "grid", "finds", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
+  for (const t of ["test", "compare", "combos", "stats", "watch", "grid", "finds", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
   if (b.dataset.tab === "memory") renderMemory();
   if (b.dataset.tab === "stats") renderStats();
 });
@@ -641,6 +660,47 @@ function renderFinds() {
 }
 document.querySelector('nav button[data-tab="finds"]').addEventListener("click", renderFinds);
 $("fDecks").addEventListener("click", (e) => { const b = e.target.closest("[data-load]"); if (!b) return; const d = NIGHTLY.found.decks[+b.dataset.load]; $("deck").value = toText({ leader: d.leader, main: d.main }); $("deck").dataset.name = `Bot deck: ${d.leader} ${d.style}`; check(); document.querySelector('nav button[data-tab="test"]').click(); });
+
+/* ---------- combo finder ---------- */
+let LEADERS = null;
+async function cfInit() {
+  if (!LEADERS) { LEADERS = (await helperCall({ type: "leaders" })).leaders; for (const l of LEADERS) NAMES[l.id] = { name: l.name }; }
+  cfFilter();
+}
+function cfFilter() {
+  const q = $("cfSearch").value.trim().toLowerCase();
+  const list = LEADERS.filter((l) => !q || (l.name + " " + l.id + " " + l.color.join(" ") + " " + l.traits.join(" ")).toLowerCase().includes(q)).slice(0, 120);
+  $("cfLeaders").innerHTML = list.map((l) => `<div class=lt data-lead="${l.id}" title="${esc(l.name)} ${l.id}">${lthumb(l.id, true)}<span>${esc(l.name)}<br><small class=mute>${l.id}</small></span></div>`).join("") || "<span class=mute>No leader matches.</span>";
+}
+$("cfSearch").oninput = () => { clearTimeout(window._cf); window._cf = setTimeout(cfFilter, 150); };
+document.querySelector('nav button[data-tab="combos"]').addEventListener("click", cfInit);
+let cfLeader = null;
+$("cfLeaders").addEventListener("click", async (e) => {
+  const t = e.target.closest("[data-lead]"); if (!t || e.target.closest("[data-card]") && !matchMedia("(hover:hover)").matches) { if (!t) return; }
+  cfLeader = t.dataset.lead; $("cfOut").classList.remove("hidden"); $("cfHead").innerHTML = "<span class=mute>Reading every card for this leader…</span>";
+  const r = await helperCall({ type: "combos", leader: cfLeader });
+  await loadCards([cfLeader, ...r.engine.map((c) => c.id), ...r.oldFits.map((c) => c.id), ...r.pairs.flatMap((p) => [p.a, p.b])]);
+  const L = r.leader;
+  $("cfHead").innerHTML = `<div class=vs>${lthumb(L.id, true)}<div><b>${esc(L.name)}</b> <span class=pill>${L.id}</span><div class=mute style="font-size:13px">${L.colors.join("/")} · {${L.traits.join("} {")}} · ${r.poolSize} legal cards</div>${L.wants.length ? `<div style="font-size:13px;margin-top:4px">Leader ${esc(L.wants.slice(0, 3).join("; "))}</div>` : ""}</div></div>`;
+  const tag = (old) => old ? ` <span class=pill style="background:var(--mid);color:#111">old</span>` : "";
+  const pairRow = (a, b, why, oldA, oldB, extra) => `<div class=who style="padding:8px 0;border-bottom:1px solid var(--line);gap:8px"><div style="width:52px">${cimg(a)}</div><span style="font-size:18px">+</span><div style="width:52px">${cimg(b)}</div><div class=nm style="font-size:13px"><b>${esc(cn(a))}</b>${tag(oldA)} + <b>${esc(cn(b))}</b>${tag(oldB)}${extra ?? ""}<small>${esc(why ?? "")}</small></div></div>`;
+  $("cfPairs").innerHTML = r.pairs.map((p) => pairRow(p.a, p.b, p.why, p.old[0], p.old[1])).join("") || "<span class=mute>No text-based combos found for this leader.</span>";
+  const learned = (NIGHTLY?.found?.combos || []).filter((c) => c.leader === cfLeader);
+  $("cfLearnedCard").classList.toggle("hidden", !learned.length);
+  if (learned.length) { await loadCards(learned.flatMap((c) => [c.a, c.b])); $("cfLearned").innerHTML = learned.map((c) => pairRow(c.a, c.b, c.why ?? "found by play, no text link", c.old[0], c.old[1], ` <span class="pill" style="background:var(--good);color:#fff">+${Math.round(100 * c.extra)}% wins together · ${c.games} games</span>`)).join(""); }
+  const grid = (xs) => xs.map((c) => `<div class=cg data-card="${c.id}">${cimg(c.id)}${c.old ? `<span class=cnt style="background:var(--mid);color:#111">old</span>` : ""}<div class=lbl><small>${esc(c.why ?? c.roles.join(", "))}</small></div></div>`).join("");
+  $("cfEngine").innerHTML = grid(r.engine); $("cfOld").innerHTML = grid(r.oldFits) || "<span class=mute>No old cards link to this leader's text.</span>";
+  $("cfBuildMsg").textContent = "";
+});
+async function cfBuild(old) {
+  if (!cfLeader) return; $("cfBuildMsg").textContent = "Building…";
+  const r = await helperCall({ type: "build", leader: cfLeader, old, seed: Date.now() });
+  if (!r.deck) { $("cfBuildMsg").textContent = "Couldn't build a legal deck for this leader."; return; }
+  $("deck").value = r.text; $("deck").dataset.name = `Bot-built ${cn(cfLeader)}${old ? " (old cards)" : ""}`; check();
+  $("cfBuildMsg").textContent = "Built and loaded into Test my deck. Test it there, or open Deck stats to look it over.";
+  document.querySelector('nav button[data-tab="test"]').click();
+}
+$("cfBuild").onclick = () => cfBuild(false); $("cfBuildOld").onclick = () => cfBuild(true);
 
 /* ---------- card popover (hover on desktop, tap on phones) ---------- */
 let popFor = null;
