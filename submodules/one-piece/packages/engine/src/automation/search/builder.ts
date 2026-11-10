@@ -59,7 +59,9 @@ export function buildDeck(leader: string, pool: string[], o: BuildOpts): Deck | 
     const main = chosen.flatMap((c) => Array(c.n).fill(c.id));
     const d: Deck = { name: "", leader, main };
     const counters = main.filter((id) => { const f = features(id)!; return f.counter > 0 || f.roles.has("counterEvent"); }).length;
-    if (main.length === 50 && counters >= 14 && isLegal(d)) return d;
+    // most decks want 14+ counter cards, but some leaders (e.g. Xebec) run almost none: relax on later tries
+    const floor = attempt < 8 ? 14 : attempt < 10 ? 6 : 0;
+    if (main.length === 50 && counters >= floor && isLegal(d)) return d;
   }
   return null;
 }

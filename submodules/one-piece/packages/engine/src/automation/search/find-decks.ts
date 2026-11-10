@@ -135,6 +135,7 @@ for (const leader of myLeaders) {
   const seen = new Set<string>();
   const init = Array.from({ length: POP }, (_, i) => MODE === "random" ? generate(leader, pool)
     : buildDeck(leader, pool, { random: rnd, temperature: 0.6 + (i % 4) * 0.5, oldBias: i % 3 === 2 ? 2.5 : 0, knowledge })).filter((d): d is Deck => !!d);
+  if (!init.length) { console.log(`skip ${leader}: could not build a legal deck`); continue; }
   init.forEach((d) => seen.add(key(d)));
   let scored = await evaluate(init);
   const elites = new Map<string, Scored>(); // best per style bucket
