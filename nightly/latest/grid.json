@@ -1,0 +1,4014 @@
+{
+ "decks": [
+  "OP18 Saint Gunko — Paparis99 (testing, Nov 6)",
+  "OP18 Saint Gunko Full Knights — Paparis99",
+  "OP18 Saint Gunko Anti-Removal Zoro — Paparis99",
+  "OP18 Saint Gunko 3C Yamato — Paparis99",
+  "OP18 Saint Gunko — OrthranTCG",
+  "OP18 Spandam — saulvarela00",
+  "OP18 Karoo prototype — Par2Singular",
+  "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)",
+  "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)",
+  "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)",
+  "OP18 Green Luffy (sim-built)",
+  "OP18 GP Franky (sim-built)",
+  "OP18 PB Saint Gunko (sim-built)",
+  "OP18 BY Spandam (sim-built)",
+  "OP18 RU Karoo (sim-built)",
+  "OP18 Blue Ms. All Sunday (sim-built)",
+  "RG Luffy (OP13-001)",
+  "Blue Xebec",
+  "Yellow Enel (OP05-098)",
+  "RG Luffy & Ace",
+  "Green Shanks",
+  "RB Sabo"
+ ],
+ "grid": [
+  {
+   "deck": "OP18 Saint Gunko — Paparis99 (testing, Nov 6)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": null,
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.3,
+     "games": 40,
+     "ci": [
+      0.181,
+      0.454
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Saint Gunko Full Knights — Paparis99",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": null,
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.275,
+     "games": 40,
+     "ci": [
+      0.161,
+      0.428
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Saint Gunko Anti-Removal Zoro — Paparis99",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": null,
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.125,
+     "games": 40,
+     "ci": [
+      0.055,
+      0.261
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.175,
+     "games": 40,
+     "ci": [
+      0.087,
+      0.32
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.125,
+     "games": 40,
+     "ci": [
+      0.055,
+      0.261
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Saint Gunko 3C Yamato — Paparis99",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": null,
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.275,
+     "games": 40,
+     "ci": [
+      0.161,
+      0.428
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.75,
+     "games": 40,
+     "ci": [
+      0.598,
+      0.858
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Saint Gunko — OrthranTCG",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": null,
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.375,
+     "games": 40,
+     "ci": [
+      0.242,
+      0.53
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.25,
+     "games": 40,
+     "ci": [
+      0.142,
+      0.402
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Spandam — saulvarela00",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "OP18 Spandam — saulvarela00": null,
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.275,
+     "games": 40,
+     "ci": [
+      0.161,
+      0.428
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.25,
+     "games": 40,
+     "ci": [
+      0.142,
+      0.402
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Karoo prototype — Par2Singular",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": null,
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.75,
+     "games": 40,
+     "ci": [
+      0.598,
+      0.858
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.7,
+     "games": 40,
+     "ci": [
+      0.546,
+      0.819
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.875,
+     "games": 40,
+     "ci": [
+      0.739,
+      0.945
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.7,
+     "games": 40,
+     "ci": [
+      0.546,
+      0.819
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.25,
+     "games": 40,
+     "ci": [
+      0.142,
+      0.402
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": null,
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.825,
+     "games": 40,
+     "ci": [
+      0.68,
+      0.913
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.3,
+     "games": 40,
+     "ci": [
+      0.181,
+      0.454
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.825,
+     "games": 40,
+     "ci": [
+      0.68,
+      0.913
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.125,
+     "games": 40,
+     "ci": [
+      0.055,
+      0.261
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.3,
+     "games": 40,
+     "ci": [
+      0.181,
+      0.454
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": null,
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.875,
+     "games": 40,
+     "ci": [
+      0.739,
+      0.945
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.825,
+     "games": 40,
+     "ci": [
+      0.68,
+      0.913
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.725,
+     "games": 40,
+     "ci": [
+      0.572,
+      0.839
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": null,
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.7,
+     "games": 40,
+     "ci": [
+      0.546,
+      0.819
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.25,
+     "games": 40,
+     "ci": [
+      0.142,
+      0.402
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.625,
+     "games": 40,
+     "ci": [
+      0.47,
+      0.758
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Green Luffy (sim-built)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.75,
+     "games": 40,
+     "ci": [
+      0.598,
+      0.858
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.125,
+     "games": 40,
+     "ci": [
+      0.055,
+      0.261
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.175,
+     "games": 40,
+     "ci": [
+      0.087,
+      0.32
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": null,
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.75,
+     "games": 40,
+     "ci": [
+      0.598,
+      0.858
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.3,
+     "games": 40,
+     "ci": [
+      0.181,
+      0.454
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 GP Franky (sim-built)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 GP Franky (sim-built)": null,
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 PB Saint Gunko (sim-built)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.725,
+     "games": 40,
+     "ci": [
+      0.572,
+      0.839
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.725,
+     "games": 40,
+     "ci": [
+      0.572,
+      0.839
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.625,
+     "games": 40,
+     "ci": [
+      0.47,
+      0.758
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": null,
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.25,
+     "games": 40,
+     "ci": [
+      0.142,
+      0.402
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.375,
+     "games": 40,
+     "ci": [
+      0.242,
+      0.53
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 BY Spandam (sim-built)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.3,
+     "games": 40,
+     "ci": [
+      0.181,
+      0.454
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": null,
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.275,
+     "games": 40,
+     "ci": [
+      0.161,
+      0.428
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 RU Karoo (sim-built)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.875,
+     "games": 40,
+     "ci": [
+      0.739,
+      0.945
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": null,
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    }
+   }
+  },
+  {
+   "deck": "OP18 Blue Ms. All Sunday (sim-built)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.7,
+     "games": 40,
+     "ci": [
+      0.546,
+      0.819
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": null,
+    "RG Luffy (OP13-001)": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.125,
+     "games": 40,
+     "ci": [
+      0.055,
+      0.261
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    }
+   }
+  },
+  {
+   "deck": "RG Luffy (OP13-001)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.825,
+     "games": 40,
+     "ci": [
+      0.68,
+      0.913
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.175,
+     "games": 40,
+     "ci": [
+      0.087,
+      0.32
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.75,
+     "games": 40,
+     "ci": [
+      0.598,
+      0.858
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.75,
+     "games": 40,
+     "ci": [
+      0.598,
+      0.858
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    },
+    "RG Luffy (OP13-001)": null,
+    "Blue Xebec": {
+     "wr": 0.7,
+     "games": 40,
+     "ci": [
+      0.546,
+      0.819
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.4,
+     "games": 40,
+     "ci": [
+      0.263,
+      0.554
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.175,
+     "games": 40,
+     "ci": [
+      0.087,
+      0.32
+     ]
+    }
+   }
+  },
+  {
+   "deck": "Blue Xebec",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.25,
+     "games": 40,
+     "ci": [
+      0.142,
+      0.402
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.375,
+     "games": 40,
+     "ci": [
+      0.242,
+      0.53
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.725,
+     "games": 40,
+     "ci": [
+      0.572,
+      0.839
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.3,
+     "games": 40,
+     "ci": [
+      0.181,
+      0.454
+     ]
+    },
+    "Blue Xebec": null,
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    }
+   }
+  },
+  {
+   "deck": "Yellow Enel (OP05-098)",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.7,
+     "games": 40,
+     "ci": [
+      0.546,
+      0.819
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.65,
+     "games": 40,
+     "ci": [
+      0.495,
+      0.779
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.75,
+     "games": 40,
+     "ci": [
+      0.598,
+      0.858
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.25,
+     "games": 40,
+     "ci": [
+      0.142,
+      0.402
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.625,
+     "games": 40,
+     "ci": [
+      0.47,
+      0.758
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.1,
+     "games": 40,
+     "ci": [
+      0.04,
+      0.231
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.225,
+     "games": 40,
+     "ci": [
+      0.123,
+      0.375
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.475,
+     "games": 40,
+     "ci": [
+      0.329,
+      0.625
+     ]
+    },
+    "Yellow Enel (OP05-098)": null,
+    "RG Luffy & Ace": {
+     "wr": 0.075,
+     "games": 40,
+     "ci": [
+      0.026,
+      0.199
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.625,
+     "games": 40,
+     "ci": [
+      0.47,
+      0.758
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.15,
+     "games": 40,
+     "ci": [
+      0.071,
+      0.291
+     ]
+    }
+   }
+  },
+  {
+   "deck": "RG Luffy & Ace",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.3,
+     "games": 40,
+     "ci": [
+      0.181,
+      0.454
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.875,
+     "games": 40,
+     "ci": [
+      0.739,
+      0.945
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.7,
+     "games": 40,
+     "ci": [
+      0.546,
+      0.819
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.45,
+     "games": 40,
+     "ci": [
+      0.307,
+      0.602
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.875,
+     "games": 40,
+     "ci": [
+      0.739,
+      0.945
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.975,
+     "games": 40,
+     "ci": [
+      0.871,
+      0.996
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "RG Luffy & Ace": null,
+    "Green Shanks": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "RB Sabo": {
+     "wr": 0.625,
+     "games": 40,
+     "ci": [
+      0.47,
+      0.758
+     ]
+    }
+   }
+  },
+  {
+   "deck": "Green Shanks",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.35,
+     "games": 40,
+     "ci": [
+      0.221,
+      0.505
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.55,
+     "games": 40,
+     "ci": [
+      0.398,
+      0.693
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.6,
+     "games": 40,
+     "ci": [
+      0.446,
+      0.737
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.125,
+     "games": 40,
+     "ci": [
+      0.055,
+      0.261
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.525,
+     "games": 40,
+     "ci": [
+      0.375,
+      0.671
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 0.925,
+     "games": 40,
+     "ci": [
+      0.801,
+      0.974
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.05,
+     "games": 40,
+     "ci": [
+      0.014,
+      0.165
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.025,
+     "games": 40,
+     "ci": [
+      0.004,
+      0.129
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.425,
+     "games": 40,
+     "ci": [
+      0.285,
+      0.578
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.675,
+     "games": 40,
+     "ci": [
+      0.52,
+      0.799
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.375,
+     "games": 40,
+     "ci": [
+      0.242,
+      0.53
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0,
+     "games": 40,
+     "ci": [
+      0,
+      0.088
+     ]
+    },
+    "Green Shanks": null,
+    "RB Sabo": {
+     "wr": 0.375,
+     "games": 40,
+     "ci": [
+      0.242,
+      0.53
+     ]
+    }
+   }
+  },
+  {
+   "deck": "RB Sabo",
+   "vs": {
+    "OP18 Saint Gunko — Paparis99 (testing, Nov 6)": {
+     "wr": 0.775,
+     "games": 40,
+     "ci": [
+      0.625,
+      0.877
+     ]
+    },
+    "OP18 Saint Gunko Full Knights — Paparis99": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Saint Gunko Anti-Removal Zoro — Paparis99": {
+     "wr": 0.875,
+     "games": 40,
+     "ci": [
+      0.739,
+      0.945
+     ]
+    },
+    "OP18 Saint Gunko 3C Yamato — Paparis99": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Saint Gunko — OrthranTCG": {
+     "wr": 0.9,
+     "games": 40,
+     "ci": [
+      0.769,
+      0.96
+     ]
+    },
+    "OP18 Spandam — saulvarela00": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "OP18 Karoo prototype — Par2Singular": {
+     "wr": 0.2,
+     "games": 40,
+     "ci": [
+      0.105,
+      0.348
+     ]
+    },
+    "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)": {
+     "wr": 0.575,
+     "games": 40,
+     "ci": [
+      0.422,
+      0.715
+     ]
+    },
+    "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)": {
+     "wr": 0.175,
+     "games": 40,
+     "ci": [
+      0.087,
+      0.32
+     ]
+    },
+    "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)": {
+     "wr": 0.8,
+     "games": 40,
+     "ci": [
+      0.652,
+      0.895
+     ]
+    },
+    "OP18 Green Luffy (sim-built)": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "OP18 GP Franky (sim-built)": {
+     "wr": 1,
+     "games": 40,
+     "ci": [
+      0.912,
+      1
+     ]
+    },
+    "OP18 PB Saint Gunko (sim-built)": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "OP18 BY Spandam (sim-built)": {
+     "wr": 0.95,
+     "games": 40,
+     "ci": [
+      0.835,
+      0.986
+     ]
+    },
+    "OP18 RU Karoo (sim-built)": {
+     "wr": 0.325,
+     "games": 40,
+     "ci": [
+      0.201,
+      0.48
+     ]
+    },
+    "OP18 Blue Ms. All Sunday (sim-built)": {
+     "wr": 0.5,
+     "games": 40,
+     "ci": [
+      0.352,
+      0.648
+     ]
+    },
+    "RG Luffy (OP13-001)": {
+     "wr": 0.825,
+     "games": 40,
+     "ci": [
+      0.68,
+      0.913
+     ]
+    },
+    "Blue Xebec": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "Yellow Enel (OP05-098)": {
+     "wr": 0.85,
+     "games": 40,
+     "ci": [
+      0.709,
+      0.929
+     ]
+    },
+    "RG Luffy & Ace": {
+     "wr": 0.375,
+     "games": 40,
+     "ci": [
+      0.242,
+      0.53
+     ]
+    },
+    "Green Shanks": {
+     "wr": 0.625,
+     "games": 40,
+     "ci": [
+      0.47,
+      0.758
+     ]
+    },
+    "RB Sabo": null
+   }
+  }
+ ],
+ "overall": [
+  {
+   "deck": "OP18 Karoo prototype — Par2Singular",
+   "wr": 0.9011904761904762,
+   "games": 840,
+   "first": 0.8952380952380953,
+   "second": 0.9071428571428571
+  },
+  {
+   "deck": "OP18 Karoo — Yumatalife (2nd, LogDuel OP18 tournament)",
+   "wr": 0.8666666666666667,
+   "games": 840,
+   "first": 0.8738095238095238,
+   "second": 0.8595238095238096
+  },
+  {
+   "deck": "RG Luffy & Ace",
+   "wr": 0.819047619047619,
+   "games": 840,
+   "first": 0.8261904761904761,
+   "second": 0.8119047619047619
+  },
+  {
+   "deck": "OP18 Blue Ms. All Sunday (sim-built)",
+   "wr": 0.8166666666666667,
+   "games": 840,
+   "first": 0.8214285714285714,
+   "second": 0.8119047619047619
+  },
+  {
+   "deck": "OP18 RU Karoo (sim-built)",
+   "wr": 0.805952380952381,
+   "games": 840,
+   "first": 0.7976190476190477,
+   "second": 0.8142857142857143
+  },
+  {
+   "deck": "OP18 Ms. All Sunday — Guts (1st, LogDuel OP18 tournament)",
+   "wr": 0.7440476190476191,
+   "games": 840,
+   "first": 0.7547619047619047,
+   "second": 0.7333333333333333
+  },
+  {
+   "deck": "RB Sabo",
+   "wr": 0.7119047619047619,
+   "games": 840,
+   "first": 0.7285714285714285,
+   "second": 0.6952380952380952
+  },
+  {
+   "deck": "RG Luffy (OP13-001)",
+   "wr": 0.5928571428571429,
+   "games": 840,
+   "first": 0.5833333333333334,
+   "second": 0.6023809523809524
+  },
+  {
+   "deck": "OP18 Green Luffy (sim-built)",
+   "wr": 0.5238095238095238,
+   "games": 840,
+   "first": 0.5119047619047619,
+   "second": 0.5357142857142857
+  },
+  {
+   "deck": "Yellow Enel (OP05-098)",
+   "wr": 0.41309523809523807,
+   "games": 840,
+   "first": 0.40476190476190477,
+   "second": 0.42142857142857143
+  },
+  {
+   "deck": "OP18 Saint Gunko — synthetichydra (4th, LogDuel OP18 tournament)",
+   "wr": 0.4083333333333333,
+   "games": 840,
+   "first": 0.4142857142857143,
+   "second": 0.4023809523809524
+  },
+  {
+   "deck": "OP18 PB Saint Gunko (sim-built)",
+   "wr": 0.4,
+   "games": 840,
+   "first": 0.4,
+   "second": 0.4
+  },
+  {
+   "deck": "Green Shanks",
+   "wr": 0.3761904761904762,
+   "games": 840,
+   "first": 0.3880952380952381,
+   "second": 0.36428571428571427
+  },
+  {
+   "deck": "OP18 Saint Gunko 3C Yamato — Paparis99",
+   "wr": 0.3547619047619048,
+   "games": 840,
+   "first": 0.3380952380952381,
+   "second": 0.37142857142857144
+  },
+  {
+   "deck": "OP18 Saint Gunko Full Knights — Paparis99",
+   "wr": 0.35119047619047616,
+   "games": 840,
+   "first": 0.3547619047619048,
+   "second": 0.3476190476190476
+  },
+  {
+   "deck": "Blue Xebec",
+   "wr": 0.3476190476190476,
+   "games": 840,
+   "first": 0.3404761904761905,
+   "second": 0.3547619047619048
+  },
+  {
+   "deck": "OP18 Saint Gunko Anti-Removal Zoro — Paparis99",
+   "wr": 0.3392857142857143,
+   "games": 840,
+   "first": 0.32142857142857145,
+   "second": 0.35714285714285715
+  },
+  {
+   "deck": "OP18 Saint Gunko — Paparis99 (testing, Nov 6)",
+   "wr": 0.32976190476190476,
+   "games": 840,
+   "first": 0.3380952380952381,
+   "second": 0.32142857142857145
+  },
+  {
+   "deck": "OP18 Spandam — saulvarela00",
+   "wr": 0.31547619047619047,
+   "games": 840,
+   "first": 0.3119047619047619,
+   "second": 0.319047619047619
+  },
+  {
+   "deck": "OP18 Saint Gunko — OrthranTCG",
+   "wr": 0.2833333333333333,
+   "games": 840,
+   "first": 0.2976190476190476,
+   "second": 0.26904761904761904
+  },
+  {
+   "deck": "OP18 BY Spandam (sim-built)",
+   "wr": 0.24523809523809523,
+   "games": 840,
+   "first": 0.24047619047619048,
+   "second": 0.25
+  },
+  {
+   "deck": "OP18 GP Franky (sim-built)",
+   "wr": 0.05357142857142857,
+   "games": 840,
+   "first": 0.047619047619047616,
+   "second": 0.05952380952380952
+  }
+ ],
+ "games": 10120,
+ "broken": 0
+}
