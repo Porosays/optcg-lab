@@ -4,7 +4,15 @@ import json, os, subprocess
 here = os.path.dirname(os.path.abspath(__file__)); search = os.path.dirname(here)
 engine = os.path.abspath(os.path.join(here, "../../../.."))
 out = os.path.abspath(os.path.join(engine, "../../../../site")); os.makedirs(out, exist_ok=True)
-subprocess.run(["bun", "build", "src/automation/search/web/worker.ts", "--target=browser", "--minify", f"--outfile={out}/worker.js"], cwd=engine, check=True)
+if os.environ.get("OPTCG_BROWSER_RELEASE") == "1":
+    import shutil, hashlib
+    release = os.path.join(here, "worker.release.js")
+    expected = "855674a900d53de35458c968a19ab78143e7aa4d7560dd607d49f882e0532885"
+    if hashlib.sha256(open(release, "rb").read()).hexdigest() != expected:
+        raise RuntimeError("Pinned browser runtime checksum mismatch")
+    shutil.copyfile(release, os.path.join(out, "worker.js"))
+else:
+    subprocess.run(["bun", "build", "src/automation/search/web/worker.ts", "--target=browser", "--minify", f"--outfile={out}/worker.js"], cwd=engine, check=True)
 fields = [("meta","Current meta (EB-05)"),("op18-community","OP-18 community lists"),("op18-preview","OP-18 preview (all 22)"),("meta-op16","OP-16 era"),("classic-2024","Classic 2023–24 (Extra)"),("test-decks","Engine test decks")]
 data = {}
 for k, label in fields:

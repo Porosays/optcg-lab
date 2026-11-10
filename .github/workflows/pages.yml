@@ -26,6 +26,8 @@ jobs:
         working-directory: submodules/one-piece
         run: CI=1 pnpm install --frozen-lockfile
       - name: Build site
+        env:
+          OPTCG_BROWSER_RELEASE: "1"
         run: python3 submodules/one-piece/packages/engine/src/automation/search/web/build.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -73,47 +73,85 @@ input.w{width:64px;padding:3px 6px;text-align:right}
 
 .grid2>*,.watch>*,.row>*{min-width:0}
 @media(max-width:600px){main{padding:12px 12px 48px}header,nav{padding-left:12px;padding-right:12px}.card{padding:14px}.big{font-size:30px}.row>*{min-width:110px}table{font-size:13px}th,td{padding:6px 5px}.mini{width:58px}.mini.lead{width:66px}}
+
+/* Simple game-first navigation and readable replay board. */
+:root{--bg:#eef2f4;--panel:#fff;--ink:#142c3a;--mute:#526775;--line:#ccd8df;--accent:#006c78;--accent-ink:#fff;--chip:#e7eff2;--r:14px}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1922;--panel:#172733;--ink:#eef5fa;--mute:#b0c2cd;--line:#354b5a;--accent:#6ed5cf;--accent-ink:#0b252b;--chip:#233b49}}
+header{padding-top:28px}header .sub{max-width:760px}nav{align-items:center;gap:8px}nav button{border-radius:9px;padding:11px 16px;font-weight:600}nav button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}nav details{position:relative}nav summary{padding:11px 16px;color:var(--ink);font-size:15px;border:1px solid var(--line);border-radius:9px}nav .more-menu{position:absolute;top:48px;right:0;z-index:20;display:grid;min-width:210px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:0 12px 30px #0003}nav .more-menu button{text-align:left;border:0}
+button:focus-visible,summary:focus-visible,[data-card]:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button:hover:not(:disabled){filter:brightness(1.08)}h2{font-size:28px;line-height:1.2;margin:4px 0 10px}h3{margin-top:0}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:750}.intro{margin:8px 0 20px}.intro p{color:var(--mute);margin:0;max-width:720px}.launch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.launch{display:flex;flex-direction:column;align-items:flex-start;padding:24px;min-height:220px}.launch p{color:var(--mute);flex:1}.launch .step{font-size:28px;font-weight:800;color:var(--accent);margin-bottom:14px}.launch .btn{width:100%}.welcome{padding:32px;background:var(--panel);border-left:4px solid var(--accent)}.section-title{display:flex;align-items:center;gap:10px}.section-title span{background:var(--accent);color:var(--accent-ink);border-radius:50%;font-size:13px;padding:4px 9px}.card{box-shadow:0 3px 12px #00000008}.board{background:var(--bg);padding:16px;border-left:4px solid var(--line)}.board.active{border-left-color:var(--accent)}.board h4{font-size:16px;align-items:center}.life-count{font-size:20px;color:var(--ink)}.board-zones{display:grid;grid-template-columns:auto 1fr;gap:18px}.zone-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);margin:10px 0 8px;font-weight:700}.zone{gap:12px;align-items:flex-start}.mini,.mini.lead{width:94px}.mini.rest{opacity:1;transform:rotate(-5deg)}.mini .ov{bottom:22px;font-size:12px;background:#07151dec;padding:4px}.card-state{display:block;font-size:11px;text-align:center;color:var(--mute);margin-top:4px}.handrow{gap:8px}.handrow .cg{width:64px}.counts{gap:8px;margin:16px 0 8px}.counts span{padding:5px 9px;background:var(--chip);border-radius:6px;color:var(--ink)}.watch{grid-template-columns:minmax(0,1fr) 300px}.log{max-height:760px}.log div{padding:10px 12px;line-height:1.5}.now{padding:14px;background:var(--chip);border-radius:9px;margin:12px 0;font-size:16px}.replay-status{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-weight:650}.ctrl{padding:8px 0}.pop{width:min(360px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:14px}.pop img,.pop .ctext{width:220px;max-width:100%;margin:auto}.pop .t{font-size:14px}.pop-close{float:right;padding:5px 9px}.inspect-hint{font-size:12px;color:var(--mute)}#deckPreview .strip{flex-wrap:wrap;overflow:visible;gap:8px}#deckPreview .strip .cg{width:72px}#report>.card:first-child{border-top:4px solid var(--accent)}.empty-board{padding:24px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--mute)}
+@media(max-width:900px){.watch{grid-template-columns:1fr}.launch-grid{grid-template-columns:1fr}.launch{min-height:0}.launch p{margin:8px 0 18px}.log{max-height:300px}}
+@media(max-width:600px){nav .more-menu{left:0;right:auto}header{padding-top:18px}h2{font-size:24px}.welcome{padding:22px}.board{padding:10px}.board-zones{gap:10px}.mini,.mini.lead{width:65px}.handrow .cg{width:52px}.zone{gap:8px}nav button,nav summary{padding:9px 11px;font-size:13px}.ctrl .btn{font-size:12px}.life-count{font-size:17px}.launch{padding:18px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div class="pop" id="pop"></div>
 <header>
   <h1>OPTCG <span>Deck Lab</span></h1>
-  <p class="sub">Paste a deck, pick a field, and bots play it out right in your browser. Every card through EB-05 and OP-18 is in. Results also feed this browser's lab memory.</p>
+  <p class="sub">Watch your deck in action. Test matchups. Understand every card.</p>
 </header>
-<nav>
-  <button data-tab="test" class="on">Test my deck</button>
-  <button data-tab="compare">Compare versions</button>
-  <button data-tab="combos">Combo finder</button>
-  <button data-tab="stats">Deck stats</button>
-  <button data-tab="watch">Watch a game</button>
-  <button data-tab="grid">Deck vs deck grid</button>
-  <button data-tab="finds">Bot finds</button>
-  <button data-tab="memory">Lab memory</button>
-  <button data-tab="about">How it works</button>
+<nav aria-label="Main navigation">
+  <button data-tab="home" class="on" aria-current="page">Start</button>
+  <button data-tab="watch">Watch game</button>
+  <button data-tab="test">Test deck</button>
+  <button data-tab="stats">Your cards</button>
+  <button data-tab="batches">Batch queue</button>
+  <details id="moreNav"><summary>More tools</summary><div class="more-menu">
+    <button data-tab="compare">Compare decks</button><button data-tab="combos">Find combos</button>
+    <button data-tab="grid">Matchup grid</button><button data-tab="finds">Bot discoveries</button>
+    <button data-tab="memory">Saved results</button><button data-tab="about">Help &amp; limits</button>
+  </div></details>
 </nav>
 <main>
+<div class="card" id="batchBanner" aria-live="polite" hidden></div>
+<section id="tab-batches" class="hidden">
+<div class="intro"><div class="eyebrow">Background tests</div><h2>Your batch queue</h2><p>Add decks, then queue a round-robin test. Every selected build plays every other build, including builds with the same leader. Add another test while this one runs.</p></div>
+<p class="note">One batch runs at a time. You can navigate, inspect cards and watch replays while it runs. Keep this tab open and your device awake. Decks and detailed batch results stay in this tab for this session. Closing or reloading loses the queue and these results; sleeping or backgrounding a mobile browser can suspend it. No server keeps it running.</p>
+<div class="grid2"><div class="card"><h3>Add a deck build</h3>
+<label for="batchName">Build name</label><input id="batchName" maxlength="70" placeholder="Luffy - aggressive build">
+<label for="batchPreset">Ready-made deck (optional)</label><select id="batchPreset"><option value="">Choose a deck...</option></select>
+<label for="batchDeck">OPTCGSim deck list</label><textarea id="batchDeck" spellcheck="false"></textarea>
+<button class="btn" id="batchAdd">Validate &amp; add deck</button><div id="batchMsg" class="msgs" role="status"></div></div>
+<div class="card"><h3>Decks for the next batch</h3><div id="batchRoster"></div>
+<label for="batchMode">Test format</label><select id="batchMode"><option value="all">Every selected build vs every other</option><option value="groups">Group A builds vs Group B builds</option></select><p class="note">For group tests, assign each selected build to A or B below. Every A build plays every B build; builds within the same group do not play.</p>
+<label for="batchGames">Games per pair (even number, alternating first player)</label><input id="batchGames" type="number" min="2" max="200" step="2" value="10">
+<label for="batchBot">Bot</label><select id="batchBot"><option value="fast">Fast</option><option value="deep">Deep (slower)</option></select>
+<p class="note">Up to 8 builds per batch. Decks are validated against the current standard-format rules and banlist. Results are estimates, not tournament predictions.</p>
+<button class="btn" id="batchEnqueue" disabled>Add test to queue</button></div></div>
+<h3>Progress &amp; results</h3><div id="batchHistory"><p class="mute">No batches yet.</p></div>
+</section>
 
-<section id="tab-test">
+<section id="tab-home">
+  <div class="card welcome"><div class="eyebrow">One Piece Card Game / Deck Lab</div><h2>What would you like to do?</h2><p class="sub">Start with a game, or put a deck to the test. No setup needed: ready-made decks are included.</p></div>
+  <div class="launch-grid">
+    <div class="card launch"><span class="step">01</span><h3>Watch a game</h3><p>See two bots play on a card table. Pause, inspect cards, and step through each move.</p><button class="btn" data-open="watch">Choose decks &amp; watch</button></div>
+    <div class="card launch"><span class="step">02</span><h3>Test a deck</h3><p>Pick a ready-made list or paste yours. Find out which matchups it wins and loses.</p><button class="btn ghost" data-open="test">Set up a deck test</button></div>
+    <div class="card launch"><span class="step">03</span><h3>Explore your cards</h3><p>Browse your deck's cards, costs, counters, opening hands, and draw odds.</p><button class="btn ghost" data-open="stats">View your cards</button></div>
+  </div><p class="note">This is a bot research simulator, not a human-versus-human game. Results are estimates, not tournament predictions. Advanced tools are under More tools.</p>
+</section>
+<section id="tab-test" class="hidden">
+  <div class="intro"><div class="eyebrow">Deck testing</div><h2>How does your deck match up?</h2><p>Choose a deck, choose its opponents, then run the test. Your results appear below.</p></div>
   <div class="grid2">
     <div class="card">
-      <label for="deck">Your deck (OPTCGSim export, like <code>4xOP13-016</code>, one per line or all on one line)</label>
-      <textarea id="deck" spellcheck="false"></textarea>
-      <div class="row" style="margin-top:8px">
-        <select id="loadDeck" aria-label="Load a deck from a field"><option value="">Load a list from the fields…</option></select>
-      </div>
+      <h3 class="section-title"><span>1</span> Choose your deck</h3>
+      <label for="loadDeck">Start with a ready-made deck</label>
+      <select id="loadDeck" aria-label="Load a deck from a field"><option value="">Choose a deck...</option></select>
+      <details style="margin-top:14px"><summary>Paste or edit an OPTCGSim deck list</summary>
+      <label for="deck">Your deck export (for example, 4xOP13-016)</label>
+      <textarea id="deck" spellcheck="false"></textarea></details>
       <div class="row" style="margin-top:8px;align-items:center"><button class="btn ghost" id="share" style="flex:0 0 auto">Copy share link</button><span class="mute" id="shareMsg" style="font-size:13px"></span></div>
       <div class="msgs" id="parseMsgs"></div>
       <div id="deckPreview"></div>
     </div>
     <div class="card">
-      <label for="field">Test against</label>
+      <h3 class="section-title"><span>2</span> Choose opponents</h3>
+      <label for="field">Opponent group</label>
       <select id="field"></select>
       <div class="leaders" id="fieldPreview"></div>
       <div class="row">
         <div><label for="games">Games per matchup</label><input id="games" type="number" min="2" max="2000" value="50"></div>
         <div><label for="bot">Bot</label><select id="bot"><option value="fast">Fast (heuristic)</option><option value="deep">Deep (search, slower)</option></select></div>
-        <div><label for="workers">Cores</label><input id="workers" type="number" min="1" max="64"></div>
+        <div><label for="workers">CPU workers</label><input id="workers" type="number" min="1" max="4"></div>
       </div>
       <div class="row" style="margin-top:14px;align-items:center">
         <button class="btn" id="run">Run tests</button>
@@ -125,6 +163,7 @@ input.w{width:64px;padding:3px 6px;text-align:right}
     </div>
   </div>
   <div id="report" class="hidden">
+    <h2>Test results</h2><p class="mute">Win rate is the share of completed games this deck won. Small samples are noisy.</p>
     <div class="card">
       <div class="stats">
         <div><div class="mute">Overall win rate</div><div class="big" id="overall">–</div><div class="mute" id="overallCi"></div></div>
@@ -165,18 +204,19 @@ input.w{width:64px;padding:3px 6px;text-align:right}
 <section id="tab-combos" class="hidden">
   <div class="card">
     <h3 style="margin-top:0">Pick a leader</h3>
-    <p class="mute" style="margin-top:0;font-size:13px">The bot reads every legal card for that leader, old and new, and shows what works together and why. Combos proven in the bots' games are marked ✔.</p>
+    <p class="mute" style="margin-top:0;font-size:13px">Explore role fit and supported effect interactions across the full legal card pool. These are hypotheses, not proven combos or competitive recommendations. Use your actual list to avoid generic package suggestions.</p>
     <input id="cfSearch" placeholder="Search leaders by name, color or type (e.g. Luffy, red, Alabasta)" style="max-width:520px">
     <div class="leaders" id="cfLeaders" style="max-height:330px;overflow:auto;margin-top:10px"></div>
   </div>
+  <div class="card"><label><input id="cfContext" type="checkbox" checked style="width:auto"> Use Test my deck list when its leader matches</label><label><input id="cfOutside" type="checkbox" style="width:auto"> Outside the leader's shared-trait package</label><label for="cfRole">Tactical role</label><select id="cfRole"><option value="">All roles</option value="removal">Removal</option><option value="draw">Draw</option><option value="lifeGain">Life gain</option><option value="blocker">Blocker</option><option value="counter2k">2000 counter</option><option value="ramp">DON recovery/ramp</option><option value="rush">Rush</option><option value="cheat">Play by effect</option></select><button class="btn ghost" id="cfRefresh">Refresh fit</button><p class="mute" id="cfContextNote"></p></div>
   <div id="cfOut" class="hidden">
     <div class="card"><div id="cfHead"></div>
       <div class="row" style="margin-top:12px;max-width:640px"><button class="btn" id="cfBuild" style="flex:0 0 auto">Build a deck around this</button><button class="btn ghost" id="cfBuildOld" style="flex:0 0 auto">Build one with old cards</button></div>
       <div class="mute" id="cfBuildMsg" style="font-size:13px;margin-top:6px"></div></div>
-    <div class="card" id="cfLearnedCard"><h3 style="margin-top:0">✔ Combos proven in bot games</h3><div id="cfLearned"></div></div>
-    <div class="card"><h3 style="margin-top:0">Combos on paper</h3><p class="mute" style="margin-top:0;font-size:13px">Pairs where one card finds, plays or powers up the other. Old cards (OP-01 to OP-04, early starters) are tagged.</p><div id="cfPairs"></div></div>
-    <div class="card"><h3 style="margin-top:0">Engine cards for this leader</h3><div class="cgrid" id="cfEngine"></div></div>
-    <div class="card"><h3 style="margin-top:0">Old cards that fit</h3><div class="cgrid" id="cfOld"></div></div>
+    <div class="card" id="cfLearnedCard"><h3 style="margin-top:0">Observed bot-game associations</h3><p class="mute">Observational comparison with single-card groups, not a controlled improvement estimate. Deck/pilot differences and sparse samples can confound it. No tournament evidence is implied.</p><div id="cfLearned"></div></div>
+    <div class="card"><h3 style="margin-top:0">Effect interactions to test</h3><p class="mute" style="margin-top:0;font-size:13px">Pairs require supported coded-action constraints; partial trait matches alone are omitted. These are not verified full-turn plans. Actual costs, available resources, timing and board conditions still need checking. In deck mode, each pair touches your list.</p><div id="cfPairs"></div></div>
+    <div class="card"><h3 style="margin-top:0">Tactical card candidates</h3><div class="cgrid" id="cfEngine"></div></div>
+    <div class="card"><h3 style="margin-top:0">Older tactical candidates</h3><div class="cgrid" id="cfOld"></div></div>
   </div>
 </section>
 
@@ -197,20 +237,23 @@ input.w{width:64px;padding:3px 6px;text-align:right}
 </section>
 
 <section id="tab-watch" class="hidden">
+  <div class="intro"><div class="eyebrow">Game viewer</div><h2>Watch the cards, follow the game.</h2><p>Choose two decks and generate a game. Then use Next move to learn at your own pace, or Play replay to watch.</p></div>
   <div class="card">
     <div class="row">
-      <div><label for="wA">Deck A</label><select id="wA"></select></div>
-      <div><label for="wB">Deck B</label><select id="wB"></select></div>
+      <div><label for="wA">Bottom player (A)</label><select id="wA"></select></div>
+      <div><label for="wB">Top player (B)</label><select id="wB"></select></div>
       <div><label for="wBot">Bot</label><select id="wBot"><option value="fast">Fast</option><option value="deep">Deep (slower, better)</option></select></div>
     </div>
-    <div class="row" style="margin-top:12px;align-items:center"><button class="btn" id="wGo" style="flex:0 0 auto">Play a game</button><span class="mute" id="wMsg" style="font-size:13px"></span></div>
+    <div class="row" style="margin-top:12px;align-items:center"><button class="btn" id="wGo" style="flex:0 0 auto">Generate game</button><span class="mute" id="wMsg" style="font-size:13px"></span></div>
   </div>
+  <div id="wEmpty" class="empty-board">Your game board will appear here. Choose decks above, then select Generate game.</div>
   <div class="card hidden" id="wOut">
-    <div class="ctrl"><button class="btn ghost" id="wFirst">⏮</button><button class="btn ghost" id="wPrev">◀</button><button class="btn" id="wPlay">▶ Play</button><button class="btn ghost" id="wNext">▶|</button><button class="btn ghost" id="wTurn">Next turn ⏭</button><button class="btn ghost" id="wKey">Next key moment ★</button>
-      <select id="wSpeed" style="width:auto"><option value="1200">Slow</option><option value="600" selected>Normal</option><option value="200">Fast</option></select>
+    <div class="replay-status"><span id="wPosition"></span><span class="inspect-hint">Click a card to inspect it. Escape closes the preview.</span></div>
+    <div class="ctrl"><button class="btn ghost" id="wFirst">Restart</button><button class="btn ghost" id="wPrev">Previous</button><button class="btn" id="wPlay">Play replay</button><button class="btn ghost" id="wNext">Next move</button><button class="btn ghost" id="wTurn">Next turn</button><button class="btn ghost" id="wKey">Key moment</button>
+      <select aria-label="Replay speed" id="wSpeed" style="width:auto"><option value="1200">Slow</option><option value="600" selected>Normal</option><option value="200">Fast</option></select>
       <label style="margin:0 0 0 8px;display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" id="wHands" style="width:auto" checked> Show hands</label></div>
     <div class="now" id="wNow"></div>
-    <div class="watch"><div><div class="board" id="wBoardB"></div><div class="board" id="wBoardA"></div></div><div class="log" id="wLog"></div></div>
+    <div class="watch"><div><div class="board" id="wBoardB"></div><div class="board" id="wBoardA"></div></div><div><h3>Move history</h3><p class="inspect-hint">Select a move to jump to that position.</p><div class="log" id="wLog" aria-label="Move history"></div></div></div>
     <p class="note">Both sides are bots, so this shows how the bot plays the deck, mistakes included. It's best for seeing curves, key turns and how games are won or lost, not as a perfect guide.</p>
   </div>
 </section>
@@ -252,7 +295,7 @@ input.w{width:64px;padding:3px 6px;text-align:right}
 <section id="tab-about" class="hidden">
   <div class="card">
     <h3 style="margin-top:0">How it works</h3>
-    <p>The full One Piece TCG rules engine (from the open-source tcg-engines project) runs inside your browser in background workers, one per CPU core. Nothing is sent to a server. Each game shuffles both decks, picks who goes first at random, and has two bots play it out under the real rules.</p>
+    <p>The full One Piece TCG rules engine (from the open-source tcg-engines project) runs inside your browser in background workers (up to four for tests, two for custom batches). Nothing is sent to a server. Each game shuffles both decks, picks who goes first at random, and has two bots play it out under the real rules.</p>
     <p><b>Fields</b> are real lists: current EB-05 meta, OP-18 lists from X and LogDuel, OP-16 era decks, and classic 2023–24 decks for Extra Regulation.</p>
     <h3>Known limits (be skeptical of close numbers)</h3>
     <ul>
@@ -276,25 +319,30 @@ const backupUrl = (id) => IMGS[id] ? `https://www.optcgapi.com/media/static/Card
 function imgFail(el) {
   const id = el.dataset.card, b = backupUrl(id);
   if (!el.dataset.tried && b) { el.dataset.tried = 1; el.src = b; return; }
-  const d = document.createElement("div"); d.className = "ctext"; d.dataset.card = id; d.textContent = (CARDS[id]?.name ?? NAMES[id]?.name ?? "") + " " + id; el.replaceWith(d);
+  const d = document.createElement("div"); d.className = "ctext"; d.dataset.card = id; d.tabIndex = 0; d.setAttribute("role", "button"); d.setAttribute("aria-label", "Inspect " + id); d.textContent = (CARDS[id]?.name ?? NAMES[id]?.name ?? "") + " " + id; el.replaceWith(d);
 }
-const cimg = (id, cls = "cimg") => `<img class="${cls}" data-card="${id}" src="${imgUrl(id)}" loading="lazy" alt="" onerror="imgFail(this)">`;
+const cimg = (id, cls = "cimg") => `<img class="${cls}" data-card="${id}" tabindex="0" role="button" aria-label="Inspect ${id}" src="${imgUrl(id)}" loading="lazy" alt="${id}" onerror="imgFail(this)">`;
 const LEADER_OF = {}, LEADER_OF_NAME = {}; for (const f of Object.values(FIELDS)) for (const d of f.decks) { LEADER_OF[d.name] = d.leader; LEADER_OF_NAME[d.leader] ??= d.name; }
 const lthumb = (leader, big) => leader ? `<img class="lthumb${big ? " lg" : ""}" data-card="${leader}" src="${imgUrl(leader)}" loading="lazy" alt="" onerror="imgFail(this)">` : "";
 const who = (name, leader, sub) => `<div class=who>${lthumb(leader ?? LEADER_OF[name])}<div class=nm>${esc(name)}${sub ? `<small>${sub}</small>` : ""}</div></div>`;
 const $ = (id) => document.getElementById(id);
 const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
 const cores = Math.max(1, Math.min(16, navigator.hardwareConcurrency || 4));
-$("workers").value = cores;
+$("workers").value = Math.min(4, cores);
 
 /* ---------- tabs ---------- */
 document.querySelectorAll("nav button").forEach((b) => b.onclick = () => {
   document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("on", x === b));
-  for (const t of ["test", "compare", "combos", "stats", "watch", "grid", "finds", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
+  for (const t of ["home", "batches", "test", "compare", "combos", "stats", "watch", "grid", "finds", "memory", "about"]) $("tab-" + t).classList.toggle("hidden", t !== b.dataset.tab);
+  document.querySelectorAll('nav button[data-tab]').forEach(x => { if(x === b) x.setAttribute('aria-current','page'); else x.removeAttribute('aria-current'); });
+  $('moreNav').open = false;
+  hidePop();
+  if (b.dataset.tab !== 'watch') stopAuto();
   if (b.dataset.tab === "memory") renderMemory();
   if (b.dataset.tab === "stats") renderStats();
 });
 
+document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => document.querySelector(`nav button[data-tab="${b.dataset.open}"]`).click());
 /* ---------- names ---------- */
 const NAMES = {};
 const nm = (id) => NAMES[id]?.name ? `${NAMES[id].name}` : id;
@@ -308,21 +356,71 @@ function helperCall(msg) {
 async function loadNames(ids) { const need = [...new Set(ids)].filter((i) => !NAMES[i]); if (!need.length) return; const r = await helperCall({ type: "names", ids: need }); Object.assign(NAMES, r.names); }
 
 let running = null;
-function runJobs(jobs, bot, nWorkers, onResult) {
-  return new Promise((resolve) => {
-    const queue = jobs.slice(); const ws = []; let live = 0; let stopped = false;
-    const chunk = bot === "deep" ? 1 : 4;
-    const feed = (w) => { if (stopped || !queue.length) { w.terminate(); if (--live === 0) resolve(); return; } w.postMessage({ type: "run", id: 0, jobs: queue.splice(0, chunk), bot, budget: 16 }); };
-    for (let i = 0; i < Math.min(nWorkers, jobs.length); i++) {
-      const w = new Worker("worker.js"); ws.push(w); live++;
-      if (NIGHTLY?.playbook) w.postMessage({ type: "playbook", id: -1, playbook: NIGHTLY.playbook });
-      w.onmessage = (e) => { const m = e.data; if (m.type === "result") onResult(m.result); else if ((m.type === "done" || m.type === "error") && m.id !== -1) feed(w); };
-      feed(w);
-    }
-    if (!live) resolve();
-    running = { stop() { stopped = true; queue.length = 0; ws.forEach((w) => w.terminate()); resolve(); } };
+// One scheduler owns all batch workers. Each task keeps immutable deck snapshots.
+const batchTasks = []; let batchActive = null; let batchSerial = 0;
+function runJobs(jobs, bot, nWorkers, onResult, options = {}) {
+  let resolve;
+  const promise = new Promise(r => resolve = r);
+  const task = { id: ++batchSerial, title: options.title || "Deck test", owner: options.owner || "test",
+    jobs: JSON.parse(JSON.stringify(jobs)), bot, nWorkers: Math.max(1, Math.min(4, Math.floor(nWorkers) || 1)),
+    onResult, resolve, results: [], errors: [], state: "Queued", stop: null };
+  batchTasks.push(task); drawBatchQueue(); pumpBatches(); return promise;
+}
+function cancelBatch(id) {
+  const t = batchTasks.find(t => t.id === id); if (!t) return;
+  if (t.state === "Running") t.stop?.();
+  else if (t.state === "Queued") { t.state = "Cancelled"; t.resolve({ errors: [], stopped: true }); drawBatchQueue(); }
+}
+function stopOwner(owner) { const t = batchTasks.find(t => t.owner === owner && ["Queued", "Running"].includes(t.state)); if(t) cancelBatch(t.id); }
+async function pumpBatches() {
+  if (batchActive) return;
+  const t = batchTasks.find(t => t.state === "Queued"); if (!t) return;
+  batchActive = t; t.state = "Running"; drawBatchQueue();
+  let outcome;
+  try { outcome = await executeBatch(t); } catch (e) { outcome = { errors: [String(e)], stopped: false }; }
+  t.errors = outcome.errors; t.state = outcome.stopped ? "Stopped" : t.errors.length || t.results.length !== t.jobs.length ? "Incomplete" : "Completed";
+  batchActive = null; running = null; t.resolve(outcome); drawBatchQueue();
+  // Let the previous caller finish its UI updates before starting the next task.
+  setTimeout(pumpBatches, 0);
+}
+function executeBatch(t) {
+  return new Promise(resolve => {
+    const pending = t.jobs.slice(), ws = new Set(), errors = []; let finished = false;
+    const finish = stopped => { if (finished) return; finished = true; for(const w of ws) w.terminate(); ws.clear(); resolve({ errors, stopped }); };
+    t.stop = () => finish(true); running = { stop: t.stop };
+    const feed = w => {
+      if(finished) return;
+      if(!pending.length) { w.terminate(); ws.delete(w); if(!ws.size) finish(false); return; }
+      w.postMessage({ type: "run", id: t.id, jobs: pending.splice(0, t.bot === "deep" ? 1 : 4), bot: t.bot, budget: 16 });
+    };
+    if(!pending.length) { finish(false); return; }
+    try {
+      for(let i=0, count=Math.min(t.nWorkers,pending.length); i<count; i++) {
+        const w=new Worker("worker.js"); ws.add(w);
+        w.onmessage=e=>{if(finished)return; const m=e.data;
+          if(m.type==="result") { t.results.push(m.result); try { t.onResult(m.result); } catch(e) {errors.push(String(e));finish(false);} drawBatchQueue(); }
+          else if(m.type==="error" && m.id!==-1) {errors.push(m.message||"Worker error"); finish(false);}
+          else if(m.type==="done" && m.id!==-1) feed(w);
+        };
+        w.onerror=e=>{errors.push(e.message||"Worker could not start");finish(false);};
+        if(NIGHTLY?.playbook)w.postMessage({type:"playbook",id:-1,playbook:NIGHTLY.playbook});
+        feed(w);
+      }
+    } catch(e) {errors.push(String(e));finish(false);}
   });
 }
+function drawBatchQueue() {
+  const openLists = new Set([...document.querySelectorAll("#batchHistory details[open]")].map(el=>el.dataset.batchList));
+  const active=batchTasks.filter(t=>["Queued","Running"].includes(t.state));
+  $("batchBanner").hidden=!active.length;
+  $("batchBanner").innerHTML=active.length ? `<b>${esc(batchActive?.title || "Batch queue")}</b> · ${batchActive ? batchActive.results.length+" / "+batchActive.jobs.length+" games" : "Waiting"} · ${active.filter(t=>t.state==="Queued").length} queued. <button class="btn ghost" data-queue-open>View queue</button>` : "";
+  $("batchHistory").innerHTML=batchTasks.slice().reverse().map(t=>{
+    const by={}; for(const r of t.results){const key=JSON.stringify([r.aName,r.bName]); const x=by[key]??={a:r.aName,b:r.bName,n:0,aw:0,bw:0,stalled:0};x.n++;if(r.winner==="a")x.aw++;else if(r.winner==="b")x.bw++;else x.stalled++;}
+    return `<div class="card"><h3>#${t.id} ${esc(t.title)}</h3><details data-batch-list="${t.id}" ${openLists.has(String(t.id))?"open":""}><summary>Exact deck lists for this test</summary>${[...new Map(t.jobs.flatMap(j=>[j.a,j.b]).map(d=>[d.name,d])).values()].map(d=>`<h4>${esc(d.name)}</h4><pre style="white-space:pre-wrap">${esc(toText(d))}</pre>`).join("")}</details><p><b>${t.state}</b> · ${t.results.length} / ${t.jobs.length} games returned</p><progress max="${Math.max(1,t.jobs.length)}" value="${t.results.length}" style="width:100%"></progress>${["Queued","Running"].includes(t.state)?`<button class="btn ghost" data-cancel-batch="${t.id}">${t.state==="Queued"?"Cancel queued test":"Stop this test"}</button>`:""}${t.errors.length?`<p class="err">${esc(t.errors[0])}. Partial results only.</p>`:""}<div style="overflow-x:auto"><table><tr><th>Build A</th><th>Build B</th><th>A wins</th><th>B wins</th><th>Stalled</th></tr>${Object.values(by).map(x=>`<tr><td>${esc(x.a)}</td><td>${esc(x.b)}</td><td>${x.aw}</td><td>${x.bw}</td><td>${x.stalled}</td></tr>`).join("")}</table></div></div>`;
+  }).join("") || '<p class="mute">No batches yet.</p>';
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-cancel-batch]");if(b)cancelBatch(+b.dataset.cancelBatch);if(e.target.closest("[data-queue-open]"))document.querySelector('nav button[data-tab="batches"]').click();});
+window.addEventListener("beforeunload",e=>{if(batchTasks.some(t=>["Queued","Running"].includes(t.state))){e.preventDefault();e.returnValue="";}});
 
 /* ---------- stats ---------- */
 function wilson(w, n, z = 1.96) { if (!n) return [0, 0]; const p = w / n, d = 1 + z * z / n, c = p + z * z / (2 * n), m = z * Math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)); return [(c - m) / d, (c + m) / d]; }
@@ -366,6 +464,42 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 for (const sel of ["field", "gfield"]) for (const [k, f] of Object.entries(FIELDS)) $(sel).insertAdjacentHTML("beforeend", `<option value="${k}">${esc(f.label)} · ${f.decks.length} decks</option>`);
 for (const [k, f] of Object.entries(FIELDS)) $("loadDeck").insertAdjacentHTML("beforeend", `<optgroup label="${esc(f.label)}">${f.decks.map((d, i) => `<option value="${k}|${i}">${esc(d.name)}</option>`).join("")}</optgroup>`);
 const toText = (d) => { const c = {}; for (const id of d.main) c[id] = (c[id] || 0) + 1; return [`1x${d.leader}`, ...Object.entries(c).map(([id, n]) => `${n}x${id}`)].join("\n"); };
+const roster = []; let buildSerial=0;
+for(const [k,f] of Object.entries(FIELDS)) $("batchPreset").insertAdjacentHTML("beforeend",`<optgroup label="${esc(f.label)}">${f.decks.map((d,i)=>`<option value="${k}|${i}">${esc(d.name)}</option>`).join("")}</optgroup>`);
+$("batchPreset").onchange=()=>{const v=$("batchPreset").value;if(!v)return;const [k,i]=v.split("|");const d=FIELDS[k].decks[+i];$("batchDeck").value=toText(d);$("batchName").value=d.name;};
+function drawRoster(){ $("batchRoster").innerHTML=roster.map(d=>`<p><label><input type="checkbox" data-build="${d.buildId}" ${d.selected?"checked":""}> ${esc(d.name)} · ${esc(d.leader)}</label><select data-group="${d.buildId}" aria-label="Group for ${esc(d.name)}"><option value="A" ${d.group==="A"?"selected":""}>Group A</option><option value="B" ${d.group==="B"?"selected":""}>Group B</option></select><button class="btn ghost" data-remove-build="${d.buildId}">Remove from next test</button></p>`).join("")||'<p class="mute">Add at least two builds. Same leader is fine.</p>';$("batchEnqueue").disabled=roster.filter(d=>d.selected).length<2; }
+$("batchRoster").onchange=e=>{const d=roster.find(d=>d.buildId===+e.target.dataset.build);if(d)d.selected=e.target.checked;const g=roster.find(d=>d.buildId===+e.target.dataset.group);if(g)g.group=e.target.value;drawRoster();};
+$("batchRoster").onclick=e=>{const id=+e.target.dataset.removeBuild;const i=roster.findIndex(d=>d.buildId===id);if(i>=0){roster.splice(i,1);drawRoster();}};
+$("batchAdd").onclick=async()=>{
+  if(roster.length>=8){$("batchMsg").textContent="This roster supports up to 8 builds. Remove a build from the next test to add another. Existing queued snapshots stay unchanged.";return;}
+  const text=$("batchDeck").value, name=$("batchName").value.trim();$("batchAdd").disabled=true;
+  try{const r=await helperCall({type:"parse",text}); if(r.errors.length||!r.deck){$("batchMsg").textContent=r.errors.join("; ")||"Invalid deck";return;}
+    const signature=d=>d.leader+"|"+d.main.slice().sort().join(",");
+    if(roster.some(d=>signature(d)===signature(r.deck))){$("batchMsg").textContent="This exact list is already in the roster. Change the build before adding it again.";return;}
+    const id=++buildSerial;roster.push({...r.deck, main:r.deck.main.slice(),name:(name||"Deck build")+" ["+id+"]",buildId:id,selected:true,group:"A"});drawRoster();$("batchMsg").textContent="Legal deck added. Edit this list or choose another to add a different build.";
+  }catch(e){$("batchMsg").textContent=String(e);}finally{$("batchAdd").disabled=false;}
+};
+function buildPairJobs(decks,n,grouped) {
+  const jobs=[];
+  for(let i=0;i<decks.length;i++)for(let j=i+1;j<decks.length;j++){
+    if(grouped&&decks[i].group===decks[j].group)continue;
+    const a=grouped&&decks[i].group!=="A"?decks[j]:decks[i],b=a===decks[i]?decks[j]:decks[i];
+    for(let k=0;k<n;k++)jobs.push({id:i+"|"+j,a,b,k});
+  }
+  return jobs;
+}
+$("batchEnqueue").onclick=()=>{
+  const decks=roster.filter(d=>d.selected);if(decks.length<2)return;
+  const n=Math.max(2,Math.min(200,Math.ceil((+$("batchGames").value||10)/2)*2));$("batchGames").value=n;
+  const grouped=$("batchMode").value==="groups";
+  if(grouped&&(!decks.some(d=>d.group==="A")||!decks.some(d=>d.group==="B"))){$("batchMsg").textContent="Select at least one build in each group.";return;}
+  const jobs=buildPairJobs(decks,n,grouped);
+  const bot=$("batchBot").value;
+  if(batchTasks.some(t=>t.owner==="roster"&&["Queued","Running"].includes(t.state)&&t.bot===bot&&JSON.stringify(t.jobs)===JSON.stringify(jobs))){$("batchMsg").textContent="That exact test is already running or queued.";return;}
+  runJobs(jobs,bot,Math.min(2,cores),()=>{},{owner:"roster",title:(grouped?"Group A vs B · ":"Round robin · ")+decks.length+" builds · "+n+" games per pair"});
+  $("batchMsg").textContent="Test queued. You can add another build and queue another test now.";
+};
+drawRoster();
 $("loadDeck").onchange = (e) => { if (!e.target.value) return; const [k, i] = e.target.value.split("|"); $("deck").value = toText(FIELDS[k].decks[+i]); $("deck").dataset.name = FIELDS[k].decks[+i].name; check(); };
 $("deck").value = toText(FIELDS.meta.decks[0]); $("deck").dataset.name = FIELDS.meta.decks[0].name;
 $("deck").oninput = () => { delete $("deck").dataset.name; clearTimeout(window._pt); window._pt = setTimeout(check, 300); };
@@ -382,7 +516,7 @@ async function check() {
 check();
 
 /* ---------- test my deck ---------- */
-$("stop").onclick = () => running?.stop();
+$("stop").onclick = () => stopOwner("test");
 $("run").onclick = async () => {
   if (!parsed) return;
   const me = { ...parsed, name: $("deck").dataset.name ? $("deck").dataset.name + " (yours)" : "Your deck" };
@@ -390,9 +524,9 @@ $("run").onclick = async () => {
   const n = Math.max(2, Math.min(2000, +$("games").value || 50));
   const jobs = []; for (const d of field) for (let k = 0; k < n; k++) jobs.push({ id: d.name, a: me, b: { name: d.name, leader: d.leader, main: d.main }, k });
   const res = []; const t0 = performance.now();
-  ui(true); $("report").classList.remove("hidden");
+  ui(true); $("progText").classList.remove("err"); $("progText").textContent = "Starting games..."; $("prog").style.width = "0%"; $("report").classList.remove("hidden");
   let lastDraw = 0;
-  await runJobs(jobs, $("bot").value, +$("workers").value || cores, (r) => {
+  const outcome = await runJobs(jobs, $("bot").value, +$("workers").value || cores, (r) => {
     res.push(r); remember(r);
     $("prog").style.width = (100 * res.length / jobs.length) + "%";
     const s = (performance.now() - t0) / 1000; const eta = s / res.length * (jobs.length - res.length);
@@ -400,7 +534,10 @@ $("run").onclick = async () => {
     if (performance.now() - lastDraw > 700) { lastDraw = performance.now(); report(res, me); }
   });
   saveMem(); report(res, me); ui(false);
-  $("progText").textContent = `Done: ${res.length} games in ${((performance.now() - t0) / 1000).toFixed(0)}s.`;
+  const status = outcome.stopped ? "Stopped" : outcome.errors.length ? "Incomplete" : "Done";
+  $("progText").textContent = `${status}: ${res.length} of ${jobs.length} games completed in ${((performance.now() - t0) / 1000).toFixed(0)}s.` + (outcome.errors.length ? ` Engine error: ${outcome.errors[0]}. Try another deck or bot; these results are incomplete.` : "");
+  $("progText").classList.toggle("err", outcome.errors.length > 0);
+  if (!res.length) $("report").classList.add("hidden");
 };
 function ui(on) { $("run").disabled = on; $("grun").disabled = on; $("stop").classList.toggle("hidden", !on); $("gstop").classList.toggle("hidden", !on); }
 
@@ -432,20 +569,20 @@ async function report(res, me) {
 }
 
 /* ---------- grid ---------- */
-$("gstop").onclick = () => running?.stop();
+$("gstop").onclick = () => stopOwner("grid");
 $("grun").onclick = async () => {
   const decks = FIELDS[$("gfield").value].decks; const n = Math.max(2, Math.min(1000, +$("ggames").value || 20));
   const jobs = []; for (let i = 0; i < decks.length; i++) for (let j = i + 1; j < decks.length; j++) for (let k = 0; k < n; k++) jobs.push({ id: i + "|" + j, a: decks[i], b: decks[j], k });
   const M = decks.map(() => decks.map(() => [0, 0])); let done = 0; const t0 = performance.now();
   ui(true); $("gout").classList.remove("hidden"); let last = 0;
-  await runJobs(jobs, $("gbot").value, cores, (r) => {
+  const outcome = await runJobs(jobs, $("gbot").value, cores, (r) => {
     done++; remember(r); const [i, j] = r.id.split("|").map(Number);
     if (r.winner) { M[i][j][1]++; M[j][i][1]++; if (r.winner === "a") { M[i][j][0]++; } else { M[j][i][0]++; } }
     $("gprog").style.width = (100 * done / jobs.length) + "%";
     const s = (performance.now() - t0) / 1000; $("gprogText").textContent = `${done} / ${jobs.length} games · ${s.toFixed(0)}s · about ${Math.ceil(s / done * (jobs.length - done))}s left`;
     if (performance.now() - last > 900) { last = performance.now(); drawGrid(decks, M); }
-  });
-  saveMem(); drawGrid(decks, M); ui(false); $("gprogText").textContent = `Done: ${done} games in ${((performance.now() - t0) / 1000).toFixed(0)}s.`;
+  }, { owner: "grid", title: "Matchup grid" });
+  saveMem(); drawGrid(decks, M); ui(false); $("gprogText").textContent = `${outcome.stopped ? "Stopped" : outcome.errors.length ? "Incomplete" : "Done"}: ${done} of ${jobs.length} games in ${((performance.now() - t0) / 1000).toFixed(0)}s.`;
 };
 function drawGrid(decks, M) {
   const tot = decks.map((_, i) => M[i].reduce((a, c) => [a[0] + c[0], a[1] + c[1]], [0, 0]));
@@ -529,7 +666,7 @@ $("thNext").onclick = () => { if (!TH) return thNew(false); const sec = $("thSec
 
 /* ---------- watch a game ---------- */
 function fillWatchSelects() {
-  const opts = (sel) => `<option value="__me">Your deck (Test my deck box)</option>` + Object.entries(FIELDS).map(([k, f]) => `<optgroup label="${esc(f.label)}">${f.decks.map((d, i) => `<option value="${k}|${i}">${esc(d.name)}</option>`).join("")}</optgroup>`).join("");
+  const opts = (sel) => `<option value="__me">Your selected deck (Test deck)</option>` + Object.entries(FIELDS).map(([k, f]) => `<optgroup label="${esc(f.label)}">${f.decks.map((d, i) => `<option value="${k}|${i}">${esc(d.name)}</option>`).join("")}</optgroup>`).join("");
   $("wA").innerHTML = opts(); $("wB").innerHTML = opts(); $("wB").value = "meta|1";
 }
 fillWatchSelects();
@@ -548,30 +685,34 @@ async function watchGame(a, b) {
   const ids = new Set(); for (const f of RP.frames) for (const sd of [f.a, f.b]) { ids.add(sd.leader.id); sd.chars.forEach((c) => ids.add(c.id)); sd.stage.forEach((x) => ids.add(x)); sd.handIds.forEach((x) => ids.add(x)); }
   await loadCards([...ids]);
   $("wMsg").innerHTML = `<span class=vs>${who(RP.aName + " (A)", a.leader)}<b>vs</b>${who(RP.bName + " (B)", b.leader)}</span>${RP.aFirst ? "A" : "B"} goes first · ${RP.winner ? esc(RP.winner === "a" ? RP.aName : RP.bName) + " wins" : "no result"} on turn ${RP.turns}`;
-  $("wOut").classList.remove("hidden");
+  $("wOut").classList.remove("hidden"); $("wEmpty").classList.add("hidden");
   $("wLog").innerHTML = RP.frames.map((f, i) => `<div data-i="${i}" class="${f.kind === "turn" ? "t" : ""}${isKey(f) ? " key" : ""}">${isKey(f) ? "★ " : ""}${esc(f.text)}</div>`).join("");
   showFrame(0);
 }
-function side(sd, label, name, active) {
-  const u = (id, don, rested, lead, power) => `<div class="mini ${rested ? "rest" : ""} ${lead ? "lead" : ""}">${cimg(id)}<div class=ov><span>${power != null ? power / 1000 + "k" : ""}</span><span>${don ? "+" + don + " DON" : ""}</span></div></div>`;
-  const hand = $("wHands").checked ? `<div class=handrow>${sd.handIds.map((x) => `<div class=cg>${cimg(x)}</div>`).join("") || "<span class=mute style='font-size:12px'>empty hand</span>"}</div>` : "";
-  return `<h4><span class=who>${lthumb(sd.leader.id)}<span>${label} · ${esc(name)}${active ? " <span class=pill>to act</span>" : ""}</span></span><span class=mute>${sd.life} life</span></h4>
-    <div class=zone style="align-items:flex-end">${u(sd.leader.id, sd.leader.don, sd.leader.rested, true, sd.leader.power)}${sd.chars.map((c) => u(c.id, c.don, c.rested, false, c.power)).join("")}${sd.stage.map((x) => u(x, 0, false, false, null)).join("")}</div>
-    <div class=counts><span>Hand ${sd.hand}</span><span>Deck ${sd.deck}</span><span>Trash ${sd.trash}</span><span>DON!! ${sd.donActive} active · ${sd.donRested} rested · ${sd.donDeck} left</span></div>${hand}`;
+function side(sd, label, name, active, setup) {
+  const u = (id, don, rested, lead, power) => `<div class="mini ${rested ? "rest" : ""} ${lead ? "lead" : ""}">${cimg(id)}<div class=ov><span>${power != null ? power / 1000 + "k" : ""}</span><span>${don ? "+" + don + " DON" : ""}</span></div><span class="card-state">${rested ? "Rested" : "Active"}</span></div>`;
+  const hand = $("wHands").checked ? `<div class="zone-title">Hand / ${sd.hand} cards</div><div class=handrow>${sd.handIds.map(x => `<div class=cg>${cimg(x)}</div>`).join("") || "<span class=mute>Empty hand</span>"}</div>` : '<div class="inspect-hint">Hand cards hidden</div>';
+  return `<h4><span>${label} / ${esc(name)} ${active ? '<span class=pill>Taking action</span>' : ''}</span><span class="life-count">${setup ? "Setting up life" : sd.life + " life"}</span></h4>
+    <div class="board-zones"><div><div class="zone-title">Leader</div>${u(sd.leader.id, sd.leader.don, sd.leader.rested, true, sd.leader.power)}</div><div><div class="zone-title">Characters / ${sd.chars.length} of 5</div><div class=zone>${sd.chars.map(c => u(c.id,c.don,c.rested,false,c.power)).join('') || '<span class=mute>No characters in play</span>'}</div>${sd.stage.length ? '<div class="zone-title">Stage</div><div class=zone>'+sd.stage.map(x=>u(x,0,false,false,null)).join('')+'</div>' : ''}</div></div>
+    <div class=counts><span>DON!! ${sd.donActive} ready / ${sd.donRested} rested</span><span>DON!! deck ${sd.donDeck}</span><span>Deck ${sd.deck}</span><span>Trash ${sd.trash}</span></div>${hand}`;
 }
 function showFrame(i) {
   if (!RP) return; RPi = Math.max(0, Math.min(RP.frames.length - 1, i)); const f = RP.frames[RPi];
   $("wNow").textContent = `Turn ${f.turn} · ${f.text}`;
-  $("wBoardB").innerHTML = side(f.b, "B", RP.bName, f.seat === "b"); $("wBoardA").innerHTML = side(f.a, "A", RP.aName, f.seat === "a");
+  $("wBoardB").innerHTML = side(f.b, "B", RP.bName, f.seat === "b", RP.frames.slice(0, RPi + 1).every(x => x.kind !== "turn")); $("wBoardA").innerHTML = side(f.a, "A", RP.aName, f.seat === "a", RP.frames.slice(0, RPi + 1).every(x => x.kind !== "turn"));
+  $('wPosition').textContent = `Turn ${f.turn} / Move ${RPi + 1} of ${RP.frames.length}`;
+  $('wBoardA').classList.toggle('active', f.seat === 'a'); $('wBoardB').classList.toggle('active', f.seat === 'b');
+  $('wFirst').disabled = $('wPrev').disabled = RPi === 0;
+  $('wNext').disabled = $('wTurn').disabled = $('wKey').disabled = RPi === RP.frames.length - 1;
   const log = $("wLog"); log.querySelector(".on")?.classList.remove("on"); const el = log.querySelector(`[data-i="${RPi}"]`); if (el) { el.classList.add("on"); el.scrollIntoView({ block: "nearest" }); }
 }
-function stopAuto() { clearInterval(RPtimer); RPtimer = null; $("wPlay").textContent = "▶ Play"; }
+function stopAuto() { clearInterval(RPtimer); RPtimer = null; $("wPlay").textContent = "Play replay"; }
 $("wLog").onclick = (e) => { const d = e.target.closest("[data-i]"); if (d) { stopAuto(); showFrame(+d.dataset.i); } };
 $("wFirst").onclick = () => { stopAuto(); showFrame(0); };
 $("wPrev").onclick = () => { stopAuto(); showFrame(RPi - 1); };
 $("wNext").onclick = () => { stopAuto(); showFrame(RPi + 1); };
 $("wTurn").onclick = () => { stopAuto(); const j = RP.frames.findIndex((f, k) => k > RPi && f.kind === "turn"); showFrame(j < 0 ? RP.frames.length - 1 : j); };
-$("wPlay").onclick = () => { if (RPtimer) return stopAuto(); $("wPlay").textContent = "⏸ Pause"; RPtimer = setInterval(() => { if (RPi >= RP.frames.length - 1) return stopAuto(); showFrame(RPi + 1); }, +$("wSpeed").value); };
+$("wPlay").onclick = () => { if (RPtimer) return stopAuto(); if (RPi >= RP.frames.length - 1) showFrame(0); $("wPlay").textContent = "Pause replay"; RPtimer = setInterval(() => { if (RPi >= RP.frames.length - 1) return stopAuto(); showFrame(RPi + 1); }, +$("wSpeed").value); };
 $("wHands").onchange = () => showFrame(RPi);
 $("wKey").onclick = () => { stopAuto(); const j = RP.frames.findIndex((f, k) => k > RPi && isKey(f)); showFrame(j < 0 ? RP.frames.length - 1 : j); };
 
@@ -598,7 +739,7 @@ async function cmpCheck() {
     ch.length ? `<div class=mute style="font-size:13px">B changes ${ch.length} card${ch.length > 1 ? "s" : ""} from A:</div><div class=strip>${ch.map((c) => `<div class=cg>${cimg(c.id)}<span class=cnt style="background:${c.d > 0 ? "var(--good)" : "var(--bad)"};color:#fff">${c.d > 0 ? "+" : ""}${c.d}</span></div>`).join("")}</div>` : `<div class=warn>The two versions are identical.</div>`;
 }
 $("cmpA").oninput = $("cmpB").oninput = () => { clearTimeout(window._ct); window._ct = setTimeout(cmpCheck, 300); };
-$("cmpStop").onclick = () => running?.stop();
+$("cmpStop").onclick = () => stopOwner("compare");
 $("cmpRun").onclick = async () => {
   if (!(cmpA && cmpB)) return;
   const A = { ...cmpA, name: "Version A" }, B = { ...cmpB, name: "Version B" };
@@ -607,13 +748,13 @@ $("cmpRun").onclick = async () => {
   const res = { "Version A": {}, "Version B": {} }; let done = 0; const t0 = performance.now();
   $("cmpRun").disabled = true; $("cmpStop").classList.remove("hidden"); $("cmpOut").classList.remove("hidden");
   let last = 0;
-  await runJobs(jobs, "fast", +$("workers").value || cores, (r) => {
+  const outcome = await runJobs(jobs, "fast", +$("workers").value || cores, (r) => {
     done++; remember(r); if (r.winner) { const x = res[r.aName][r.bName] ??= [0, 0]; x[1]++; if (r.winner === "a") x[0]++; }
     $("cmpProg").style.width = (100 * done / jobs.length) + "%";
     const s = (performance.now() - t0) / 1000; $("cmpText").textContent = `${done} / ${jobs.length} games · about ${Math.ceil(s / done * (jobs.length - done))}s left`;
     if (performance.now() - last > 800) { last = performance.now(); cmpDraw(field, res); }
-  });
-  cmpDraw(field, res); $("cmpRun").disabled = false; $("cmpStop").classList.add("hidden"); $("cmpText").textContent = `Done: ${done} games.`;
+  }, { owner: "compare", title: "Compare two builds" });
+  cmpDraw(field, res); $("cmpRun").disabled = false; $("cmpStop").classList.add("hidden"); $("cmpText").textContent = `${outcome.stopped ? "Stopped" : outcome.errors.length ? "Incomplete" : "Done"}: ${done} of ${jobs.length} games.`;
 };
 function cmpDraw(field, res) {
   const tot = (v) => Object.values(res[v]).reduce((a, x) => [a[0] + x[0], a[1] + x[1]], [0, 0]);
@@ -681,24 +822,34 @@ function cfFilter() {
 }
 $("cfSearch").oninput = () => { clearTimeout(window._cf); window._cf = setTimeout(cfFilter, 150); };
 document.querySelector('nav button[data-tab="combos"]').addEventListener("click", cfInit);
-let cfLeader = null;
+let cfLeader = null, cfRequest = 0;
 $("cfLeaders").addEventListener("click", async (e) => {
   const t = e.target.closest("[data-lead]"); if (!t || e.target.closest("[data-card]") && !matchMedia("(hover:hover)").matches) { if (!t) return; }
-  cfLeader = t.dataset.lead; $("cfOut").classList.remove("hidden"); $("cfHead").innerHTML = "<span class=mute>Reading every card for this leader…</span>";
-  const r = await helperCall({ type: "combos", leader: cfLeader });
+  cfLeader = t.dataset.lead; await cfRender();
+});
+async function cfRender() {
+  if (!cfLeader) return; const request = ++cfRequest; $("cfOut").classList.remove("hidden"); $("cfHead").innerHTML = "<span class=mute>Reading every card for this leader…</span>";
+  const r = await helperCall({ type: "combos", leader: cfLeader, deckText: $("cfContext").checked ? $("deck").value : "", outsideEngine: $("cfOutside").checked, role: $("cfRole").value });
+  if (request !== cfRequest) return;
   await loadCards([cfLeader, ...r.engine.map((c) => c.id), ...r.oldFits.map((c) => c.id), ...r.pairs.flatMap((p) => [p.a, p.b])]);
+  if (request !== cfRequest) return;
+  $("cfContextNote").textContent = r.contextNote + " Scanned " + r.scanned + " of " + r.poolSize + " legal-pool cards (deck restriction conflicts excluded). Role labels and rankings are heuristics, not matchup evidence.";
   const L = r.leader;
   $("cfHead").innerHTML = `<div class=vs>${lthumb(L.id, true)}<div><b>${esc(L.name)}</b> <span class=pill>${L.id}</span><div class=mute style="font-size:13px">${L.colors.join("/")} · {${L.traits.join("} {")}} · ${r.poolSize} legal cards</div>${L.wants.length ? `<div style="font-size:13px;margin-top:4px">Leader ${esc(L.wants.slice(0, 3).join("; "))}</div>` : ""}</div></div>`;
   const tag = (old) => old ? ` <span class=pill style="background:var(--mid);color:#111">old</span>` : "";
-  const pairRow = (a, b, why, oldA, oldB, extra) => `<div class=who style="padding:8px 0;border-bottom:1px solid var(--line);gap:8px"><div style="width:52px">${cimg(a)}</div><span style="font-size:18px">+</span><div style="width:52px">${cimg(b)}</div><div class=nm style="font-size:13px"><b>${esc(cn(a))}</b>${tag(oldA)} + <b>${esc(cn(b))}</b>${tag(oldB)}${extra ?? ""}<small>${esc(why ?? "")}</small></div></div>`;
-  $("cfPairs").innerHTML = r.pairs.map((p) => pairRow(p.a, p.b, p.why, p.old[0], p.old[1])).join("") || "<span class=mute>No text-based combos found for this leader.</span>";
+  const pairRow = (a, b, why, oldA, oldB, extra) => `<div class=who style="padding:8px 0;border-bottom:1px solid var(--line);gap:8px"><div style="width:52px">${cimg(a)}</div><span style="font-size:18px">+</span><div style="width:52px">${cimg(b)}</div><div class=nm style="font-size:13px"><b>${esc(cn(a))}</b> <span class=pill>${esc(a)}</span>${tag(oldA)} + <b>${esc(cn(b))}</b> <span class=pill>${esc(b)}</span>${tag(oldB)}${extra ?? ""}<small>${esc(why ?? "")}</small></div></div>`;
+  $("cfPairs").innerHTML = r.pairs.map((p) => pairRow(p.a, p.b, p.evidence + ": " + p.why, p.old[0], p.old[1])).join("") || "<span class=mute>No supported effect interactions match this deck/filter. This does not mean no useful tactical combinations exist.</span>";
   const learned = (NIGHTLY?.found?.combos || []).filter((c) => c.leader === cfLeader);
   $("cfLearnedCard").classList.toggle("hidden", !learned.length);
-  if (learned.length) { await loadCards(learned.flatMap((c) => [c.a, c.b])); $("cfLearned").innerHTML = learned.map((c) => pairRow(c.a, c.b, c.why ?? "found by play, no text link", c.old[0], c.old[1], ` <span class="pill" style="background:var(--good);color:#fff">+${Math.round(100 * c.extra)}% wins together · ${c.games} games</span>`)).join(""); }
+  if (learned.length) { await loadCards(learned.flatMap((c) => [c.a, c.b])); $("cfLearned").innerHTML = learned.map((c) => pairRow(c.a, c.b, c.why ?? "observed association, no structural link", c.old[0], c.old[1], ` <span class="pill" style="background:var(--good);color:#fff">+${Math.round(100 * c.extra)} points observed association · ${c.games} games</span>`)).join(""); }
   const grid = (xs) => xs.map((c) => `<div class=cg data-card="${c.id}">${cimg(c.id)}${c.old ? `<span class=cnt style="background:var(--mid);color:#111">old</span>` : ""}<div class=lbl><small>${esc(c.why ?? c.roles.join(", "))}</small></div></div>`).join("");
-  $("cfEngine").innerHTML = grid(r.engine); $("cfOld").innerHTML = grid(r.oldFits) || "<span class=mute>No old cards link to this leader's text.</span>";
+  $("cfEngine").innerHTML = grid(r.engine); $("cfOld").innerHTML = grid(r.oldFits) || "<span class=mute>No older candidates match this deck and filter.</span>";
   $("cfBuildMsg").textContent = "";
-});
+}
+$("cfRefresh").onclick = cfRender;
+$("cfOutside").onchange = cfRender;
+$("cfRole").onchange = cfRender;
+$("cfContext").onchange = cfRender;
 async function cfBuild(old) {
   if (!cfLeader) return; $("cfBuildMsg").textContent = "Building…";
   const r = await helperCall({ type: "build", leader: cfLeader, old, seed: Date.now() });
@@ -710,22 +861,23 @@ async function cfBuild(old) {
 $("cfBuild").onclick = () => cfBuild(false); $("cfBuildOld").onclick = () => cfBuild(true);
 
 /* ---------- card popover (hover on desktop, tap on phones) ---------- */
-let popFor = null;
+let popFor = null, popPinned = false;
 async function showPop(el, x, y) {
   const id = el.dataset.card; if (!id) return; popFor = el;
   await loadCards([id]); if (popFor !== el) return;
   const c = CARDS[id] || {};
   const meta = [c.type, c.cost != null ? "cost " + c.cost : c.life != null ? c.life + " life" : "", c.power ? c.power / 1000 + "k power" : "", c.counter ? "+" + c.counter / 1000 + "k counter" : "", (c.color || []).join("/")].filter(Boolean).join(" · ");
-  $("pop").innerHTML = `${cimg(id)}<b>${esc(c.name ?? id)} <span class=pill>${id}</span></b><div class=mute style="font-size:12px">${esc(meta)}</div><div class=t>${esc(c.text ?? "")}</div>`;
+  $("pop").innerHTML = `<button class="btn ghost pop-close" onclick="hidePop()" aria-label="Close card preview">Close</button>${cimg(id)}<b>${esc(c.name ?? id)} <span class=pill>${id}</span></b><div class=mute style="font-size:12px">${esc(meta)}</div><div class=t>${esc(c.text ?? "")}</div>`;
   const p = $("pop"); p.style.display = "block";
-  const w = 290, h = p.offsetHeight || 520;
-  p.style.left = Math.min(window.innerWidth - w - 8, x + 16) + "px";
+  const w = p.offsetWidth, h = p.offsetHeight || 520;
+  p.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, x + 16)) + "px";
   p.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, y - 40)) + "px";
 }
-function hidePop() { popFor = null; $("pop").style.display = "none"; }
-document.addEventListener("mouseover", (e) => { const el = e.target.closest("[data-card]"); if (el && matchMedia("(hover:hover)").matches) showPop(el, e.clientX, e.clientY); });
-document.addEventListener("mouseout", (e) => { if (e.target.closest("[data-card]") && matchMedia("(hover:hover)").matches) hidePop(); });
-document.addEventListener("click", (e) => { if (matchMedia("(hover:hover)").matches) return; const el = e.target.closest("[data-card]"); if (el) { e.preventDefault(); showPop(el, e.clientX, e.clientY); } else if (!e.target.closest("#pop")) hidePop(); });
+function hidePop() { popPinned = false; popFor = null; $("pop").style.display = "none"; }
+document.addEventListener("mouseover", e => { const el = e.target.closest("[data-card]"); if (!popPinned && el && !el.closest('#pop') && matchMedia("(hover:hover)").matches) showPop(el,e.clientX,e.clientY); });
+document.addEventListener("mouseout", e => { if (!popPinned && e.target.closest('[data-card]') && !e.relatedTarget?.closest?.('#pop')) hidePop(); });
+document.addEventListener("click", e => { const el = e.target.closest('[data-card]'); if(el && !el.closest('#pop')) { popPinned = true; showPop(el,e.clientX,e.clientY); } else if (!e.target.closest('#pop')) hidePop(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') hidePop(); if((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-card]')) { e.preventDefault(); popPinned=true; const r=e.target.getBoundingClientRect(); showPop(e.target,r.left,r.top); } });
 
 /* ---------- deck + field previews ---------- */
 async function renderDeckPreview() {
