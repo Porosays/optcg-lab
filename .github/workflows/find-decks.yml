@@ -65,8 +65,10 @@ jobs:
           MODE: ${{ inputs.mode }}
           CONFIRM: ${{ inputs.confirm }}
           SHARD: ${{ matrix.job }}
+        timeout-minutes: 315 # stop before the job limit so results still upload
         run: bun find-decks.ts --leaders="$LEADERS" --pop="$POP" --gens="$GENS" --games="$GAMES" --field="$FIELD" --mode="$MODE" --confirm="$CONFIRM" --knowledge="$GITHUB_WORKSPACE/nightly/knowledge.json" --shard="$SHARD" --shards=12 --workers=4 --out=out
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: found-${{ matrix.job }}
           path: ${{ env.SEARCH_DIR }}/out/*.json
