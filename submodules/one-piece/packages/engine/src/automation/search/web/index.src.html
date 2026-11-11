@@ -321,7 +321,7 @@ function imgFail(el) {
   if (!el.dataset.tried && b) { el.dataset.tried = 1; el.src = b; return; }
   const d = document.createElement("div"); d.className = "ctext"; d.dataset.card = id; d.tabIndex = 0; d.setAttribute("role", "button"); d.setAttribute("aria-label", "Inspect " + id); d.textContent = (CARDS[id]?.name ?? NAMES[id]?.name ?? "") + " " + id; el.replaceWith(d);
 }
-const cimg = (id, cls = "cimg") => `<img class="${cls}" data-card="${id}" tabindex="0" role="button" aria-label="Inspect ${id}" src="${imgUrl(id)}" loading="lazy" alt="${id}" onerror="imgFail(this)">`;
+const cimg = (id, cls = "cimg") => !/^[A-Z]{1,5}[0-9]{0,3}-[0-9]{2,3}(?:_[pr][0-9]+)?$/.test(id) ? "" : `<img class="${cls}" data-card="${id}" tabindex="0" role="button" aria-label="Inspect ${id}" src="${imgUrl(id)}" loading="lazy" alt="${id}" onerror="imgFail(this)">`;
 const LEADER_OF = {}, LEADER_OF_NAME = {}; for (const f of Object.values(FIELDS)) for (const d of f.decks) { LEADER_OF[d.name] = d.leader; LEADER_OF_NAME[d.leader] ??= d.name; }
 const lthumb = (leader, big) => leader ? `<img class="lthumb${big ? " lg" : ""}" data-card="${leader}" src="${imgUrl(leader)}" loading="lazy" alt="" onerror="imgFail(this)">` : "";
 const who = (name, leader, sub) => `<div class=who>${lthumb(leader ?? LEADER_OF[name])}<div class=nm>${esc(name)}${sub ? `<small>${sub}</small>` : ""}</div></div>`;
@@ -350,6 +350,15 @@ const nm = (id) => NAMES[id]?.name ? `${NAMES[id].name}` : id;
 /* ---------- worker pool ---------- */
 let helper; const pending = new Map(); let reqId = 0;
 function helperCall(msg) {
+  if (msg.type === "parse") {
+    const text = msg.text;
+    let total = 0;
+    const invalid = typeof text !== "string" || text.length > 65536 || [...text.matchAll(/(\d+)\s*[xXx]\s*[A-Za-z]{1,5}\d{0,3}-\d{2,3}/g)].some(m => {
+      const n = Number(m[1]); total += n;
+      return !Number.isSafeInteger(n) || n < 1 || n > 100 || total > 200;
+    });
+    if (invalid) return Promise.resolve({type:"parsed",deck:null,errors:["Deck input is too large or has an invalid card count."],warnings:[]});
+  }
   if (!helper) { helper = new Worker("worker.js"); if (NIGHTLY?.playbook) helper.postMessage({ type: "playbook", id: -1, playbook: NIGHTLY.playbook }); helper.onmessage = (e) => { const p = pending.get(e.data.id); if (p) { pending.delete(e.data.id); p(e.data); } }; }
   const id = ++reqId; return new Promise((res) => { pending.set(id, res); helper.postMessage({ ...msg, id }); });
 }
@@ -428,13 +437,14 @@ const pct = (x) => (100 * x).toFixed(0) + "%";
 const cls = (x) => x >= 0.55 ? "hi" : x <= 0.45 ? "lo" : "";
 
 /* ---------- lab memory ---------- */
-let MEM = store.get("optcg-lab-mem-v1", { games: 0, decks: {}, cards: {} });
+let MEM = { games: 0, decks: Object.create(null), cards: Object.create(null) };
+try { mergeMem(store.get("optcg-lab-mem-v1", MEM)); } catch { /* Leave invalid saved data untouched for recovery. */ }
 function remember(r) {
   if (r.winner === null) return;
   MEM.games++;
   for (const side of ["a", "b"]) {
     const name = side === "a" ? r.aName : r.bName, opp = side === "a" ? r.bName : r.aName, won = r.winner === side;
-    const d = MEM.decks[name] ??= { g: 0, w: 0, vs: {} }; d.g++; if (won) d.w++;
+    const d = MEM.decks[name] ??= { g: 0, w: 0, vs: Object.create(null) }; d.g++; if (won) d.w++;
     const v = d.vs[opp] ??= [0, 0]; v[1]++; if (won) v[0]++;
     const played = side === "a" ? r.aPlayed : r.bPlayed;
     for (const c of Object.keys(played)) { const s = MEM.cards[c] ??= [0, 0]; s[1]++; if (won) s[0]++; }
@@ -450,13 +460,44 @@ async function renderMemory() {
   }).join("");
   const cards = Object.entries(MEM.cards).filter(([, s]) => s[1] >= 30).sort((a, b) => b[1][0] / b[1][1] - a[1][0] / a[1][1]).slice(0, 40);
   await loadNames(cards.map(([c]) => c));
-  $("mcards").innerHTML = "<tr><th>Card</th><th class=n>Games used</th><th class=n>Win rate when used</th></tr>" + cards.map(([c, s]) => `<tr><td><div class=who><div style="width:40px">${cimg(c)}</div><div class=nm>${esc(nm(c))}<small>${c}</small></div></div></td><td class=n>${s[1]}</td><td class="n wr ${cls(s[0] / s[1])}">${pct(s[0] / s[1])}</td></tr>`).join("");
+  $("mcards").innerHTML = "<tr><th>Card</th><th class=n>Games used</th><th class=n>Win rate when used</th></tr>" + cards.map(([c, s]) => `<tr><td><div class=who><div style="width:40px">${cimg(c)}</div><div class=nm>${esc(nm(c))}<small>${esc(c)}</small></div></div></td><td class=n>${s[1]}</td><td class="n wr ${cls(s[0] / s[1])}">${pct(s[0] / s[1])}</td></tr>`).join("");
 }
 $("mexport").onclick = () => { $("mbox").classList.remove("hidden"); $("mload").classList.add("hidden"); $("mlabel").textContent = "Copy this and send it to a friend. They paste it under “Add a friend's data”."; $("mtext").value = JSON.stringify(MEM); $("mtext").select(); };
 $("mimport").onclick = () => { $("mbox").classList.remove("hidden"); $("mload").classList.remove("hidden"); $("mlabel").textContent = "Paste a friend's shared data here."; $("mtext").value = ""; $("mtext").focus(); };
-$("mload").onclick = () => { try { mergeMem(JSON.parse($("mtext").value)); saveMem(); $("mbox").classList.add("hidden"); renderMemory(); } catch { alertBox("That text isn't shared lab data."); } };
-function mergeMem(m) { MEM.games += m.games || 0; for (const [n, d] of Object.entries(m.decks || {})) { const t = MEM.decks[n] ??= { g: 0, w: 0, vs: {} }; t.g += d.g; t.w += d.w; for (const [o, v] of Object.entries(d.vs)) { const x = t.vs[o] ??= [0, 0]; x[0] += v[0]; x[1] += v[1]; } } for (const [c, s] of Object.entries(m.cards || {})) { const x = MEM.cards[c] ??= [0, 0]; x[0] += s[0]; x[1] += s[1]; } }
-$("mreset").onclick = () => { MEM = { games: 0, decks: {}, cards: {} }; store.set("optcg-lab-mem-v1", MEM); renderMemory(); };
+$("mload").onclick = () => { try { if ($("mtext").value.length > 2000000) throw new Error("Too much data"); mergeMem(JSON.parse($("mtext").value)); saveMem(); $("mbox").classList.add("hidden"); renderMemory(); } catch { alertBox("That text is invalid or too large for shared lab data (2 MB maximum)."); } };
+function mergeMem(m) {
+  // Treat pasted and saved JSON as untrusted; validate everything before changing MEM.
+  const fail = () => { throw new Error("Invalid or oversized shared lab data"); };
+  const count = n => Number.isSafeInteger(n) && n >= 0 && n <= 1000000000;
+  const record = o => o && typeof o === "object" && !Array.isArray(o);
+  const entries = o => { if (!record(o) || Object.keys(o).length > 10000) fail(); return Object.entries(o); };
+  const key = k => k.length > 0 && k.length <= 300 && !["__proto__", "prototype", "constructor"].includes(k);
+  const pair = p => { if (!Array.isArray(p) || p.length !== 2 || !p.every(count) || p[0] > p[1]) fail(); return p.slice(); };
+  const normalize = o => {
+    if (!record(o) || !count(o.games) || JSON.stringify(o).length > 2000000) fail();
+    const out = { games: o.games, decks: Object.create(null), cards: Object.create(null) };
+    for (const [n,d] of entries(o.decks)) {
+      if (!key(n) || !record(d) || !count(d.g) || !count(d.w) || d.w > d.g) fail();
+      const vs = Object.create(null);
+      for (const [name,v] of entries(d.vs)) { if (!key(name)) fail(); vs[name] = pair(v); }
+      out.decks[n] = {g:d.g,w:d.w,vs};
+    }
+    for (const [id,p] of entries(o.cards)) {
+      if (!/^[A-Z]{1,5}[0-9]{0,3}-[0-9]{2,3}(?:_[pr][0-9]+)?$/.test(id)) fail();
+      out.cards[id] = pair(p);
+    }
+    return out;
+  };
+  const incoming = normalize(m), next = normalize(MEM);
+  next.games += incoming.games;
+  for (const [n,d] of Object.entries(incoming.decks)) {
+    const t = next.decks[n] ??= {g:0,w:0,vs:Object.create(null)}; t.g += d.g; t.w += d.w;
+    for (const [o,v] of Object.entries(d.vs)) { const x = t.vs[o] ??= [0,0]; x[0] += v[0]; x[1] += v[1]; }
+  }
+  for (const [c,s] of Object.entries(incoming.cards)) { const x = next.cards[c] ??= [0,0]; x[0] += s[0]; x[1] += s[1]; }
+  MEM = normalize(next);
+}
+$("mreset").onclick = () => { MEM = { games: 0, decks: Object.create(null), cards: Object.create(null) }; store.set("optcg-lab-mem-v1", MEM); renderMemory(); };
 function alertBox(t) { $("msum").textContent = t; }
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 

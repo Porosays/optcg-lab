@@ -5,12 +5,14 @@ here = os.path.dirname(os.path.abspath(__file__)); search = os.path.dirname(here
 engine = os.path.abspath(os.path.join(here, "../../../.."))
 out = os.path.abspath(os.path.join(engine, "../../../../site")); os.makedirs(out, exist_ok=True)
 if os.environ.get("OPTCG_BROWSER_RELEASE") == "1":
-    import shutil, hashlib
+    import hashlib
     release = os.path.join(here, "worker.release.js")
     expected = "855674a900d53de35458c968a19ab78143e7aa4d7560dd607d49f882e0532885"
-    if hashlib.sha256(open(release, "rb").read()).hexdigest() != expected:
+    # Git's Windows checkout may convert line endings. Verify and emit canonical bytes.
+    release_bytes = open(release, "rb").read().replace(b"\r\n", b"\n")
+    if hashlib.sha256(release_bytes).hexdigest() != expected:
         raise RuntimeError("Pinned browser runtime checksum mismatch")
-    shutil.copyfile(release, os.path.join(out, "worker.js"))
+    open(os.path.join(out, "worker.js"), "wb").write(release_bytes)
 else:
     subprocess.run(["bun", "build", "src/automation/search/web/worker.ts", "--target=browser", "--minify", f"--outfile={out}/worker.js"], cwd=engine, check=True)
 fields = [("meta","Current meta (EB-05)"),("op18-community","OP-18 community lists"),("op18-preview","OP-18 preview (all 22)"),("meta-op16","OP-16 era"),("classic-2024","Classic 2023–24 (Extra)"),("test-decks","Engine test decks")]
@@ -34,5 +36,9 @@ def maybe(path):
     try: return json.load(open(os.path.join(root, path)))
     except Exception: return None
 nightly = {"found": maybe("nightly/latest/found-summary.json"), "grid": maybe("nightly/latest/grid.json"), "playbook": maybe("nightly/playbook.json")}
-html = open(os.path.join(here, "index.src.html")).read().replace("__NIGHTLY__", json.dumps(nightly, separators=(",", ":"))).replace("__FIELDS__", json.dumps(data, separators=(",", ":"))).replace("__IMGS__", json.dumps(imgs, separators=(",", ":")))
-open(os.path.join(out, "index.html"), "w").write(html); print("built", out)
+def script_json(value):
+    # HTML parses </script> before JavaScript parses string literals.
+    return json.dumps(value, separators=(",", ":")).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+
+html = open(os.path.join(here, "index.src.html"), encoding="utf-8").read().replace("__NIGHTLY__", script_json(nightly)).replace("__FIELDS__", script_json(data)).replace("__IMGS__", script_json(imgs))
+open(os.path.join(out, "index.html"), "w", encoding="utf-8", newline="\n").write(html); print("built", out)
