@@ -97,7 +97,7 @@ jobs:
       - name: Build report
         working-directory: ${{ env.SEARCH_DIR }}
         run: |
-          bun find-report.ts --dir=out --base="$GITHUB_WORKSPACE/nightly/knowledge.json"
+          bun find-report.ts --dir=out --shards=12 --base="$GITHUB_WORKSPACE/nightly/knowledge.json"
           cat out/found.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
@@ -105,3 +105,4 @@ jobs:
           path: |
             ${{ env.SEARCH_DIR }}/out/found.md
             ${{ env.SEARCH_DIR }}/out/found-decks.json
+            ${{ env.SEARCH_DIR }}/out/found-summary.json

@@ -1066,7 +1066,10 @@ function resolveEffectSelection(state: MatchState, prompt: PromptState): EngineC
     (id) => getInstance(state, id).controller === otherSeat(seat),
   );
 
-  const harmful = action !== null && HARMFUL_ACTIONS.has(action.action);
+  const harmful =
+    action !== null &&
+    (HARMFUL_ACTIONS.has(action.action) ||
+      (action.action === "modifyPower" && action.value < 0));
   const beneficial =
     action !== null &&
     (BENEFICIAL_ACTIONS.has(action.action) ||
@@ -1085,6 +1088,18 @@ function resolveEffectSelection(state: MatchState, prompt: PromptState): EngineC
     ordered = byCheapest(state, legalCandidateIds); // lose/give the least
   } else {
     ordered = byStrongest(state, legalCandidateIds);
+  }
+
+  // During defense, power belongs on the units fighting this battle. Buffing
+  // a stronger bystander (or weakening one) does not stop the current hit.
+  // Keep the engine's legal candidate set: card restrictions still apply.
+  if (action?.action === "modifyPower" && state.battle?.defendingSeat === seat) {
+    const preferred = action.value > 0 && allMine
+      ? state.battle.targetId
+      : action.value < 0 && allOpponents ? state.battle.attackerId : null;
+    if (preferred && ordered.includes(preferred)) {
+      ordered = [preferred, ...ordered.filter((id) => id !== preferred)];
+    }
   }
 
   let count = prompt.minSelections;
