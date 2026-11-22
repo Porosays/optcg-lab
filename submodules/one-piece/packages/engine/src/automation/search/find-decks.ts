@@ -8,7 +8,7 @@
  *     [--pop=8] [--gens=5] [--games=6] [--workers=N] [--out=out]
  */
 import "@tcg/op-cards";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync, renameSync } from "node:fs";
 import { getCard } from "@tcg/op-cards";
 import { cardName, cost, counter, deckToText, isBlock1, isLegal, leaders, poolFor, type Deck } from "./decklist.ts";
 import { runJobs, wilson } from "./pool.ts";
@@ -103,7 +103,7 @@ const style = (d: Deck) => {
 };
 const key = (d: Deck) => [...d.main].sort().join(",");
 
-interface Scored { deck: Deck; w: number; g: number; wr: number; style: string; vs: Record<string, number> }
+interface Scored { deck: Deck; w: number; g: number; wr: number; style: string; vs: Record<string, number>; confirmed?: { w: number; g: number } }
 const allScored: Scored[] = [];
 
 async function evaluate(decks: Deck[]): Promise<Scored[]> {
@@ -129,44 +129,64 @@ async function evaluate(decks: Deck[]): Promise<Scored[]> {
 
 const t0 = Date.now();
 const elitesAll: Scored[] = [];
+let activeElites: Scored[] = [];
+const progress = { complete: false, completedLeaders: [] as string[], skippedLeaders: [] as string[],
+  activeLeader: null as string | null, completedGenerations: 0 };
+save(); // publish an explicit partial checkpoint before the first batch
 for (const leader of myLeaders) {
+  progress.activeLeader = leader; progress.completedGenerations = 0;
+  activeElites = [];
+  save();
   const pool = poolFor(leader);
-  if (pool.length < 15) { console.log(`skip ${leader}: pool ${pool.length}`); continue; }
+  if (pool.length < 15) { console.log(`skip ${leader}: pool ${pool.length}`); progress.skippedLeaders.push(leader); progress.activeLeader = null; save(); continue; }
   const seen = new Set<string>();
   const init = Array.from({ length: POP }, (_, i) => MODE === "random" ? generate(leader, pool)
     : buildDeck(leader, pool, { random: rnd, temperature: 0.6 + (i % 4) * 0.5, oldBias: i % 3 === 2 ? 2.5 : 0, knowledge })).filter((d): d is Deck => !!d);
-  if (!init.length) { console.log(`skip ${leader}: could not build a legal deck`); continue; }
+  if (!init.length) { console.log(`skip ${leader}: could not build a legal deck`); progress.skippedLeaders.push(leader); progress.activeLeader = null; save(); continue; }
   init.forEach((d) => seen.add(key(d)));
   let scored = await evaluate(init);
   const elites = new Map<string, Scored>(); // best per style bucket
   const keep = (xs: Scored[]) => { for (const s of xs) { const e = elites.get(s.style); if (!e || s.wr > e.wr) elites.set(s.style, s); } };
   keep(scored);
+  activeElites = [...elites.values()]; save();
   for (let gen = 0; gen < GENS; gen++) {
     const parents = [...elites.values(), ...scored.sort((a, b) => b.wr - a.wr).slice(0, 3)];
     const kids: Deck[] = [];
     for (let i = 0; i < POP * 3 && kids.length < POP; i++) { const par = pick(parents).deck; const k = MODE === "random" ? mutate(par, pool) : improve(par, pool, { random: rnd, knowledge, explore: 0.2, oldBias: par.main.filter(isBlock1).length >= 12 ? 2 : 0 }); if (!seen.has(key(k))) { seen.add(key(k)); kids.push(k); } }
     scored = await evaluate(kids);
     keep(scored);
+    progress.completedGenerations = gen + 1;
+    activeElites = [...elites.values()]; save();
   }
   const best = [...elites.values()].sort((a, b) => b.wr - a.wr);
   if (CONFIRM && best[0]) {
     const d = best[0].deck; const jobs: Job[] = field.flatMap((opp) => Array.from({ length: CONFIRM }, (_, k) => ({ id: `c-${opp.name}`, a: d, b: opp, k: 100000 + k })));
     const rs = (await runJobs(jobs, { workers })).filter((r) => r.winner && !r.broken);
-    (best[0] as any).confirmed = { w: rs.filter((r) => r.winner === "a").length, g: rs.length };
+    best[0].confirmed = { w: rs.filter((r) => r.winner === "a").length, g: rs.length };
   }
   elitesAll.push(...best);
-  const cf = (best[0] as any)?.confirmed;
+  activeElites = [];
+  progress.completedLeaders.push(leader);
+  progress.activeLeader = null;
+  const cf = best[0]?.confirmed;
   console.log(`${leader} ${cardName(leader)}: best ${Math.round(100 * (best[0]?.wr ?? 0))}% (${best[0]?.style})${cf ? `, confirmed ${Math.round(100 * cf.w / Math.max(1, cf.g))}% over ${cf.g} fresh games` : ""}, ${best.length} styles, ${Math.round((Date.now() - t0) / 1000)}s`);
-  save(); // after every leader, so a timeout keeps what finished
+  save(); // include confirmation and mark the leader complete
 }
 
+progress.complete = true;
+progress.activeLeader = null;
 save();
 function save() {
-  const done = [...new Set(elitesAll.map((e) => e.deck.leader))];
-  writeFileSync(`${outDir}/found-${shard}.json`, JSON.stringify({ field: field.map((f) => f.name), games: GAMES,
-    elites: elitesAll.map((e) => ({ ...e, ci: wilson(e.w, e.g), text: deckToText(e.deck) })),
+  const snapshot = [...elitesAll, ...activeElites];
+  const done = [...new Set(snapshot.map((e) => e.deck.leader))];
+  // Embed knowledge in the authoritative snapshot so interruption between renames
+  // cannot pair deck results with observations from another generation.
+  saveKnowledge(`${outDir}/knowledge-${shard}.json.tmp`, learned);
+  writeFileSync(`${outDir}/found-${shard}.json.tmp`, JSON.stringify({ shard, shards, progress, learnedKnowledge: learned, field: field.map((f) => f.name), games: GAMES,
+    elites: snapshot.map((e) => ({ ...e, ci: wilson(e.w, e.g), text: deckToText(e.deck) })),
     cards: cardStats(), combos: combosFor(done) }, null, 0));
-  saveKnowledge(`${outDir}/knowledge-${shard}.json`, learned);
+  renameSync(`${outDir}/found-${shard}.json.tmp`, `${outDir}/found-${shard}.json`);
+  renameSync(`${outDir}/knowledge-${shard}.json.tmp`, `${outDir}/knowledge-${shard}.json`);
 }
 
 /** Pairs that won more together than apart, with the card-text reason when there is one. */
