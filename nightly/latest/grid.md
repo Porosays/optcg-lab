@@ -1,6 +1,6 @@
 # Matchup grid
 
-10120 games (0 broken), 4.75s avg/game
+10120 games (0 broken), 4.43s avg/game
 
 ## Ranking
 
